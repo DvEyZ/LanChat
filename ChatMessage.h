@@ -16,9 +16,11 @@ class ChatMessage
 public:
 	enum MessageType {
 		unicast = 'u',
-		broadcast = 'b'
+		broadcast = 'b',
+		system = 's',
+		system_broadcast = 'v'
 	} message_type;
-	ChatMessage(MessageType _type, std::vector <std::string> _receivers, std::string _body = "");
+	ChatMessage(MessageType _type, std::string _sender, std::vector <std::string> _receivers, std::string _body);
 	~ChatMessage();
 	int getBodyLength();
 	MessageType getMessageType();

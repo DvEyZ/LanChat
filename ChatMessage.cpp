@@ -2,10 +2,11 @@
 
 #include "ChatMessage.h"
 
-ChatMessage::ChatMessage(MessageType _type, std::vector <std::string> _receivers, std::string _body)
-    :message_type(_type), receivers(_receivers), body(_body)
+ChatMessage::ChatMessage(MessageType _type, std::string _sender, std::vector <std::string> _receivers, std::string _body)
+    :message_type(_type), sender(_sender), receivers(_receivers), body(_body)
 {
     body_length = body.length() + 1;
+    body_length += sender.length() + 1;
     for(auto i : receivers)
     {
         body_length += i.length() + 1;
@@ -82,14 +83,14 @@ bool ChatMessage::decodeHeader(char* header)    // true on success, false on fai
         delete [] _enc_recv_num;
         return false;
     }  
-    if(_enc_type != MessageType.unicast && _enc_type != MessageType.broadcast)    
+    if(_enc_type != MessageType.unicast && _enc_type != MessageType.broadcast && _enc_type != MessageType.system && _enc_type != MessageType.system_broadcast)    
     {
         delete [] _enc_length;
         delete _enc_type;
         delete [] _enc_recv_num;
         return false;
     }
-    if(atoi(_enc_recv_num) == 0 && _enc_type != MessageType.broadcast)    
+    if(atoi(_enc_recv_num) == 0 && _enc_type != MessageType.broadcast)
     {
         delete [] _enc_length;
         delete _enc_type;
@@ -121,6 +122,9 @@ bool ChatMessage::decodeBody(char* body)
     sender = temp;
     pointer++;
 
+    if(message_type != MessageType.system && message_type != MessageType.system_broadcast && sender == "") return false;    // sender can't be empty unless message is system message
+    if(message_type == MessageType.system || message_type != MessageType.system_broadcast && sender != "") return false;    // sender must be empty if message is system message
+
     for(int i = 0; i < recv_num; i++)
     {
         std::string temp;
@@ -144,7 +148,7 @@ bool ChatMessage::decodeBody(char* body)
         if(pointer - body > body_length) return false;
     }
     
-    if(receivers.size() != recv_num) return false;
+    if(receivers.size() != recv_num) return false;  // this means that broadcast message must have recv_num of 0
 
     msgBody = temp;
     return true;
