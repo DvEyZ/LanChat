@@ -1,3 +1,6 @@
+//TODO:
+//Implement identify(), onReadIdentificationBody(), writeIdentificationResponse(), onWriteIdentificationResponse()
+
 #include "Connection.h"
 
 Connection::Connection(boost::asio::io_context& io_context_, Chat* chat_)

@@ -1,3 +1,5 @@
+//FINISHED
+
 #include "ChatMessage.h"
 
 ChatMessage::ChatMessage(MessageType _type, std::vector <std::string> _receivers, std::string _body)

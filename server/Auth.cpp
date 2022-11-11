@@ -1,3 +1,6 @@
+//TODO:
+//Implement Auth() and containsBannedWords()
+
 #include "Auth.h"
 
 Auth::Auth()

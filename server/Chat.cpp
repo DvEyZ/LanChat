@@ -1,3 +1,5 @@
+// FINISHED
+
 #include "Chat.h"
 
 void Chat::log(std::string message)

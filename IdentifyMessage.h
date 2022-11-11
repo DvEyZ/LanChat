@@ -1,4 +1,7 @@
+//FINISHED
+
 #pragma once
+
 #include "helper_functions.h"
 
 class IdentifyMessage

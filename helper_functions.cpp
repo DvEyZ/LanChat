@@ -1,3 +1,5 @@
+//FINISHED
+
 #include "helper_functions.h"
 
 std::string intts(int number, int digits = 0)
