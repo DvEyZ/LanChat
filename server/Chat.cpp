@@ -22,7 +22,7 @@ void Chat::leave(boost::shared_ptr <Connection> connection)
 
 void Chat::messageIncoming(ChatMessage message)
 {
-	if(message.getMessageType() == message.message_type.broadcast)
+	if(message.getMessageType() == ChatMessage::MessageType.broadcast || (message.getMessageType() == ChatMessage::MessageType.system_broadcast))
 	{
 		for(auto i : connected)
 		{
