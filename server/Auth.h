@@ -14,6 +14,7 @@ public:
 	bool permitMessage(ChatMessage message);							//check if message is permitted
 private:
 	Chat* chat;
+	std::string system_message_user;
 //rules for Auth::authenticate()
 	bool require_account;
 	bool require_password;
@@ -24,6 +25,7 @@ private:
 	int max_connections_from_ip;
 	int max_connections_for_user;
 //rules for Auth::permitMessage()
+	bool anyone_may_broadcast;
 	std::set <std::string> banned_words;
 	std::set <std::string> broadcast_users;
 

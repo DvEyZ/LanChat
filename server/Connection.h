@@ -24,8 +24,8 @@ private:
     void onReadIdentificationHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
     void readIdentificationBody();
     void onReadIdentificationBody(const boost::system::error_code& error, std::size_t bytes_transferred);
-    void writeIdentification();
-    void onWriteIdentification(const boost::system::error_code& error, std::size_t bytes_transferred);
+    void writeIdentificationResponse();
+    void onWriteIdentificationResponse(const boost::system::error_code& error, std::size_t bytes_transferred);
     void readHeader();
     void readBody();
     void write();

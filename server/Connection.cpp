@@ -39,22 +39,43 @@ bool identify()
     readIdentificationHeader();
 }
 
-void readIdentification()
+void readIdentificationHeader()
+{
+    boost::asio::async_read(sock, boost::asio::buffer(recentMsgHeaderBuffer), boost::bind(&Connection::onReadIdentificationHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+}
+
+void onReadIdentificationHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
+{
+    if(!error)
+    {
+        identifyMessageTemp = new IdentifyMessage();
+        if(identifyMessageTemp.decodeHeader(recentMsgHeaderBuffer))
+        {
+            recentMsgBodyBuffer = new char[recentMsgRead.getBodyLength()];
+            readIdentificationBody();
+        }
+    }
+    else
+    {
+        onError(error);
+    }
+}   // Todo: Find a way to return value on failure
+
+void readIdentificationBody()
+{
+    boost::asio::async_read(sock, boost::asio::buffer(recentMsgBodyBuffer), boost::bind(&Connection::onReadIdentificationBody, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+}
+
+void onReadIdentificationBody(const boost::system::error_code& error, std::size_t bytes_transferred);
+{
+}
+
+void writeIdentificationResponse()
 {
 
 }
 
-void onReadIdentification(const boost::system::error_code& error, std::size_t bytes_transferred);
-{
-
-}
-
-void writeIdentification()
-{
-
-}
-
-void onWriteIdentification(const boost::system::error_code& error, std::size_t bytes_transferred)
+void onWriteIdentificationResponse(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
 
 }

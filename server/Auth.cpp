@@ -7,6 +7,7 @@ Auth::Auth()
 
 bool Auth::authenticate(IdentifyMessage message)
 {
+	if(message.getUsername == system_message_user)	return false;
 	if(!require_account)	return true;
 	else return checkPassword(message.getUsername(), message.getPassword());
 }
@@ -36,4 +37,7 @@ bool checkPassword(std::string user, std::string password)
 
 bool isAllowedToBroadcast(std::string user)
 {
+	if(anyone_may_broadcast)	return true;
+	if(broadcast_users.contains(user)) return true;
+	else return false;
 }
