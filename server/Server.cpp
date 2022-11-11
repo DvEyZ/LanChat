@@ -3,9 +3,9 @@
 #include "Server.h"
 
 Server::Server(asio::io_context& ioc, int port)
-:_io_context(ioc), _acceptor(ioc, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+    :_io_context(ioc), _acceptor(ioc, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
 {
-    init();
+    start();
 }
 
 Server::start()
