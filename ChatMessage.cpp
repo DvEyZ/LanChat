@@ -13,6 +13,9 @@ ChatMessage::ChatMessage(MessageType _type, std::string _sender, std::vector <st
     }
 }
 
+ChatMessage::ChatMessage()
+{}
+
 ChatMessage::~ChatMessage() {}
 
 int ChatMessage::getBodyLength()
@@ -20,7 +23,7 @@ int ChatMessage::getBodyLength()
     return body_length;
 }
 
-MessageType ChatMessage::getMessageType()
+ChatMessage::MessageType ChatMessage::getMessageType()
 {
     return message_type;
 }
@@ -42,14 +45,14 @@ std::string ChatMessage::getSender()
 
 std::string ChatMessage::getMsgBody()
 {
-    return msgBody;
+    return body;
 }
 
 /*
 LLLLtnnn rr0rr0rr0mmmmm
  HEADER       BODY
 */
-char* ChatMessage::composeMessage()
+char* ChatMessage::encodeMessage()
 {
     std::string message_composed;
     message_composed += intts(body_length, 4);          // Body length
@@ -76,21 +79,21 @@ bool ChatMessage::decodeHeader(char* header)    // true on success, false on fai
     memcpy(_enc_type, header+4, sizeof(_enc_type));
     memcpy(_enc_recv_num, header+5, sizeof(_enc_recv_num));
     
-    if(atoi(body_length) == 0)
+    if(atoi(_enc_length) == 0)
     {
         delete [] _enc_length;
         delete _enc_type;
         delete [] _enc_recv_num;
         return false;
     }  
-    if(_enc_type != MessageType.unicast && _enc_type != MessageType.broadcast && _enc_type != MessageType.system && _enc_type != MessageType.system_broadcast)    
+    if(int(_enc_type) != MessageType::unicast && int(_enc_type) != MessageType::broadcast && int(_enc_type) != MessageType::system && int(_enc_type) != MessageType::system_broadcast)    
     {
         delete [] _enc_length;
         delete _enc_type;
         delete [] _enc_recv_num;
         return false;
     }
-    if(atoi(_enc_recv_num) == 0 && _enc_type != MessageType.broadcast)
+    if(atoi(_enc_recv_num) == 0 && int(_enc_type) != MessageType::broadcast)
     {
         delete [] _enc_length;
         delete _enc_type;
@@ -98,7 +101,7 @@ bool ChatMessage::decodeHeader(char* header)    // true on success, false on fai
         return false;
     }
     body_length = atoi(_enc_length);
-    message_type = _enc_type;
+    message_type = static_cast<MessageType> (_enc_type);
     recv_num = atoi(_enc_recv_num);
 
     delete [] _enc_length;
@@ -108,22 +111,22 @@ bool ChatMessage::decodeHeader(char* header)    // true on success, false on fai
     return true;
 }
 
-bool ChatMessage::decodeBody(char* body)
+bool ChatMessage::decodeBody(char* _body)
 {
-    char* pointer = body;
+    char* pointer = _body;
 
     std::string temp;
     while(*pointer != '\x00')
     {
         temp += pointer;
         pointer++;
-        if(pointer - body > body_length) return false;
+        if(pointer - _body > body_length) return false;
     }
     sender = temp;
     pointer++;
 
-    if(message_type != MessageType.system && message_type != MessageType.system_broadcast && sender == "") return false;    // sender can't be empty unless message is system message
-    if(message_type == MessageType.system || message_type != MessageType.system_broadcast && sender != "") return false;    // sender must be empty if message is system message
+    if(message_type != MessageType::system && message_type != MessageType::system_broadcast && sender == "") return false;    // sender can't be empty unless message is system message
+    if(message_type == MessageType::system || message_type != MessageType::system_broadcast && sender != "") return false;    // sender must be empty if message is system message
 
     for(int i = 0; i < recv_num; i++)
     {
@@ -132,7 +135,7 @@ bool ChatMessage::decodeBody(char* body)
         {
             temp += *pointer;
             pointer++;
-            if(pointer - body > body_length)
+            if(pointer - _body > body_length)
             return false;
         }
         pointer++;
@@ -145,11 +148,11 @@ bool ChatMessage::decodeBody(char* body)
     {
         temp += pointer;
         pointer++;
-        if(pointer - body > body_length) return false;
+        if(pointer - _body > body_length) return false;
     }
     
     if(receivers.size() != recv_num) return false;  // this means that broadcast message must have recv_num of 0
 
-    msgBody = temp;
+    body = temp;
     return true;
 }

@@ -16,6 +16,7 @@ public:
 		system_broadcast = 'v'
 	};
 	ChatMessage(MessageType _type, std::string _sender, std::vector <std::string> _receivers, std::string _body);
+	ChatMessage();
 	~ChatMessage();
 	int getBodyLength();
 	MessageType getMessageType();
@@ -24,13 +25,13 @@ public:
 	std::string getSender();
 	std::string getMsgBody();
 	char* encodeMessage();
-	bool decodeHeader(char* header);
-	bool decodeBody(char* body);
+	bool decodeHeader(char* _header);
+	bool decodeBody(char* _body);
 private:
 	int body_length;
 	int recv_num;
 	std::string sender;
 	std::vector <std::string> receivers;
-	std::string msgBody;
+	std::string body;
 	MessageType message_type;
 };

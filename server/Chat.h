@@ -6,6 +6,7 @@
 #include "defines.h"
 #include <set>
 #include <iostream>
+#include <string>
 #include <fstream>
 
 class Chat
@@ -17,9 +18,9 @@ public:
 	void join(boost::shared_ptr <Connection> connection);
 	void leave(boost::shared_ptr <Connection> connection);
 	std::set <boost::shared_ptr <Connection>> getUserConnections(std::string username);
-	std::set <boost::shared_ptr <Connection>> getIpConnections(boost::asio::ip::address ip);
+	std::set <boost::shared_ptr <Connection>> getIpConnections(std::string ip);
 	Auth auth;
 private:
 	std::set <boost::shared_ptr <Connection>> connected;
 	std::fstream logstream;
-}
+};

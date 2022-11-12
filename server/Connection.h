@@ -8,13 +8,14 @@
 #include "Chat.h"
 #include "Server.h"
 #include <queue>
+#include <boost/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
 
 class Connection : public boost::enable_shared_from_this<Connection>
 {
 public:
-    Connection(boost::asio::io_context io_context_, Chat* chat);
+    Connection(boost::asio::io_context& io_context_, Chat* chat);
     ~Connection();
     boost::asio::ip::tcp::socket& socket();
     void run();             // main
@@ -35,7 +36,7 @@ private:
     void onReadHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
     void onReadBody(const boost::system::error_code& error, std::size_t bytes_transferred);
     void onWrite(const boost::system::error_code& error, std::size_t bytes_transferred);
-    void onError();
+    void onError(const boost::system::error_code& error);
     boost::asio::ip::tcp::socket sock;
     boost::system::error_code error_status;
     ChatMessage recentMsgRead;

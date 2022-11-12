@@ -21,17 +21,18 @@ private:
 //rules for Auth::authenticate()
 	bool require_account;
 	std::optional <bool> require_password;
-	std::optional <std::map <std::string, std::string>> user_list;
+	std::map <std::string, std::string> user_list;
 
 	bool checkPassword(std::string user, std::string password);
 //rules for Auth::permitConnection()
 	std::optional <int> max_connections_from_ip;	
 	std::optional <int> max_connections_for_user;	//if none, any number of connections is permitted
+	std::set <std::string> banned_ips;				//list of banned IP addresses
 //rules for Auth::permitMessage()
 	bool anyone_may_broadcast;
 	std::set <std::string> banned_words;
 	std::set <std::string> broadcast_users;
 
-	bool containsBannedWords(std::string text)
+	bool containsBannedWords(std::string text);
 	bool isAllowedToBroadcast(std::string user);
-}
+};
