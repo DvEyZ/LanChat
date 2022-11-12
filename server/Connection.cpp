@@ -1,5 +1,4 @@
-//TODO:
-//Implement writeIdentificationResponse(), onWriteIdentificationResponse()
+//FINISHED
 
 #include "Connection.h"
 
