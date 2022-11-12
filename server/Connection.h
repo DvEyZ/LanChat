@@ -22,6 +22,7 @@ public:
     std::string user;       // User of this session, by default 
 private:
     bool identify();
+    void identificationFailure(IdentifyResponseMessage::Status status);
     void readIdentificationHeader();
     void onReadIdentificationHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
     void readIdentificationBody();
@@ -38,11 +39,12 @@ private:
     boost::asio::ip::tcp::socket sock;
     boost::system::error_code error_status;
     ChatMessage recentMsgRead;
-    char recentMsgHeaderBuffer[8];
+    char* recentMsgHeaderBuffer;
     char* recentMsgBodyBuffer;
     std::queue <ChatMessage> recentMsgWrite;
 
     IdentifyMessage* identifyMessageTemp;
+    IdentifyResponseMessage* identifyResponseMessageTemp;
 
     Chat* chat;
     Server* server;

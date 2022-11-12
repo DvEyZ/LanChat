@@ -1,5 +1,5 @@
 //TODO:
-//Implement identify(), onReadIdentificationBody(), writeIdentificationResponse(), onWriteIdentificationResponse()
+//Implement writeIdentificationResponse(), onWriteIdentificationResponse()
 
 #include "Connection.h"
 
@@ -20,11 +20,8 @@ boost::asio::ip::tcp::socket& Connection::socket()
 void Connection::run()
 {
     server->awaiting_for_identification.insert(shared_from_this());
-    if(identify())
-    {
-        Chat.join(boost::shared_from_this());
-    }
-    server->awaiting_for_identification.erase(shared_from_this());
+    recentMsgHeadBuffer = new char[8];
+    readIdentificationHeader();
 }
 
 void Connection::postMessage(ChatMessage message)
@@ -39,7 +36,20 @@ void Connection::postMessage(ChatMessage message)
 
 bool identify()
 {
-    readIdentificationHeader();
+    IdentifyResponseMessage::Status status;
+    status = chat.auth.authenticate();
+    if(status == IdentifyResponseMessage::Status.ok)
+        status = chat.auth.permitConnection();
+    
+    identifyResponseMessageTemp = new IdentifyResponseMessage(status);
+
+    writeIdentificationResponse();
+}
+
+void identificationFailure(IdentifyResponseMessage::Status status)
+{
+    identifyResponseMessageTemp = new IdentifyResponseMessage(status);
+    writeIdentificationResponse();
 }
 
 void readIdentificationHeader()
@@ -57,12 +67,16 @@ void onReadIdentificationHeader(const boost::system::error_code& error, std::siz
             recentMsgBodyBuffer = new char[recentMsgRead.getBodyLength()];
             readIdentificationBody();
         }
+        else
+        {
+            identificationFailure(IdentifyResponseMessage::Status.auth_failed_malformed);
+        }
     }
     else
     {
         onError(error);
     }
-}   // Todo: Find a way to return value on failure
+}
 
 void readIdentificationBody()
 {
@@ -71,16 +85,46 @@ void readIdentificationBody()
 
 void onReadIdentificationBody(const boost::system::error_code& error, std::size_t bytes_transferred);
 {
+    if(!error)
+    {
+        if(identifyMessageTemp.decodeBody(recentMsgBodyBuffer))
+        {
+            identify();
+        }
+        else
+        {
+            identificationFailure(IdentifyResponseMessage::Status.auth_failed_malformed);
+        }
+        delete[] recentMsgHeaderBuffer;
+        delete[] recentMsgBodyBuffer;
+    }
+    else
+    {
+        onError(error);
+    }
 }
 
 void writeIdentificationResponse()
 {
-
+    boost::asio::async_write(sock, boost::asio::buffer(identifyResponseMessageTemp.encode()), boost::bind(&Connection::onWriteIdentificationResponse, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void onWriteIdentificationResponse(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
-
+    if(!error)
+    {
+        if(identifyResponseMessageTemp.getStatus() == IdentifyResponseMessage::Status.ok)
+        {
+            readHeader();
+            chat.join(shared_from_this());
+        }
+        server->awaiting_for_identification.erase(shared_from_this());
+    }
+    else
+    {
+        onError(error);
+    }
+    //TODO: If identification succeeds, start readHeader(), else close the connection
 }
 
 
@@ -133,8 +177,9 @@ void Connection::onReadBody(const boost::system::error_code& error, std::size_t 
         {
             chat.log("Bad message body from" + sock.remote_endpoint());
         }
-        recentMsgHeaderBuffer = "\0\0\0\0\0\0\0\0"
+        delete[] recentMsgHeaderBuffer;
         delete[] RecentMsgBodyBuffer;
+        recentMsgHeaderBuffer = new char[8];
         readHeader();
     }
     else

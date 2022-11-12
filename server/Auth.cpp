@@ -8,19 +8,23 @@ Auth::Auth()
 	
 }
 
-bool Auth::authenticate(IdentifyMessage message)
+IdentifyResponseMessage::Status Auth::authenticate(IdentifyMessage message)
 {
-	if(message.getUsername == system_message_user)	return false;
 	if(!require_account)	return true;
-	else return checkPassword(message.getUsername(), message.getPassword());
+	else if(checkPassword(message.getUsername(), message.getPassword()))
+		return IdentifyResponseMessage::Status.ok;
+	else
+		return IdentifyResponseMessage::Status.auth_failed_bad_credentials;
 }
 
-bool Auth::permitConnection(boost::shared_ptr <Connection> connection)
+IdentifyResponseMessage::Status Auth::permitConnection(boost::shared_ptr <Connection> connection)
 {
 	boost::asio::system::error_code error;
-	if(chat.getUserConnections(connection->user).size() >= max_connections_for_user)	return false;
-	if(chat.getIpConnections(connection->getSocket().remote_endpoint(error).address().to_string()).size() >= max_connections_for_ip)	return false;
-	if(error)	return false;
+	if(chat.getUserConnections(connection->user).size() >= max_connections_for_user)	
+		return IdentifyResponseMessage::Status.conn_failed_too_many_for_user;
+	if(chat.getIpConnections(connection->getSocket().remote_endpoint(error).address().to_string()).size() >= max_connections_for_ip)	
+		return IdentifyResponseMessage::Status.conn_failed_too_many_for_ip;
+	if(error)	return IdentifyResponseMessage::Status.fail_generic;
 	return true;
 }
 
