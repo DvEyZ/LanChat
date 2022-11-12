@@ -8,9 +8,9 @@ class Server
 {
 public:
     Server(boost::asio::io_context& ioc, int port = 6789);
+    ~Server();
     std::set <boost::shared_ptr <Connection>> awaiting_for_identification;
 private:
-    ~Server();
     void start();
     void createConnection(boost::shared_ptr <Connection> connection, const boost::system::error_code& error);
     Chat* chat;

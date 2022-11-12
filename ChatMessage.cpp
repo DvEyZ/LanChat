@@ -101,7 +101,7 @@ bool ChatMessage::decodeHeader(char* header)    // true on success, false on fai
         return false;
     }
     body_length = atoi(_enc_length);
-    message_type = static_cast<MessageType> (_enc_type);
+    message_type = int(_enc_type);
     recv_num = atoi(_enc_recv_num);
 
     delete [] _enc_length;

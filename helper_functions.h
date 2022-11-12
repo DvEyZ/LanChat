@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <sstream>
 #include <string>
+#include <vector>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
 

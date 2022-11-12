@@ -8,6 +8,9 @@ Server::Server(boost::asio::io_context& ioc, int port)
     start();
 }
 
+Server::~Server()
+{}
+
 void Server::start()
 {
     boost::shared_ptr <Connection> connection = boost::shared_ptr<Connection>(new Connection(_io_context, chat));
