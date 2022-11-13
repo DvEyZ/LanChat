@@ -18,6 +18,11 @@ boost::asio::ip::tcp::socket& Connection::socket()
     return sock;
 }
 
+std::string Connection::getUser()
+{
+    return user;
+}
+
 void Connection::run()
 {
     server->awaiting_for_identification.insert(shared_from_this());
@@ -38,9 +43,9 @@ void Connection::postMessage(ChatMessage message)
 bool Connection::identify()
 {
     IdentifyResponseMessage::Status status;
-    status = chat->auth.authenticate(*identifyMessageTemp);
+    status = chat->auth->authenticate(*identifyMessageTemp);
     if(status == IdentifyResponseMessage::Status::ok)
-        status = chat->auth.permitConnection(shared_from_this());
+        status = chat->auth->permitConnection(shared_from_this());
     
     identifyResponseMessageTemp = new IdentifyResponseMessage(status);
 

@@ -1,8 +1,13 @@
 //FINISHED
 
-#include "Chat.h"
+#include "BasicChat.h"
 
-void Chat::log(std::string message)
+BasicChat::BasicChat(Auth* _auth)
+{
+	this->auth = _auth;
+}
+
+void BasicChat::log(std::string message)
 {
 	std::cout << message;
 	logstream.open(LOG_FILE_SERVER);
@@ -10,22 +15,22 @@ void Chat::log(std::string message)
 	logstream.close();
 }
 
-void Chat::join(boost::shared_ptr <Connection> connection)
+void BasicChat::join(boost::shared_ptr <Connection> connection)
 {
 	connected.insert(connection);
 }
 
-void Chat::leave(boost::shared_ptr <Connection> connection)
+void BasicChat::leave(boost::shared_ptr <Connection> connection)
 {
 	connected.erase(connection);
 }
 
-void Chat::messageIncoming(ChatMessage message)
+void BasicChat::messageIncoming(ChatMessage message)
 {
 	// system messages don't need permission from Auth
 	if(!message.getMessageType() == ChatMessage::MessageType::system && !message.getMessageType() == ChatMessage::MessageType::system_broadcast)
 	{
-		if(!auth.permitMessage(message))
+		if(!auth->permitMessage(message))
 		{
 			ChatMessage system_response_message(ChatMessage::MessageType::system, "", {message.getSender()}, "Your message was not delivered.");
 			return;
@@ -53,18 +58,18 @@ void Chat::messageIncoming(ChatMessage message)
 	}
 }
 
-std::set <boost::shared_ptr <Connection>> Chat::getUserConnections(std::string username)
+std::set <boost::shared_ptr <Connection>> BasicChat::getUserConnections(std::string username)
 {
 	std::set <boost::shared_ptr <Connection>> temp;
 	for(auto i : connected)
 	{
-		if(i->user == username)
+		if(i->getUser() == username)
 			temp.insert(i);
 	}
 	return temp;
 }
 
-std::set <boost::shared_ptr <Connection>> Chat::getIpConnections(std::string ip)
+std::set <boost::shared_ptr <Connection>> BasicChat::getIpConnections(std::string ip)
 {
 	boost::system::error_code error;
 	std::set <boost::shared_ptr <Connection>> temp;

@@ -20,7 +20,7 @@ public:
     boost::asio::ip::tcp::socket& socket();
     void run();             // main
     void postMessage(ChatMessage message);
-    std::string user;       // User of this session, by default 
+    std::string getUser();
 private:
     bool identify();
     void identificationFailure(IdentifyResponseMessage::Status status);
@@ -38,6 +38,8 @@ private:
     void onWrite(const boost::system::error_code& error, std::size_t bytes_transferred);
     void onError(const boost::system::error_code& error);
     boost::asio::ip::tcp::socket sock;
+    std::string user; 
+
     boost::system::error_code error_status;
     ChatMessage recentMsgRead;
     

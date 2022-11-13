@@ -4,7 +4,8 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
-                "C:\\Boost\\boost_1_80_0\\boost_1_80_0"
+                "C:\\Boost\\boost_1_80_0\\boost_1_80_0",
+                "C:\\Users\\kwiregowo5\\Desktop\\SZYMON\\projekty\\C++\\include"
             ],
             "defines": [
                 "_DEBUG",

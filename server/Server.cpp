@@ -2,8 +2,8 @@
 
 #include "Server.h"
 
-Server::Server(boost::asio::io_context& ioc, int port)
-    :_io_context(ioc), _acceptor(ioc, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port))
+Server::Server(boost::asio::io_context& ioc, int port, Chat* _chat)
+    :_io_context(ioc), _acceptor(ioc, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), chat(_chat)
 {
     start();
 }
