@@ -13,5 +13,5 @@ public:
 	virtual IdentifyResponseMessage::Status authenticate(IdentifyMessage identification) = 0;
 	virtual IdentifyResponseMessage::Status permitConnection(boost::shared_ptr <Connection> connection) = 0;
 	virtual bool permitMessage(ChatMessage message) = 0;
-	virtual void addToChat(Chat* chat);
+	void addToChat(Chat* chat);
 };

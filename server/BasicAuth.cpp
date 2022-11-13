@@ -85,7 +85,7 @@ bool BasicAuth::containsBannedWords(std::string message)
 {
 	for(auto i : banned_words)
 	{
-		if(message.contains(i)) return true;
+		if(string_contains(message, i)) return true;
 	}
 	return false;
 }
