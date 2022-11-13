@@ -9,8 +9,7 @@
 class BasicChat : public Chat
 {
 public:
-	BasicChat(Auth* _auth);
-	void log(std::string message);
+	BasicChat(Auth* _auth, std::vector<Logger*> _loggers);
 	void messageIncoming(ChatMessage message);
 	void join(boost::shared_ptr <Connection> connection);
 	void leave(boost::shared_ptr <Connection> connection);
@@ -19,5 +18,4 @@ public:
 	//	Auth* auth;
 private:
 	std::set <boost::shared_ptr <Connection>> connected;
-	std::fstream logstream;
 };

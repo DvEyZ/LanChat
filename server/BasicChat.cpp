@@ -2,26 +2,24 @@
 
 #include "BasicChat.h"
 
-BasicChat::BasicChat(Auth* _auth)
+BasicChat::BasicChat(Auth* _auth, std::vector<Logger*> _loggers)
 {
-	this->auth = _auth;
-}
-
-void BasicChat::log(std::string message)
-{
-	std::cout << message;
-	logstream.open(LOG_FILE_SERVER);
-	logstream << message;
-	logstream.close();
+	auth = _auth;
+	loggers = _loggers;
+	auth->addToChat(this);
 }
 
 void BasicChat::join(boost::shared_ptr <Connection> connection)
 {
 	connected.insert(connection);
+	for(auto i : loggers)
+		i->log(connection->getUser() + " joined the chat.");
 }
 
 void BasicChat::leave(boost::shared_ptr <Connection> connection)
 {
+	for(auto i : loggers)
+		i->log(connection->getUser() + " left the chat.");
 	connected.erase(connection);
 }
 
