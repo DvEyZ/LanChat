@@ -17,9 +17,9 @@ public:
 	IdentifyResponseMessage(Status status);
 	IdentifyResponseMessage();
 	
-	bool decodeHeader(char* header);
-	bool decodeBody(char* body);
-	char* encodeMessage();
+	bool decodeHeader(std::vector<char> _header);
+	bool decodeBody(std::vector<char> _body);
+	std::vector<char> encodeMessage();
 	int getStatus();
 private:
 	Status status;

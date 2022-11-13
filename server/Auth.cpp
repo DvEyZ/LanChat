@@ -20,10 +20,20 @@ IdentifyResponseMessage::Status Auth::authenticate(IdentifyMessage message)
 IdentifyResponseMessage::Status Auth::permitConnection(boost::shared_ptr <Connection> connection)
 {
 	boost::system::error_code error;
-	if(chat->getUserConnections(connection->user).size() >= max_connections_for_user)	
+	try
+	{
+	if(chat->getUserConnections(connection->user).size() >= max_connections_for_user.value())	
 		return IdentifyResponseMessage::Status::conn_failed_too_many_for_user;
-	if(chat->getIpConnections(connection->socket().remote_endpoint(error).address().to_string()).size() >= max_connections_from_ip)	
+	}
+	catch(std::experimental::bad_optional_access)
+	{}
+	try
+	{
+	if(chat->getIpConnections(connection->socket().remote_endpoint(error).address().to_string()).size() >= max_connections_from_ip.value())	
 		return IdentifyResponseMessage::Status::conn_failed_too_many_for_ip;
+	}
+	catch(std::experimental::bad_optional_access)
+	{}
 	if(banned_ips.contains(connection->socket().remote_endpoint(error).address().to_string()))
 		return IdentifyResponseMessage::Status::conn_failed_ip_banned;
 	if(error)	return IdentifyResponseMessage::Status::fail_generic;

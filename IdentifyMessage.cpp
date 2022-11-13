@@ -7,7 +7,7 @@ IdentifyMessage::IdentifyMessage(std::string _username, std::string _password)
 	:username(_username), password(_password), length(_username.length())
 {}
 
-bool IdentifyMessage::decodeHeader(char* header)
+bool IdentifyMessage::decodeHeader(std::vector<char> _header)
 {
 
 }

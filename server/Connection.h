@@ -40,8 +40,9 @@ private:
     boost::asio::ip::tcp::socket sock;
     boost::system::error_code error_status;
     ChatMessage recentMsgRead;
-    char* recentMsgHeaderBuffer;
-    char* recentMsgBodyBuffer;
+    
+    std::vector <char> recentReadBuffer;
+
     std::queue <ChatMessage> recentMsgWrite;
 
     IdentifyMessage* identifyMessageTemp;

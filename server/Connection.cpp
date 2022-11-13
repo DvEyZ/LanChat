@@ -21,7 +21,7 @@ boost::asio::ip::tcp::socket& Connection::socket()
 void Connection::run()
 {
     server->awaiting_for_identification.insert(shared_from_this());
-    recentMsgHeaderBuffer = new char[8];
+    recentReadBuffer = std::vector<char>(8,'\0');
     readIdentificationHeader();
 }
 
@@ -55,7 +55,7 @@ void Connection::identificationFailure(IdentifyResponseMessage::Status status)
 
 void Connection::readIdentificationHeader()
 {
-    boost::asio::async_read(sock, boost::asio::buffer(recentMsgHeaderBuffer), boost::bind(&Connection::onReadIdentificationHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    boost::asio::async_read(sock, boost::asio::buffer(recentReadBuffer), boost::bind(&Connection::onReadIdentificationHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void Connection::onReadIdentificationHeader(const boost::system::error_code& error, std::size_t bytes_transferred)
@@ -63,9 +63,9 @@ void Connection::onReadIdentificationHeader(const boost::system::error_code& err
     if(!error)
     {
         identifyMessageTemp = new IdentifyMessage();
-        if(identifyMessageTemp->decodeHeader(recentMsgHeaderBuffer))
+        if(identifyMessageTemp->decodeHeader(recentReadBuffer))
         {
-            recentMsgBodyBuffer = new char[recentMsgRead.getBodyLength()];
+            recentReadBuffer = std::vector<char>(identifyMessageTemp->getLength(),'\0');
             readIdentificationBody();
         }
         else
@@ -81,14 +81,14 @@ void Connection::onReadIdentificationHeader(const boost::system::error_code& err
 
 void Connection::readIdentificationBody()
 {
-    boost::asio::async_read(sock, boost::asio::buffer(recentMsgBodyBuffer), boost::bind(&Connection::onReadIdentificationBody, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    boost::asio::async_read(sock, boost::asio::buffer(recentReadBuffer), boost::bind(&Connection::onReadIdentificationBody, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void Connection::onReadIdentificationBody(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
     if(!error)
     {
-        if(identifyMessageTemp->decodeBody(recentMsgBodyBuffer))
+        if(identifyMessageTemp->decodeBody(recentReadBuffer))
         {
             identify();
         }
@@ -96,8 +96,6 @@ void Connection::onReadIdentificationBody(const boost::system::error_code& error
         {
             identificationFailure(IdentifyResponseMessage::Status::auth_failed_malformed);
         }
-        delete[] recentMsgHeaderBuffer;
-        delete[] recentMsgBodyBuffer;
     }
     else
     {
@@ -116,8 +114,9 @@ void Connection::onWriteIdentificationResponse(const boost::system::error_code& 
     {
         if(identifyResponseMessageTemp->getStatus() == IdentifyResponseMessage::Status::ok)
         {
-            readHeader();
             chat->join(shared_from_this());
+            recentReadBuffer = std::vector<char>(8,'\0');
+            readHeader();
         }
         server->awaiting_for_identification.erase(shared_from_this());
     }
@@ -125,18 +124,17 @@ void Connection::onWriteIdentificationResponse(const boost::system::error_code& 
     {
         onError(error);
     }
-    //TODO: If identification succeeds, start readHeader(), else close the connection
 }
 
 
 void Connection::readHeader()
 {
-    boost::asio::async_read(sock, boost::asio::buffer(recentMsgHeaderBuffer), boost::bind(&Connection::onReadHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    boost::asio::async_read(sock, boost::asio::buffer(recentReadBuffer), boost::bind(&Connection::onReadHeader, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void Connection::readBody()
 {
-    boost::asio::async_read(sock, boost::asio::buffer(recentMsgBodyBuffer), boost::bind(&Connection::onReadBody, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
+    boost::asio::async_read(sock, boost::asio::buffer(recentReadBuffer), boost::bind(&Connection::onReadBody, shared_from_this(), boost::asio::placeholders::error, boost::asio::placeholders::bytes_transferred));
 }
 
 void Connection::write()
@@ -148,9 +146,9 @@ void Connection::onReadHeader(const boost::system::error_code& error, std::size_
 {
     if(!error)
     {
-        if(recentMsgRead.decodeHeader(recentMsgHeaderBuffer))
+        if(recentMsgRead.decodeHeader(recentReadBuffer))
         {
-            recentMsgBodyBuffer = new char[recentMsgRead.getBodyLength()];
+            recentReadBuffer = std::vector<char>(recentMsgRead.getBodyLength(), '\0');
             readBody();
         }
         else
@@ -170,7 +168,7 @@ void Connection::onReadBody(const boost::system::error_code& error, std::size_t 
 {
     if(!error)
     {
-        if(recentMsgRead.decodeBody(recentMsgBodyBuffer))
+        if(recentMsgRead.decodeBody(recentReadBuffer))
         {
             chat->messageIncoming(recentMsgRead);
         }
@@ -178,9 +176,7 @@ void Connection::onReadBody(const boost::system::error_code& error, std::size_t 
         {
             chat->log("Bad message body from" + sock.remote_endpoint().address().to_string());
         }
-        delete[] recentMsgHeaderBuffer;
-        delete[] recentMsgBodyBuffer;
-        recentMsgHeaderBuffer = new char[8];
+        recentReadBuffer = std::vector<char>(8, '\0');
         readHeader();
     }
     else

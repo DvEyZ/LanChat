@@ -52,105 +52,62 @@ std::string ChatMessage::getMsgBody()
 LLLLtnnn rr0rr0rr0mmmmm
  HEADER       BODY
 */
-char* ChatMessage::encodeMessage()
+std::vector<char> ChatMessage::encodeMessage()
 {
     std::string message_composed;
     message_composed += intts(body_length, 4);          // Body length
     message_composed += message_type;                   // Message type
     message_composed += intts(receivers.size(), 3);     // Number of receivers
     message_composed += sender;
-    message_composed += "\x00";
+    message_composed += "\0";
     for(auto i : receivers)
     {
         message_composed += i;
-        message_composed += "\x00";
+        message_composed += "\0";
     }
     message_composed += body;
-    return message_composed.c_str();
+    return std::vector<char>(message_composed.begin(), message_composed.end());
 }
 
-bool ChatMessage::decodeHeader(char* header)    // true on success, false on fail
+bool ChatMessage::decodeHeader(std::vector<char> header)    // true on success, false on fail
 {
-    if(sizeof(char) != 8)   return false;
-    char* _enc_length = new char[4];    // max length 9999
-    char* _enc_type = new char;         // type
-    char* _enc_recv_num = new char[3];  // max number of receivers 999
-    memcpy(_enc_length, header, sizeof(_enc_length));
-    memcpy(_enc_type, header+4, sizeof(_enc_type));
-    memcpy(_enc_recv_num, header+5, sizeof(_enc_recv_num));
-    
-    if(atoi(_enc_length) == 0)
+    if(header.size() != 8)   return false;
+    if(std::stoi(std::string(header.begin(), header.begin() + 4)) == 0)
     {
-        delete [] _enc_length;
-        delete _enc_type;
-        delete [] _enc_recv_num;
         return false;
     }  
-    if(int(_enc_type) != MessageType::unicast && int(_enc_type) != MessageType::broadcast && int(_enc_type) != MessageType::system && int(_enc_type) != MessageType::system_broadcast)    
+    if(static_cast<MessageType>(header.at(5)) != MessageType::unicast && static_cast<MessageType>(header.at(5)) != MessageType::broadcast && static_cast<MessageType>(header.at(5)) != MessageType::system && static_cast<MessageType>(header.at(5)) != MessageType::system_broadcast)    
     {
-        delete [] _enc_length;
-        delete _enc_type;
-        delete [] _enc_recv_num;
         return false;
     }
-    if(atoi(_enc_recv_num) == 0 && int(_enc_type) != MessageType::broadcast)
+    if(std::stoi(std::string(header.begin() + 6, header.end())) == 0 && static_cast<MessageType>(header.at(5)) != MessageType::broadcast)
     {
-        delete [] _enc_length;
-        delete _enc_type;
-        delete [] _enc_recv_num;
         return false;
     }
-    body_length = atoi(_enc_length);
-    message_type = int(_enc_type);
-    recv_num = atoi(_enc_recv_num);
-
-    delete [] _enc_length;
-    delete _enc_type;
-    delete [] _enc_recv_num;
-
+    body_length = std::stoi(std::string(header.begin(), header.begin() + 4));
+    message_type = static_cast<MessageType>(header.at(5));
+    recv_num = std::stoi(std::string(header.begin() + 6, header.end()));
     return true;
 }
 
-bool ChatMessage::decodeBody(char* _body)
+bool ChatMessage::decodeBody(std::vector<char> _body)
 {
-    char* pointer = _body;
+    std::string temp(_body.begin(), _body.end());
+    sender = temp.substr(0, temp.find('\0'));
+    temp.erase(0, temp.find('\0') + 1);
 
-    std::string temp;
-    while(*pointer != '\x00')
+    for(int i = 0; i < recv_num; i++)
     {
-        temp += pointer;
-        pointer++;
-        if(pointer - _body > body_length) return false;
+        receivers.push_back(temp.substr(0, temp.find('\0')));
+        temp.erase(0, temp.find('\0') + 1);
     }
-    sender = temp;
-    pointer++;
+
+    body = temp.substr(0, temp.find('\0'));
+    temp.erase(0, temp.find('\0') + 1);
 
     if(message_type != MessageType::system && message_type != MessageType::system_broadcast && sender == "") return false;    // sender can't be empty unless message is system message
     if(message_type == MessageType::system || message_type != MessageType::system_broadcast && sender != "") return false;    // sender must be empty if message is system message
 
-    for(int i = 0; i < recv_num; i++)
-    {
-        std::string temp;
-        while(*pointer != '\x00')
-        {
-            temp += *pointer;
-            pointer++;
-            if(pointer - _body > body_length)
-            return false;
-        }
-        pointer++;
-        receivers.push_back(temp);
-        temp = "";
-    }
-    
-    temp = "";
-    while(*pointer != '\x00')
-    {
-        temp += pointer;
-        pointer++;
-        if(pointer - _body > body_length) return false;
-    }
-    
     if(receivers.size() != recv_num) return false;  // this means that broadcast message must have recv_num of 0
 
     body = temp;

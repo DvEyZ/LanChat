@@ -24,9 +24,9 @@ public:
 	std::vector <std::string> getReceivers();
 	std::string getSender();
 	std::string getMsgBody();
-	char* encodeMessage();
-	bool decodeHeader(char* _header);
-	bool decodeBody(char* _body);
+	std::vector<char> encodeMessage();
+	bool decodeHeader(std::vector<char> _header);
+	bool decodeBody(std::vector<char> _body);
 private:
 	int body_length;
 	int recv_num;

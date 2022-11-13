@@ -3,7 +3,7 @@
 #pragma once
 
 #include <map>
-#include <optional>
+#include <experimental/optional>
 #include "defines.h"
 #include "Chat.h"
 #include "../IdentifyMessage.h"
@@ -20,13 +20,13 @@ private:
 	Chat* chat;
 //rules for Auth::authenticate()
 	bool require_account;
-	std::optional <bool> require_password;
+	std::experimental::optional <bool> require_password;
 	std::map <std::string, std::string> user_list;
 
 	bool checkPassword(std::string user, std::string password);
 //rules for Auth::permitConnection()
-	std::optional <int> max_connections_from_ip;	
-	std::optional <int> max_connections_for_user;	//if none, any number of connections is permitted
+	std::experimental::optional <int> max_connections_from_ip;	
+	std::experimental::optional <int> max_connections_for_user;	//if none, any number of connections is permitted
 	std::set <std::string> banned_ips;				//list of banned IP addresses
 //rules for Auth::permitMessage()
 	bool anyone_may_broadcast;

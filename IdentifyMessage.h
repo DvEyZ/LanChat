@@ -9,9 +9,9 @@ class IdentifyMessage
 public:
 	IdentifyMessage();
 	IdentifyMessage(std::string _username, std::string _password);
-	bool decodeHeader(char* header);
-	bool decodeBody(char* body);
-	char* encodeMessage();
+	bool decodeHeader(std::vector<char> _header);
+	bool decodeBody(std::vector<char> _body);
+	std::vector<char> encodeMessage();
 	int getLength();
 	std::string getUsername();
 	std::string getPassword();
