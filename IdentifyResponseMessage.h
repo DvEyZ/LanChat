@@ -2,7 +2,7 @@
 
 #include "helper_functions.h"
 
-class IdentifyResponseMessage
+class IdentifyResponseMessage : public Message
 {
 public:
 	enum Status {
@@ -15,11 +15,12 @@ public:
 		fail_generic = 9
 	};
 	IdentifyResponseMessage(Status status);
-	IdentifyResponseMessage();
+	IdentifyRespons
+	eMessage();
 	
-	bool decodeHeader(std::vector<char> _header);
 	bool decodeBody(std::vector<char> _body);
 	std::vector<char> encodeMessage();
+
 	int getStatus();
 private:
 	Status status;
