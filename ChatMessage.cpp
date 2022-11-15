@@ -5,11 +5,11 @@
 ChatMessage::ChatMessage(MessageType _type, std::string _sender, std::vector <std::string> _receivers, std::string _body)
     :message_type(_type), sender(_sender), receivers(_receivers), body(_body)
 {
-    body_length = body.length() + 1;
-    body_length += sender.length() + 1;
+    length = body.length() + 1;
+    length += sender.length() + 1;
     for(auto i : receivers)
     {
-        body_length += i.length() + 1;
+        length += i.length() + 1;
     }
 }
 
@@ -50,7 +50,7 @@ LLLLtnnn rr0rr0rr0mmmmm
 std::vector<char> ChatMessage::encodeMessage()
 {
     std::string message_composed;
-    message_composed += intts(body_length, 4);          // Body length
+    message_composed += intts(length, 4);          // Body length
     message_composed += message_type;                   // Message type
     message_composed += intts(receivers.size(), 3);     // Number of receivers
     message_composed += sender;
@@ -103,7 +103,12 @@ bool ChatMessage::decodeBody(std::vector<char> _body)
     if(temp_message_type == MessageType::system || temp_message_type != MessageType::system_broadcast && temp_sender != "") return false;    // sender must be empty if message is system message
 
     if(temp_receivers.size() != temp_recv_num) return false;  // this means that broadcast message must have recv_num of 0
-
+    
+    message_type = static_cast<MessageType>(temp_message_type);
+    recv_num = temp_recv_num;
+    sender = temp_sender;
+    receivers = temp_receivers;
+    body = temp_body;
 
     return true;
 }

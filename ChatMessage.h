@@ -24,7 +24,6 @@ public:
 	bool decodeHeader(std::vector<char> _header);
 	bool decodeBody(std::vector<char> _body);
 private:
-	int body_length;
 	int recv_num;
 	std::string sender;
 	std::vector <std::string> receivers;

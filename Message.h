@@ -13,6 +13,6 @@ public:
 	int getLength();
 	
 	virtual std::vector <char> encodeMessage() = 0;
-private:
+protected:
 	int length;
 };

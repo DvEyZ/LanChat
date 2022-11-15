@@ -15,7 +15,6 @@ public:
 	std::string getUsername();
 	std::string getPassword();
 private:
-	int length;
 	std::string username;
 	std::string password;
 };

@@ -15,8 +15,7 @@ public:
 		fail_generic = 9
 	};
 	IdentifyResponseMessage(Status status);
-	IdentifyRespons
-	eMessage();
+	IdentifyResponseMessage();
 	
 	bool decodeBody(std::vector<char> _body);
 	std::vector<char> encodeMessage();
