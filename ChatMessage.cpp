@@ -18,11 +18,6 @@ ChatMessage::ChatMessage()
 
 ChatMessage::~ChatMessage() {}
 
-int ChatMessage::getBodyLength()
-{
-    return body_length;
-}
-
 ChatMessage::MessageType ChatMessage::getMessageType()
 {
     return message_type;
@@ -69,47 +64,46 @@ std::vector<char> ChatMessage::encodeMessage()
     return std::vector<char>(message_composed.begin(), message_composed.end());
 }
 
-bool ChatMessage::decodeHeader(std::vector<char> header)    // true on success, false on fail
-{
-    if(header.size() != 8)   return false;
-    if(std::stoi(std::string(header.begin(), header.begin() + 4)) == 0)
-    {
-        return false;
-    }  
-    if(static_cast<MessageType>(header.at(5)) != MessageType::unicast && static_cast<MessageType>(header.at(5)) != MessageType::broadcast && static_cast<MessageType>(header.at(5)) != MessageType::system && static_cast<MessageType>(header.at(5)) != MessageType::system_broadcast)    
-    {
-        return false;
-    }
-    if(std::stoi(std::string(header.begin() + 6, header.end())) == 0 && static_cast<MessageType>(header.at(5)) != MessageType::broadcast)
-    {
-        return false;
-    }
-    body_length = std::stoi(std::string(header.begin(), header.begin() + 4));
-    message_type = static_cast<MessageType>(header.at(5));
-    recv_num = std::stoi(std::string(header.begin() + 6, header.end()));
-    return true;
-}
-
 bool ChatMessage::decodeBody(std::vector<char> _body)
 {
     std::string temp(_body.begin(), _body.end());
-    sender = temp.substr(0, temp.find('\0'));
-    temp.erase(0, temp.find('\0') + 1);
-
-    for(int i = 0; i < recv_num; i++)
+    int temp_message_type;
+    int temp_recv_num;
+    std::string temp_sender;
+    std::vector <std::string> temp_receivers;
+    std::string temp_body;
+    try
     {
-        receivers.push_back(temp.substr(0, temp.find('\0')));
+        if(temp.at(0) != MessageType::unicast && temp.at(0) != MessageType::broadcast && temp.at(0) != MessageType::system && temp.at(0) != MessageType::system_broadcast)
+            return false;
+        temp_message_type = static_cast<MessageType>(temp.at(0));
+        temp.erase(0);
+
+        temp_recv_num = stoi(temp.substr(0,3));
+        temp.erase(0,3);
+
+        temp_sender = temp.substr(0, temp.find('\0'));
+        temp.erase(0, temp.find('\0') + 1);
+
+        for(int i = 0; i < recv_num; i++)
+        {
+            temp_receivers.push_back(temp.substr(0, temp.find('\0')));
+            temp.erase(0, temp.find('\0') + 1);
+        }
+
+        temp_body = temp.substr(0, temp.find('\0'));
         temp.erase(0, temp.find('\0') + 1);
     }
+    catch(std::out_of_range)
+    {
+        return false;
+    }
 
-    body = temp.substr(0, temp.find('\0'));
-    temp.erase(0, temp.find('\0') + 1);
+    if(temp_message_type != MessageType::system && temp_message_type != MessageType::system_broadcast && temp_sender == "") return false;    // sender can't be empty unless message is system message
+    if(temp_message_type == MessageType::system || temp_message_type != MessageType::system_broadcast && temp_sender != "") return false;    // sender must be empty if message is system message
 
-    if(message_type != MessageType::system && message_type != MessageType::system_broadcast && sender == "") return false;    // sender can't be empty unless message is system message
-    if(message_type == MessageType::system || message_type != MessageType::system_broadcast && sender != "") return false;    // sender must be empty if message is system message
+    if(temp_receivers.size() != temp_recv_num) return false;  // this means that broadcast message must have recv_num of 0
 
-    if(receivers.size() != recv_num) return false;  // this means that broadcast message must have recv_num of 0
 
-    body = temp;
     return true;
 }

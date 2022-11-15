@@ -2,11 +2,9 @@
 
 #pragma once
 
-#include <string>
-#include <vector>
-#include "helper_functions.h"
+#include "Message.h"
 
-class ChatMessage
+class ChatMessage : public Message
 {
 public:
 	enum MessageType {
@@ -17,8 +15,6 @@ public:
 	};
 	ChatMessage(MessageType _type, std::string _sender, std::vector <std::string> _receivers, std::string _body);
 	ChatMessage();
-	~ChatMessage();
-	int getBodyLength();
 	MessageType getMessageType();
 	int getRecvNum();
 	std::vector <std::string> getReceivers();

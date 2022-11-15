@@ -3,6 +3,7 @@
 #pragma once
 
 #include "../ChatMessage.h"
+#include "../defines.h"
 #include "../IdentifyMessage.h"
 #include "../IdentifyResponseMessage.h"
 #include "Chat.h"
@@ -41,14 +42,14 @@ private:
     std::string user; 
 
     boost::system::error_code error_status;
+
+    IdentifyMessage identifyMessageTemp;
+    IdentifyResponseMessage identifyResponseMessageTemp;
+
     ChatMessage recentMsgRead;
-    
     std::vector <char> recentReadBuffer;
 
     std::queue <ChatMessage> recentMsgWrite;
-
-    IdentifyMessage* identifyMessageTemp;
-    IdentifyResponseMessage* identifyResponseMessageTemp;
 
     Chat* chat;
     Server* server;

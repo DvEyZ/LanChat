@@ -2,17 +2,16 @@
 
 #pragma once
 
-#include "helper_functions.h"
+#include "Message.h"
 
-class IdentifyMessage
+class IdentifyMessage : public Message
 {
 public:
 	IdentifyMessage();
 	IdentifyMessage(std::string _username, std::string _password);
-	bool decodeHeader(std::vector<char> _header);
+
 	bool decodeBody(std::vector<char> _body);
 	std::vector<char> encodeMessage();
-	int getLength();
 	std::string getUsername();
 	std::string getPassword();
 private:
