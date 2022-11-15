@@ -1,5 +1,4 @@
-//TODO:
-//Implement decodeHeader(), decodeBody(), encodeMessage(), getLength(), getUsername(), getPassword()
+//FINISHED
 
 #include "IdentifyMessage.h"
 
@@ -8,6 +7,9 @@ IdentifyMessage::IdentifyMessage(std::string _username, std::string _password)
 {
 	length = username.length() + password.length() + 2;
 }
+
+IdentifyMessage::IdentifyMessage()
+{}
 
 std::string IdentifyMessage::getUsername()
 {
@@ -42,4 +44,13 @@ bool IdentifyMessage::decodeBody(std::vector<char> _body)
 	password = temp_password;
 
 	return true;
+}
+
+std::vector <char> IdentifyMessage::encodeMessage()
+{
+	std::string temp;
+	temp += intts(length, MESSAGE_HEADER_LENGTH);
+	temp += username + "\0";
+	temp += password + "\0";
+	return std::vector <char> (temp.begin(), temp.end());
 }

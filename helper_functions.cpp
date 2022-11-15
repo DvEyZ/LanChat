@@ -2,7 +2,7 @@
 
 #include "helper_functions.h"
 
-std::string intts(int number, int digits = 0)
+std::string intts(int number, int digits)
 {
     if (digits == 0) return std::to_string(number);
     else

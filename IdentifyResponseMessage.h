@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Message.h"
 #include "helper_functions.h"
 
 class IdentifyResponseMessage : public Message
@@ -14,13 +15,13 @@ public:
 		conn_failed_ip_banned = 5,
 		fail_generic = 9
 	};
-	IdentifyResponseMessage(Status status);
+	IdentifyResponseMessage(Status _status);
 	IdentifyResponseMessage();
 	
 	bool decodeBody(std::vector<char> _body);
 	std::vector<char> encodeMessage();
 
-	int getStatus();
+	Status getStatus();
 private:
 	Status status;
 };

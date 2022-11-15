@@ -16,7 +16,6 @@ ChatMessage::ChatMessage(MessageType _type, std::string _sender, std::vector <st
 ChatMessage::ChatMessage()
 {}
 
-ChatMessage::~ChatMessage() {}
 
 ChatMessage::MessageType ChatMessage::getMessageType()
 {
@@ -50,7 +49,7 @@ LLLLtnnn rr0rr0rr0mmmmm
 std::vector<char> ChatMessage::encodeMessage()
 {
     std::string message_composed;
-    message_composed += intts(length, 4);          // Body length
+    message_composed += intts(length, MESSAGE_HEADER_LENGTH);          // Body length
     message_composed += message_type;                   // Message type
     message_composed += intts(receivers.size(), 3);     // Number of receivers
     message_composed += sender;

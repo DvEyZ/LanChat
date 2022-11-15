@@ -23,7 +23,7 @@ public:
 	std::vector<char> encodeMessage();
 	bool decodeHeader(std::vector<char> _header);
 	bool decodeBody(std::vector<char> _body);
-private:
+protected:
 	int recv_num;
 	std::string sender;
 	std::vector <std::string> receivers;

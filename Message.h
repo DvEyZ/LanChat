@@ -1,6 +1,7 @@
 #pragma once
 
 #include "helper_functions.cpp"
+#include "defines.h"
 #include <string>
 #include <vector>
 
