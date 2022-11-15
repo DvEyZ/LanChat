@@ -8,6 +8,9 @@
 #include "Auth.h"
 #include "Logger.h"
 
+class Connection;
+class Auth;
+
 class Chat
 {
 public:

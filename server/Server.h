@@ -4,6 +4,9 @@
 
 #include "Connection.h"
 
+class Connection;
+class Chat;
+
 class Server
 {
 public:

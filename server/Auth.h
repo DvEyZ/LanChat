@@ -7,6 +7,9 @@
 #include <map>
 #include <optional>
 
+class Connection;
+class Chat;
+
 class Auth
 {
 public:

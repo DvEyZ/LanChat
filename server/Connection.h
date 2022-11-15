@@ -9,9 +9,12 @@
 #include "Chat.h"
 #include "Server.h"
 #include <queue>
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <boost/enable_shared_from_this.hpp>
 #include <boost/shared_ptr.hpp>
+
+class Chat;
+class Server;
 
 class Connection : public boost::enable_shared_from_this<Connection>
 {
@@ -23,7 +26,7 @@ public:
     void postMessage(ChatMessage message);
     std::string getUser();
 private:
-    bool identify();
+    void identify();
     void identificationFailure(IdentifyResponseMessage::Status status);
     void readIdentificationHeader();
     void onReadIdentificationHeader(const boost::system::error_code& error, std::size_t bytes_transferred);

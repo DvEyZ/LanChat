@@ -40,7 +40,7 @@ void Connection::postMessage(ChatMessage message)
     }
 }
 
-bool Connection::identify()
+void Connection::identify()
 {
     IdentifyResponseMessage::Status status;
     status = chat->auth->authenticate(identifyMessageTemp);
