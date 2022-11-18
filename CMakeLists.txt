@@ -4,7 +4,7 @@ set(CMAKE_CXX_STANDARD 20)
 project(LanChat)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	include_directories("C:\\Boost\\boost_1_80_0\\boost_1_80_0")
+	include_directories("C:\\Boost\\boost_1_80_0\\boost_1_80_0" "C:\\Users\\kwiregowo5\\Desktop\\SZYMON\\projekty\\C++\\include")
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	# include_directories(linux includes)
 endif()
