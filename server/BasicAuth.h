@@ -17,6 +17,7 @@ public:
 private:
 	Chat* chat;
 	void useDefaultConfig();
+	void getUserList();
 //rules for Auth::authenticate()
 	bool require_account;
 	std::optional <bool> require_password;

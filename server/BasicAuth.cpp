@@ -1,12 +1,13 @@
 //TODO:
-//Implement Auth()
+//Implement BasicAuth()
 
 #include "BasicAuth.h"
 
 BasicAuth::BasicAuth()
 {
-	// get user list
-	std::ifstream config_file(CONFIG_FILE_SERVER);
+	useDefaultConfig();
+
+	std::ifstream config_file(AUTH_CONFIG_FILE_SERVER);
 	nlohmann::json config;
 	if(!config_file.good())
 	{
@@ -22,7 +23,31 @@ BasicAuth::BasicAuth()
 		useDefaultConfig();
 		return;
 	}
-	require_account = config["require_account"].get<bool>();
+
+	try	//required parameters
+	{
+		require_account = config["auth"]["requireAccount"].get<bool>();
+	}
+	catch(nlohmann::json::exception)
+	{
+		useDefaultConfig();
+		return;
+	}
+	
+	try {	require_password = config["auth"]["requirePassword"].get<bool>();							} catch(nlohmann::json::exception) {}
+	
+	try {	max_connections_from_ip = config["connectionPolicy"]["maxConnectionsFromIp"].get<int>();	} catch(nlohmann::json::exception) {}
+	try {	max_connections_for_user = config["connectionPolicy"]["maxConnectionsForUser"].get<int>();	} catch(nlohmann::json::exception) {}
+	try {	banned_ips = config["connectionPolicy"]["bannedIps"].get<std::set<std::string>>();			} catch(nlohmann::json::exception) {}
+
+	try {	anyone_may_broadcast = config["messagePolicy"]["anyoneMayBroadcast"].get<bool>();			} catch(nlohmann::json::exception) {}
+	try {	banned_words = config["messagePolicy"]["bannedWords"].get<std::set<std::string>>();			} catch(nlohmann::json::exception) {}
+	try {	broadcast_users = config["messagePolicy"]["broadcastUsers"].get<std::set<std::string>>();	} catch(nlohmann::json::exception) {}
+
+	if(require_account)
+	{
+		getUserList();
+	}
 }
 
 void BasicAuth::useDefaultConfig()
@@ -32,6 +57,23 @@ void BasicAuth::useDefaultConfig()
 	anyone_may_broadcast = true;
 	banned_words = {};
 	broadcast_users = {};
+}
+
+void BasicAuth::getUserList()
+{
+	std::ifstream user_file(USER_LIST_FILE);
+	nlohmann::json users;
+	if(!user_file.good())
+	{
+		useDefaultConfig();
+		return;
+	}
+	try 
+	{
+		user_list = users["users"].get<std::map<std::string, std::string>>();
+	}
+	catch(nlohmann::json::exception)
+	{}
 }
 
 IdentifyResponseMessage::Status BasicAuth::authenticate(IdentifyMessage message)
@@ -68,15 +110,15 @@ IdentifyResponseMessage::Status BasicAuth::permitConnection(boost::shared_ptr <C
 
 bool BasicAuth::permitMessage(ChatMessage message)
 {
-	if(containsBannedWords(message.getMsgBody()))	return false;
-	if((message.getMessageType() == ChatMessage::MessageType::broadcast) && (!isAllowedToBroadcast(message.getSender())))	return false;
+	if(containsBannedWords(message.getMsgBody())) return false;
+	if((message.getMessageType() == ChatMessage::MessageType::broadcast) && (!isAllowedToBroadcast(message.getSender()))) return false;
 
 	return true;
 }
 
 bool BasicAuth::checkPassword(std::string user, std::string password)
 {
-	if(!require_password)	return true;
+	if(!require_password) return true;
 	if(user_list[user] == password)	return true;
 	return false;
 }
@@ -92,7 +134,7 @@ bool BasicAuth::containsBannedWords(std::string message)
 
 bool BasicAuth::isAllowedToBroadcast(std::string user)
 {
-	if(anyone_may_broadcast)	return true;
+	if(anyone_may_broadcast) return true;
 	if(broadcast_users.contains(user)) return true;
 	else return false;
 }
