@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\Boost\\boost_1_80_0\\boost_1_80_0",
-                "C:\\Users\\kwiregowo5\\Desktop\\SZYMON\\projekty\\C++\\include"
+                "C:\\Users\\kwiregowo5\\Desktop\\SZYMON\\projekty\\C++\\include",
+                "C:\\Users\\kwiregowo5\\Desktop\\SZYMON\\projekty\\C++\\LanChat\\src\\build\\_deps\\googletest-src\\googletest\\include"
             ],
             "defines": [
                 "_DEBUG",

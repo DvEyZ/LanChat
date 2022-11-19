@@ -21,7 +21,7 @@ public:
 	std::string getSender();
 	std::string getMsgBody();
 	std::vector<char> encodeMessage();
-	bool decodeHeader(std::vector<char> _header);
+	//bool decodeHeader(std::vector<char> _header);
 	bool decodeBody(std::vector<char> _body);
 protected:
 	int recv_num;
