@@ -12,3 +12,10 @@ std::string intts(int number, int digits = 0)
         return temp.str();
     }
 }
+
+bool string_contains(std::string text, std::string find)
+{
+    if(text.substr(text.find(find), find.length()) == find)
+        return true;
+    else return false;
+}

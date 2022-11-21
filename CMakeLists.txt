@@ -23,7 +23,7 @@ if(MSVC)
 endif()
 
 add_library(LibLanChatGeneric Message.cpp ChatMessage.cpp IdentifyMessage.cpp IdentifyResponseMessage.cpp helper_functions.cpp)
-add_library(LibLanChatServer server/Auth.cpp server/Connection.cpp server/Server.cpp)
+add_library(LibLanChatServer "server/Auth.cpp" "server/Connection.cpp" "server/Server.cpp")
 target_link_libraries(LibLanChatServer LibLanChatGeneric)
 
 add_executable(LanChatServer server/BasicAuth.cpp server/BasicChat.cpp server/StdOstreamLogger.cpp server/FileLogger.cpp server/main.cpp)

@@ -30,7 +30,7 @@ void BasicChat::leave(boost::shared_ptr <Connection> connection)
 void BasicChat::messageIncoming(ChatMessage message)
 {
 	// system messages don't need permission from Auth
-	if(!message.getMessageType() == ChatMessage::MessageType::system && !message.getMessageType() == ChatMessage::MessageType::system_broadcast)
+	if(!(message.getMessageType() == ChatMessage::MessageType::system) && !(message.getMessageType() == ChatMessage::MessageType::system_broadcast))
 	{
 		if(!auth->permitMessage(message))
 		{

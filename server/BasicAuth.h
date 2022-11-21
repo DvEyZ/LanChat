@@ -14,7 +14,7 @@ public:
 	virtual IdentifyResponseMessage::Status authenticate(IdentifyMessage identification);					//check credentials
 	virtual IdentifyResponseMessage::Status permitConnection(boost::shared_ptr <Connection> connection);	//check if connection is permitted
 	virtual bool permitMessage(ChatMessage message);							//check if message is permitted
-private:
+protected:
 	Chat* chat;
 	void useDefaultConfig();
 	void getUserList();
