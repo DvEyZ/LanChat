@@ -158,8 +158,7 @@ void Connection::onReadHeader(const boost::system::error_code& error, std::size_
         }
         else
         {
-            for(auto i : chat->loggers)
-                i->log("Bad message header from" + sock.remote_endpoint().address().to_string());
+            chat->log("Bad message header from" + sock.remote_endpoint().address().to_string());
             readHeader();
         }
     }
@@ -180,8 +179,7 @@ void Connection::onReadBody(const boost::system::error_code& error, std::size_t 
         }
         else
         {
-            for(auto i : chat->loggers)
-                i->log("Bad message body from" + sock.remote_endpoint().address().to_string());
+            chat->log("Bad message body from" + sock.remote_endpoint().address().to_string());
         }
         recentReadBuffer = std::vector<char>(8, '\0');
         readHeader();
@@ -211,7 +209,6 @@ void Connection::onWrite(const boost::system::error_code& error, std::size_t byt
 void Connection::onError(const boost::system::error_code& error)
 {
     error_status = error;
-    for(auto i : chat->loggers)
-        i->log(error.message());
+    chat->log(error.message());
     chat->leave(shared_from_this());
 }

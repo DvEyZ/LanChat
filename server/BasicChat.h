@@ -15,6 +15,7 @@ public:
 	void leave(boost::shared_ptr <Connection> connection);
 	std::set <boost::shared_ptr <Connection>> getUserConnections(std::string username);
 	std::set <boost::shared_ptr <Connection>> getIpConnections(std::string ip);
+	void log(std::string str);
 	//	Auth* auth;
 private:
 	std::set <boost::shared_ptr <Connection>> connected;

@@ -24,7 +24,7 @@ BasicAuth::BasicAuth()
 		return;
 	}
 
-	try	//required parameters
+	try	//required values
 	{
 		require_account = config["auth"]["requireAccount"].get<bool>();
 	}
@@ -34,6 +34,7 @@ BasicAuth::BasicAuth()
 		return;
 	}
 	
+	//optional values
 	try {	require_password = config["auth"]["requirePassword"].get<bool>();							} catch(nlohmann::json::exception) {}
 	
 	try {	max_connections_from_ip = config["connectionPolicy"]["maxConnectionsFromIp"].get<int>();	} catch(nlohmann::json::exception) {}

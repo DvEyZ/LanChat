@@ -20,5 +20,7 @@ public:
 	virtual std::set <boost::shared_ptr <Connection>> getUserConnections(std::string username) = 0;
 	virtual std::set <boost::shared_ptr <Connection>> getIpConnections(std::string ip) = 0;
 	Auth* auth;
+	virtual void log(std::string message);
+protected:
 	std::vector <Logger*> loggers;
 };
