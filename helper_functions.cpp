@@ -15,7 +15,7 @@ std::string intts(int number, int digits = 0)
 
 bool string_contains(std::string text, std::string find)
 {
-    if(text.substr(text.find(find), find.length()) == find)
+    if(text.find(find) != std::string::npos)
         return true;
     else return false;
 }
