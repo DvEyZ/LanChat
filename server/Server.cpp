@@ -5,7 +5,7 @@
 Server::Server(boost::asio::io_context& ioc, int port, Chat* _chat)
     :_io_context(ioc), _acceptor(ioc, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), chat(_chat)
 {
-    awaiting_for_identification = {};
+    awaiting_for_identification = std::set<boost::shared_ptr<Connection>>();
     chat->log("Server runs on host " + _acceptor.local_endpoint().address().to_string() + " on port " + std::to_string(port) + ".");
     start();
 }

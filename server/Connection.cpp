@@ -25,7 +25,7 @@ std::string Connection::getUser()
 
 void Connection::run()
 {
-    server->awaiting_for_identification.insert(shared_from_this());
+    server->awaiting_for_identification.emplace(shared_from_this());     //error
     recentReadBuffer = std::vector<char>(MESSAGE_HEADER_LENGTH,'\0');
     readIdentificationHeader();
 }

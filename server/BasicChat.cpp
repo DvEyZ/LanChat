@@ -4,7 +4,6 @@
 
 BasicChat::BasicChat(Auth* _auth, std::vector<Logger*> _loggers)
 {
-	connected = {};
 	auth = _auth;
 	loggers = _loggers;
 	auth->addToChat(this);

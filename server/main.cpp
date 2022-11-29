@@ -4,6 +4,8 @@
 #include "StdOstreamLogger.h"
 #include "FileLogger.h"
 
+boost::shared_ptr<Server> server;
+
 int main(int argc, char* argv[])
 {
     boost::asio::io_context iocontext;
@@ -13,7 +15,9 @@ int main(int argc, char* argv[])
 
     BasicChat chat(&auth, {&cout_logger, &file_logger});
 
-    Server server(iocontext, 12345, &chat);
+    server = boost::shared_ptr<Server>(new Server(iocontext, 12345, &chat));
     
     iocontext.run();
+
+    return 0;
 }
