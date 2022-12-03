@@ -1,6 +1,7 @@
 #include "Auth.h"
 
-void Auth::addToChat(Chat* chat)
+void Auth::addToChat(Chat* _chat)
 {
-	chat->auth = this;
+	_chat->auth = this;
+	chat = _chat;
 }

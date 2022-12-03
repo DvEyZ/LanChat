@@ -99,7 +99,10 @@ bool ChatMessage::decodeBody(std::vector<char> _body)
     {
         return false;
     }
-
+    catch(std::invalid_argument)
+    {
+        return false;
+    }
     if((temp_message_type != MessageType::system) && (temp_message_type != MessageType::system_broadcast) && (temp_sender == "")) return false;    // sender can't be empty unless message is system message
     if(((temp_message_type == MessageType::system) || (temp_message_type == MessageType::system_broadcast)) && (temp_sender != "")) return false;    // sender must be empty if message is system message
 
