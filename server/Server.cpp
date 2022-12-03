@@ -15,9 +15,8 @@ Server::~Server()
 
 void Server::start()
 {
-    boost::shared_ptr <Connection> connection = boost::shared_ptr<Connection>(new Connection(_io_context, chat));
+    boost::shared_ptr <Connection> connection = boost::shared_ptr<Connection>(new Connection(_io_context, chat, this));
     _acceptor.async_accept(connection->socket(), boost::bind(&Server::createConnection, this, connection, boost::asio::placeholders::error));
-    chat->log("Server started - awaiting for connections.");
 }
 
 void Server::createConnection(boost::shared_ptr <Connection> connection, const boost::system::error_code& error)

@@ -19,7 +19,7 @@ class Server;
 class Connection : public boost::enable_shared_from_this<Connection>
 {
 public:
-    Connection(boost::asio::io_context& io_context_, Chat* chat);
+    Connection(boost::asio::io_context& io_context_, Chat* chat, Server* server);
     ~Connection();
     boost::asio::ip::tcp::socket& socket();
     void run();             // main

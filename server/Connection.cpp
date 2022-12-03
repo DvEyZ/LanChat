@@ -2,8 +2,8 @@
 
 #include "Connection.h"
 
-Connection::Connection(boost::asio::io_context& _io_context, Chat* _chat)
-    :sock(_io_context), chat(_chat)
+Connection::Connection(boost::asio::io_context& _io_context, Chat* _chat, Server* _server)
+    :sock(_io_context), chat(_chat), server(_server)
 {
 
 }
