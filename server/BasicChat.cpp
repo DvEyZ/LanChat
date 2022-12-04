@@ -71,7 +71,7 @@ std::set <boost::shared_ptr <Session>> BasicChat::getIpConnections(std::string i
 	std::set <boost::shared_ptr <Session>> temp;
 	for(auto i : connected)
 	{
-		if(i->getConnection()->getSocket().remote_endpoint(error).address().to_string() == ip)
+		if(i->getConnection()->getRemoteIp() == ip)
 			temp.insert(i);
 	}
 	return temp;

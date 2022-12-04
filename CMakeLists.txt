@@ -23,7 +23,7 @@ if(MSVC)
 endif()
 
 add_library(LibLanChatGeneric Message.cpp ChatMessage.cpp IdentifyMessage.cpp IdentifyResponseMessage.cpp helper_functions.cpp)
-add_library(LibLanChatServer "server/Auth.cpp" "server/Connection.cpp" "server/Server.cpp" "server/Session.cpp")
+add_library(LibLanChatServer server/Auth.cpp server/SocketConnection.cpp server/Server.cpp server/Session.cpp server/ConnectionException.cpp)
 target_link_libraries(LibLanChatServer LibLanChatGeneric)
 
 add_executable(LanChatServer server/BasicAuth.cpp server/BasicChat.cpp server/StdOstreamLogger.cpp server/FileLogger.cpp server/LoggerProxy.cpp server/main.cpp)
@@ -38,6 +38,10 @@ target_link_libraries(ChatMessageTest LibLanChatGeneric)
 add_executable(IdentifyMessageTest tests/IdentifyMessageTest.cpp)
 target_link_libraries(IdentifyMessageTest GTest::gtest_main)
 target_link_libraries(IdentifyMessageTest LibLanChatGeneric)
+
+add_executable(SessionTest tests/SessionTest/SessionTest.cpp tests/SessionTest/TestConnection.cpp)
+target_link_libraries(SessionTest GTest::gtest_main)
+target_link_libraries(SessionTest LibLanChatGeneric)
 
 include(GoogleTest)
 

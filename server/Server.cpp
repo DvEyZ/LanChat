@@ -14,17 +14,17 @@ Server::~Server()
 
 void Server::start()
 {
-    boost::shared_ptr<Connection> connection(new Connection(_io_context));
-    _acceptor.async_accept(connection->getSocket(), boost::bind(&Server::createConnection, this, connection, boost::asio::placeholders::error));
+    boost::shared_ptr<Connection> connection(new SocketConnection(_io_context));
+    _acceptor.async_accept(boost::dynamic_pointer_cast<SocketConnection>(connection)->getSocket(), boost::bind(&Server::createConnection, this, connection, boost::asio::placeholders::error));
 }
 
 void Server::createConnection(boost::shared_ptr <Connection> connection, const boost::system::error_code& error)
 {
     if(!error)
     {
-        boost::shared_ptr <Session> session(new Session(connection, chat));
+        boost::shared_ptr <Session> session(new Session(connection, chat, new LoggerProxy("Session - " + connection->getRemoteIp() + ":", {&global_logger_proxy})));
         session->run();
-        logger->log("Connection from " + connection->getSocket().remote_endpoint().address().to_string() + " accepted.");
+        logger->log("Connection from " + connection->getRemoteIp() + " accepted.");
     }
     else
     {

@@ -7,9 +7,14 @@ LoggerProxy::LoggerProxy(std::string _module_name, std::vector <Logger*> _logger
 
 void LoggerProxy::log(std::string message)
 {
-	message = "[ " + module_name + " ]: " + message;
+	message = module_name + message;
 	for(auto i : loggers)
 	{
 		i->log(message);
 	}
+}
+
+void LoggerProxy::addLogger(Logger* logger)
+{
+	loggers.push_back(logger);
 }

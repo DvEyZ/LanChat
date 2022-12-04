@@ -98,12 +98,12 @@ IdentifyResponseMessage::Status BasicAuth::permitConnection(boost::shared_ptr <S
 	{}
 	try
 	{
-	if(chat->getIpConnections(session->getConnection()->getSocket().remote_endpoint(error).address().to_string()).size() >= max_connections_from_ip.value())	
+	if(chat->getIpConnections(session->getConnection()->getRemoteIp()).size() >= max_connections_from_ip.value())	
 		return IdentifyResponseMessage::Status::conn_failed_too_many_for_ip;
 	}
 	catch(std::bad_optional_access)
 	{}
-	if(banned_ips.contains(session->getConnection()->getSocket().remote_endpoint(error).address().to_string()))
+	if(banned_ips.contains(session->getConnection()->getRemoteIp()))
 		return IdentifyResponseMessage::Status::conn_failed_ip_banned;
 	if(error)	return IdentifyResponseMessage::Status::fail_generic;
 	return IdentifyResponseMessage::Status::ok;
