@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "BasicAuth.h"
 #include "BasicChat.h"
+#include "LoggerProxy.h"
 #include "StdOstreamLogger.h"
 #include "FileLogger.h"
 
@@ -11,10 +12,13 @@ int main(int argc, char* argv[])
     StdOstreamLogger cout_logger(&std::cout);
     FileLogger file_logger(LOG_FILE_SERVER);
 
-    BasicChat chat(&auth, {&cout_logger, &file_logger});
+    LoggerProxy chat_logger_proxy({&cout_logger, &file_logger});
+    LoggerProxy server_logger_proxy({&cout_logger, &file_logger});
+
+    BasicChat chat(auth, &chat_logger_proxy);
     auth.addToChat(&chat);
 
-    Server server(iocontext, 12345, &chat);
+    Server server(iocontext, 12345, &chat, &server_logger_proxy);
     
     iocontext.run();
 

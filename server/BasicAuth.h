@@ -12,7 +12,7 @@ class BasicAuth : public Auth
 public:
 	BasicAuth();
 	virtual IdentifyResponseMessage::Status authenticate(IdentifyMessage identification);					//check credentials
-	virtual IdentifyResponseMessage::Status permitConnection(boost::shared_ptr <Connection> connection);	//check if connection is permitted
+	virtual IdentifyResponseMessage::Status permitConnection(boost::shared_ptr <Session> session);	//check if connection is permitted
 	virtual bool permitMessage(ChatMessage message);							//check if message is permitted
 protected:
 	void useDefaultConfig();

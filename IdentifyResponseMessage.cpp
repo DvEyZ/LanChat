@@ -3,7 +3,7 @@
 IdentifyResponseMessage::IdentifyResponseMessage(Status _status)
 	:status(_status)
 {
-	length = MESSAGE_HEADER_LENGTH + 1;
+	length = 1;
 }
 
 IdentifyResponseMessage::IdentifyResponseMessage()

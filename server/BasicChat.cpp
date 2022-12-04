@@ -2,29 +2,23 @@
 
 #include "BasicChat.h"
 
-BasicChat::BasicChat(Auth* _auth, std::vector<Logger*> _loggers)
+BasicChat::BasicChat(Auth* _auth, Logger* _logger)
 {
 	auth = _auth;
-	loggers = _loggers;
+	logger = _logger;
 	auth->addToChat(this);
 }
 
-void BasicChat::log(std::string message)
+void BasicChat::join(boost::shared_ptr <Session> session)
 {
-	for(auto i : loggers)
-		i->log(message);
+	connected.insert(session);
+	logger->log(session->getUser() + " joined the chat.");
 }
 
-void BasicChat::join(boost::shared_ptr <Connection> connection)
+void BasicChat::leave(boost::shared_ptr <Session> session)
 {
-	connected.insert(connection);
-	log(connection->getUser() + " joined the chat.");
-}
-
-void BasicChat::leave(boost::shared_ptr <Connection> connection)
-{
-	log(connection->getUser() + " left the chat.");
-	connected.erase(connection);
+	logger->log(session->getUser() + " left the chat.");
+	connected.erase(session);
 }
 
 void BasicChat::messageIncoming(ChatMessage message)
@@ -60,9 +54,9 @@ void BasicChat::messageIncoming(ChatMessage message)
 	}
 }
 
-std::set <boost::shared_ptr <Connection>> BasicChat::getUserConnections(std::string username)
+std::set <boost::shared_ptr <Session>> BasicChat::getUserConnections(std::string username)
 {
-	std::set <boost::shared_ptr <Connection>> temp;
+	std::set <boost::shared_ptr <Session>> temp;
 	for(auto i : connected)
 	{
 		if(i->getUser() == username)
@@ -71,13 +65,13 @@ std::set <boost::shared_ptr <Connection>> BasicChat::getUserConnections(std::str
 	return temp;
 }
 
-std::set <boost::shared_ptr <Connection>> BasicChat::getIpConnections(std::string ip)
+std::set <boost::shared_ptr <Session>> BasicChat::getIpConnections(std::string ip)
 {
 	boost::system::error_code error;
-	std::set <boost::shared_ptr <Connection>> temp;
+	std::set <boost::shared_ptr <Session>> temp;
 	for(auto i : connected)
 	{
-		if(i->socket().remote_endpoint(error).address().to_string() == ip)
+		if(i->getConnection()->getSocket().remote_endpoint(error).address().to_string() == ip)
 			temp.insert(i);
 	}
 	return temp;

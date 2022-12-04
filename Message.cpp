@@ -14,6 +14,14 @@ bool Message::decodeHeader(std::vector <char> _header)
 	return true;
 }
 
+bool Message::decodeAll(std::vector <char> _all)
+{
+	bool dh = decodeHeader(std::vector(_all.begin(), _all.begin() + MESSAGE_HEADER_LENGTH));
+	bool db = decodeBody(std::vector(_all.begin() + MESSAGE_HEADER_LENGTH, _all.end()));
+
+	return dh && db;
+}
+
 int Message::getLength()
 {
 	return length;
