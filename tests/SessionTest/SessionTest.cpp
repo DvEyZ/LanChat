@@ -24,3 +24,8 @@ protected:
 	BasicAuth auth_dummy;
 	LoggerProxy logger_dummy;
 };
+
+TEST_F(SessionTest, IdentificationTest)
+{
+
+};
