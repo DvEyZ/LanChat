@@ -5,7 +5,7 @@
 #include "../defines.h"
 #include "Auth.h"
 
-#include <json.hpp>
+#include <nlohmann/json.hpp>
 
 class BasicAuth : public Auth
 {
