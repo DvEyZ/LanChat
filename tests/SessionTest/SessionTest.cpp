@@ -14,7 +14,6 @@ protected:
 		chat_dummy = BasicChat(&auth_dummy, &logger_dummy);
 		connection_dummy = TestConnection(&dummy_network);
 		session_dummy_1 = Session(boost::shared_ptr<Connection>(&connection_dummy), &chat_dummy, &logger_dummy);
-		session_dummy_2 = Session(boost::shared_ptr<Connection>(&connection_dummy), &chat_dummy, &logger_dummy);
 	}
 
 	DummyNetwork dummy_network;
