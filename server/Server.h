@@ -3,12 +3,12 @@
 #pragma once
 
 #include "Session.h"
-#include "LoggerProxy.h"
+#include "LoggerComposite.h"
 #include <boost/bind.hpp>
 
 class Connection;
 class Chat;
-extern LoggerProxy global_logger_proxy;
+extern LoggerComposite global_logger_composite;
 
 class Server
 {

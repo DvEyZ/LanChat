@@ -22,7 +22,7 @@ void Server::createConnection(std::shared_ptr <Connection> connection, const boo
 {
     if(!error)
     {
-        boost::shared_ptr <Session> session(new Session(connection, chat, new LoggerProxy("Session - " + connection->getRemoteIp() + ":", {&global_logger_proxy})));
+        boost::shared_ptr <Session> session(new Session(connection, chat, new LoggerComposite("Session - " + connection->getRemoteIp() + ":", {&global_logger_composite})));
         session->run();
         logger->log("Connection from " + connection->getRemoteIp() + " accepted.");
     }

@@ -1,19 +1,19 @@
 #include "Server.h"
 #include "BasicAuth.h"
 #include "BasicChat.h"
-#include "LoggerProxy.h"
+#include "LoggerComposite.h"
 #include "StdOstreamLogger.h"
 #include "FileLogger.h"
 
-LoggerProxy global_logger_proxy;
+LoggerComposite global_logger_composite;
 
 void loggerSetup()
 {
     auto cout_logger = new StdOstreamLogger(&std::cout);
     auto file_logger = new FileLogger(LOG_FILE_SERVER);
 
-    global_logger_proxy.addLogger(cout_logger);
-    global_logger_proxy.addLogger(file_logger);
+    global_logger_composite.addLogger(cout_logger);
+    global_logger_composite.addLogger(file_logger);
 }
 
 int main(int argc, char* argv[])
@@ -22,12 +22,12 @@ int main(int argc, char* argv[])
     boost::asio::io_context iocontext;
     BasicAuth auth;
 
-    LoggerProxy chat_logger_proxy("Chat:\t", {&global_logger_proxy});
-    LoggerProxy server_logger_proxy("Server:\t", {&global_logger_proxy});
+    LoggerComposite chat_logger_composite("Chat:\t", {&global_logger_composite});
+    LoggerComposite server_logger_composite("Server:\t", {&global_logger_composite});
 
-    BasicChat chat(&auth, &chat_logger_proxy);
+    BasicChat chat(&auth, &chat_logger_composite);
 
-    Server server(iocontext, 12345, &chat, &server_logger_proxy);
+    Server server(iocontext, 12345, &chat, &server_logger_composite);
     
     iocontext.run();
 
