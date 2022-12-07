@@ -11,6 +11,7 @@ BasicAuth::BasicAuth()
 	nlohmann::json config;
 	if(!config_file.good())
 	{
+		logger->log("Configuration file not found, using default settings.");
 		useDefaultConfig();
 		return;
 	}
@@ -20,19 +21,12 @@ BasicAuth::BasicAuth()
 	}
 	catch(nlohmann::json::exception)
 	{
+		logger->log("Something went wrong with configuration file.");
 		useDefaultConfig();
 		return;
 	}
 
-	try	//required values
-	{
-		require_account = config["auth"]["requireAccount"].get<bool>();
-	}
-	catch(nlohmann::json::exception)
-	{
-		useDefaultConfig();
-		return;
-	}
+	try	{	require_account = config["auth"]["requireAccount"].get<bool>();								} catch(nlohmann::json::exception) {}
 	
 	//optional values
 	try {	require_password = config["auth"]["requirePassword"].get<bool>();							} catch(nlohmann::json::exception) {}
@@ -66,6 +60,7 @@ void BasicAuth::getUserList()
 	nlohmann::json users;
 	if(!user_file.good())
 	{
+		logger->log("User file not found, using default settings.");
 		useDefaultConfig();
 		return;
 	}
@@ -74,7 +69,9 @@ void BasicAuth::getUserList()
 		user_list = users["users"].get<std::map<std::string, std::string>>();
 	}
 	catch(nlohmann::json::exception)
-	{}
+	{
+		logger->log("Something went wrong with user file, using default settings.");
+	}
 }
 
 IdentifyResponseMessage::Status BasicAuth::authenticate(IdentifyMessage message)

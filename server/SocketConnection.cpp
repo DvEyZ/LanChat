@@ -16,7 +16,7 @@ std::string SocketConnection::getRemoteIp()
 	return socket.remote_endpoint().address().to_string();
 }
 
-boost::asio::ip::tcp::socket& getSocket()
+boost::asio::ip::tcp::socket& SocketConnection::getSocket()
 {
 	return socket;
 }
@@ -136,10 +136,10 @@ void SocketConnection::onWrite(const boost::system::error_code& error, std::size
 
 void SocketConnection::onMalformed()
 {
-	
+	// TODO
 }
 
 void SocketConnection::onError(const boost::system::error_code& error)
 {
-	throw new ConnectionException(error);
+	throw new ConnectionException(error.message());
 }

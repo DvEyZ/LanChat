@@ -6,9 +6,9 @@
 class ConnectionException : public std::exception
 {
 public:
-	ConnectionException(const boost::system::error_code& _err);
+	ConnectionException(std::string _err);
 	~ConnectionException();
 	char* what();
 private:
-	boost::system::error_code err;
+	std::string err;
 };

@@ -39,7 +39,7 @@ add_executable(IdentifyMessageTest tests/IdentifyMessageTest.cpp)
 target_link_libraries(IdentifyMessageTest GTest::gtest_main)
 target_link_libraries(IdentifyMessageTest LibLanChatGeneric)
 
-add_executable(SessionTest tests/SessionTest/SessionTest.cpp tests/SessionTest/TestConnection.cpp tests/SessionTest/DummyNetwork.cpp)
+add_executable(SessionTest tests/SessionTest/SessionTest.cpp tests/SessionTest/TestConnection.cpp)
 target_link_libraries(SessionTest GTest::gtest_main)
 target_link_libraries(SessionTest LibLanChatGeneric)
 
