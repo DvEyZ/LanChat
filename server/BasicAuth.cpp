@@ -83,7 +83,7 @@ IdentifyResponseMessage::Status BasicAuth::authenticate(IdentifyMessage message)
 		return IdentifyResponseMessage::Status::auth_failed_bad_credentials;
 }
 
-IdentifyResponseMessage::Status BasicAuth::permitConnection(boost::shared_ptr <Session> session)
+IdentifyResponseMessage::Status BasicAuth::permitConnection(std::shared_ptr <Session> session)
 {
 	boost::system::error_code error;
 	try

@@ -9,13 +9,13 @@ BasicChat::BasicChat(Auth* _auth, Logger* _logger)
 	auth->addToChat(this);
 }
 
-void BasicChat::join(boost::shared_ptr <Session> session)
+void BasicChat::join(std::shared_ptr <Session> session)
 {
 	connected.insert(session);
 	logger->log(session->getUser() + " joined the chat.");
 }
 
-void BasicChat::leave(boost::shared_ptr <Session> session)
+void BasicChat::leave(std::shared_ptr <Session> session)
 {
 	logger->log(session->getUser() + " left the chat.");
 	connected.erase(session);
@@ -54,9 +54,9 @@ void BasicChat::messageIncoming(ChatMessage message)
 	}
 }
 
-std::set <boost::shared_ptr <Session>> BasicChat::getUserConnections(std::string username)
+std::set <std::shared_ptr <Session>> BasicChat::getUserConnections(std::string username)
 {
-	std::set <boost::shared_ptr <Session>> temp;
+	std::set <std::shared_ptr <Session>> temp;
 	for(auto i : connected)
 	{
 		if(i->getUser() == username)
@@ -65,10 +65,10 @@ std::set <boost::shared_ptr <Session>> BasicChat::getUserConnections(std::string
 	return temp;
 }
 
-std::set <boost::shared_ptr <Session>> BasicChat::getIpConnections(std::string ip)
+std::set <std::shared_ptr <Session>> BasicChat::getIpConnections(std::string ip)
 {
 	boost::system::error_code error;
-	std::set <boost::shared_ptr <Session>> temp;
+	std::set <std::shared_ptr <Session>> temp;
 	for(auto i : connected)
 	{
 		if(i->getConnection()->getRemoteIp() == ip)

@@ -2,7 +2,7 @@
 
 #include "Session.h"
 
-Session::Session(boost::shared_ptr<Connection> _connection, Chat* _chat, Logger* _logger)
+Session::Session(std::shared_ptr<Connection> _connection, Chat* _chat, Logger* _logger)
     :connection(_connection), chat(_chat), logger(_logger)
 {
 

@@ -14,11 +14,11 @@ Server::~Server()
 
 void Server::start()
 {
-    boost::shared_ptr<Connection> connection(new SocketConnection(_io_context));
-    _acceptor.async_accept(boost::dynamic_pointer_cast<SocketConnection>(connection)->getSocket(), boost::bind(&Server::createConnection, this, connection, boost::asio::placeholders::error));
+    std::shared_ptr<Connection> connection(new SocketConnection(_io_context));
+    _acceptor.async_accept(std::dynamic_pointer_cast<SocketConnection>(connection)->getSocket(), boost::bind(&Server::createConnection, this, connection, boost::asio::placeholders::error));
 }
 
-void Server::createConnection(boost::shared_ptr <Connection> connection, const boost::system::error_code& error)
+void Server::createConnection(std::shared_ptr <Connection> connection, const boost::system::error_code& error)
 {
     if(!error)
     {
@@ -28,7 +28,7 @@ void Server::createConnection(boost::shared_ptr <Connection> connection, const b
     }
     else
     {
-        logger->log("Error while accepting connection - " + error.to_string());
+        logger->log("Error while accepting connection - " + error.message());
 
     }
     start();

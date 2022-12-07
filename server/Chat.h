@@ -15,12 +15,12 @@ class Chat
 {
 public:
 	virtual void messageIncoming(ChatMessage message) = 0;
-	virtual void join(boost::shared_ptr <Session> session) = 0;
-	virtual void leave(boost::shared_ptr <Session> session) = 0;
-	virtual std::set <boost::shared_ptr <Session>> getUserConnections(std::string username) = 0;
-	virtual std::set <boost::shared_ptr <Session>> getIpConnections(std::string ip) = 0;
+	virtual void join(std::shared_ptr <Session> session) = 0;
+	virtual void leave(std::shared_ptr <Session> session) = 0;
+	virtual std::set <std::shared_ptr <Session>> getUserConnections(std::string username) = 0;
+	virtual std::set <std::shared_ptr <Session>> getIpConnections(std::string ip) = 0;
 	Auth* auth;
 protected:
 	Logger* logger;
-	std::set <boost::shared_ptr <Session>> connected;
+	std::set <std::shared_ptr <Session>> connected;
 };

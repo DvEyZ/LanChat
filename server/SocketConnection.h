@@ -3,10 +3,9 @@
 #include "Connection.h"
 #include "ConnectionException.h"
 #include <boost/asio.hpp>
-#include <boost/enable_shared_from_this.hpp>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
-class SocketConnection : public Connection, public boost::enable_shared_from_this<SocketConnection>
+class SocketConnection : public Connection, public std::enable_shared_from_this<SocketConnection>
 {
 public:
 	SocketConnection(boost::asio::io_context& io_context);

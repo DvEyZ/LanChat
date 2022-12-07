@@ -16,18 +16,18 @@
 class Chat;
 class Server;
 
-class Session : public boost::enable_shared_from_this<Session>
+class Session : public std::enable_shared_from_this<Session>
 {
 public:
-    static std::set <boost::shared_ptr <Session>> awaiting_for_identification;
+    static std::set <std::shared_ptr <Session>> awaiting_for_identification;
 
-    Session(boost::shared_ptr<Connection> connection, Chat* chat, Logger* logger);
+    Session(std::shared_ptr<Connection> connection, Chat* chat, Logger* logger);
     ~Session();
     void run();             // main
     void postMessage(ChatMessage message);
     
     std::string getUser();
-    boost::shared_ptr <Connection> getConnection();
+    std::shared_ptr <Connection> getConnection();
 private:
     void identify(IdentifyMessage id);
     void main();
@@ -48,7 +48,7 @@ private:
     std::queue <ChatMessage> recentMsgWrite;
 
     std::string user; 
-    boost::shared_ptr <Connection> connection;
+    std::shared_ptr <Connection> connection;
     Chat* chat;
 
     Logger* logger;

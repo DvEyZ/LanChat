@@ -12,7 +12,7 @@ protected:
 		logger_dummy = LoggerProxy("", {});
 		chat_dummy = BasicChat(&auth_dummy, &logger_dummy);
 		connection_dummy = TestConnection(&test_connection_sstream);
-		session_dummy = Session(boost::shared_ptr<Connection>(&connection_dummy), &chat_dummy, &logger_dummy);
+		session_dummy = Session(std::shared_ptr<Connection>(&connection_dummy), &chat_dummy, &logger_dummy);
 	}
 
 	TestConnection connection_dummy;

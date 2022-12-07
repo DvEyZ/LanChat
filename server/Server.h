@@ -17,7 +17,7 @@ public:
     ~Server();
 private:
     void start();
-    void createConnection(boost::shared_ptr <Connection> connection, const boost::system::error_code& error);
+    void createConnection(std::shared_ptr <Connection> connection, const boost::system::error_code& error);
     Chat* chat;
     boost::asio::io_context& _io_context;
     boost::asio::ip::tcp::acceptor _acceptor;
