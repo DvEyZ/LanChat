@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../defines.h"
 #include "Connection.h"
 #include "ConnectionException.h"
 #include <boost/asio.hpp>
@@ -24,6 +25,8 @@ private:
 	void onWrite(const boost::system::error_code& error, std::size_t bytes_transferred);
 	
 	void onMalformed();
+	int malformed_messages;
+
 	void onError(const boost::system::error_code& error);
 
 	std::function <void(std::vector <char>)> read_callback;

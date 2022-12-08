@@ -43,7 +43,7 @@ private:
     void onWriteMessage();
     
     void identificationFailure(IdentifyResponseMessage::Status status);
-    void onError(ConnectionException error);
+    void onError(ConnectionException& error);
     
     std::queue <ChatMessage> recentMsgWrite;
 

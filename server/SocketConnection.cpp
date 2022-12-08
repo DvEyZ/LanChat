@@ -1,7 +1,7 @@
 #include "SocketConnection.h"
 
 SocketConnection::SocketConnection(boost::asio::io_context& iocontext)
-	:socket(iocontext)
+	:socket(iocontext), malformed_messages(0)
 {
 
 }
@@ -56,7 +56,6 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 		catch(std::invalid_argument)
 		{
 			onMalformed();
-			readHeader();
 		}
 	}
 	else
@@ -88,11 +87,11 @@ void SocketConnection::onReadBody(std::vector <char> body_buffer, const boost::s
 		if(body_buffer.size() != std::stoi(std::string(read_buffer.begin(), read_buffer.end())))
 		{
 			onMalformed();
-			readHeader();
 		}
 		else
 		{
 			read_buffer.insert(read_buffer.end(), body_buffer.begin(), body_buffer.end());
+			malformed_messages = 0;
 			onRead();
 		}
 	}
@@ -136,7 +135,15 @@ void SocketConnection::onWrite(const boost::system::error_code& error, std::size
 
 void SocketConnection::onMalformed()
 {
-	// TODO
+	malformed_messages++;
+	if(malformed_messages < CONNECTION_MAX_MALFORMED_IN_A_ROW)
+	{
+		readHeader();
+	}
+	else
+	{
+		throw new ConnectionException("Too many malformed messages.");
+	}
 }
 
 void SocketConnection::onError(const boost::system::error_code& error)

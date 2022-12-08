@@ -33,7 +33,7 @@ void Session::readMessage()
     {
         connection->read(std::bind(&Session::onReadMessage, shared_from_this(), std::placeholders::_1));
     }
-    catch(ConnectionException e)
+    catch(ConnectionException& e)
     {
         onError(e);
     }
@@ -55,7 +55,7 @@ void Session::readIdentification()
     {
         connection->read(std::bind(&Session::onReadIdentification, shared_from_this(), std::placeholders::_1));
     }
-    catch(ConnectionException e)
+    catch(ConnectionException& e)
     {
         onError(e);
     }
@@ -93,7 +93,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
     {
         connection->write(resp.encodeMessage(), std::bind(&Session::onWriteIdentification, shared_from_this(), resp.getStatus()));
     }
-    catch(ConnectionException e)
+    catch(ConnectionException& e)
     {
         onError(e);
     }
@@ -129,7 +129,7 @@ void Session::writeMessage(ChatMessage message)
     {
         connection->write(message.encodeMessage(), std::bind(&Session::onWriteMessage, shared_from_this()));
     }
-    catch(ConnectionException e)
+    catch(ConnectionException& e)
     {
         onError(e);
     }
@@ -144,7 +144,7 @@ void Session::onWriteMessage()
     }
 }
 
-void Session::onError(ConnectionException error)
+void Session::onError(ConnectionException& error)
 {
     logger->log(error.what());
     chat->leave(shared_from_this());
