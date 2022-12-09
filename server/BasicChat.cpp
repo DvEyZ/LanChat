@@ -2,7 +2,7 @@
 
 #include "BasicChat.h"
 
-BasicChat::BasicChat(Auth* _auth, Logger* _logger)
+BasicChat::BasicChat(Auth* _auth, std::shared_ptr <Logger> _logger)
 {
 	auth = _auth;
 	logger = _logger;

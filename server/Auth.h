@@ -20,5 +20,5 @@ public:
 	void addToChat(Chat* chat);
 protected:
 	Chat* chat;
-	Logger* logger;
+	std::shared_ptr <Logger> logger;
 };

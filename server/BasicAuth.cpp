@@ -3,8 +3,10 @@
 
 #include "BasicAuth.h"
 
-BasicAuth::BasicAuth()
+BasicAuth::BasicAuth(std::shared_ptr <Logger> _logger)
 {
+	logger = _logger;
+
 	useDefaultConfig();
 
 	std::ifstream config_file(AUTH_CONFIG_FILE_SERVER);
@@ -85,6 +87,11 @@ IdentifyResponseMessage::Status BasicAuth::authenticate(IdentifyMessage message)
 
 IdentifyResponseMessage::Status BasicAuth::permitConnection(std::shared_ptr <Session> session)
 {
+	if(chat == nullptr)
+	{
+		logger->log("ERROR: chat is null.");
+		return IdentifyResponseMessage::Status::fail_generic;
+	}
 	boost::system::error_code error;
 	try
 	{

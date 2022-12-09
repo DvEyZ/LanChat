@@ -21,6 +21,6 @@ public:
 	virtual std::set <std::shared_ptr <Session>> getIpConnections(std::string ip) = 0;
 	Auth* auth;
 protected:
-	Logger* logger;
+	std::shared_ptr <Logger> logger;
 	std::set <std::shared_ptr <Session>> connected;
 };

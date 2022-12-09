@@ -21,7 +21,7 @@ class Session : public std::enable_shared_from_this<Session>
 public:
     static std::set <std::shared_ptr <Session>> awaiting_for_identification;
 
-    Session(std::shared_ptr<Connection> connection, Chat* chat, Logger* logger);
+    Session(std::shared_ptr<Connection> connection, Chat* chat, std::shared_ptr <Logger>  logger);
     ~Session();
     void run();             // main
     void postMessage(ChatMessage message);
@@ -51,5 +51,5 @@ private:
     std::shared_ptr <Connection> connection;
     Chat* chat;
 
-    Logger* logger;
+    std::shared_ptr <Logger>  logger;
 };

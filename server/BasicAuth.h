@@ -10,7 +10,7 @@
 class BasicAuth : public Auth
 {
 public:
-	BasicAuth();
+	BasicAuth(std::shared_ptr <Logger> logger);
 	virtual IdentifyResponseMessage::Status authenticate(IdentifyMessage identification);					//check credentials
 	virtual IdentifyResponseMessage::Status permitConnection(std::shared_ptr <Session> session);	//check if connection is permitted
 	virtual bool permitMessage(ChatMessage message);							//check if message is permitted

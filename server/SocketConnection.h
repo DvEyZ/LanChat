@@ -35,6 +35,4 @@ private:
 	boost::asio::ip::tcp::socket socket;
 
 	std::vector <char> read_buffer;
-	
-	Logger* logger;
 };

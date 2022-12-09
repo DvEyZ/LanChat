@@ -13,7 +13,7 @@ extern LoggerComposite global_logger_composite;
 class Server
 {
 public:
-    Server(boost::asio::io_context& ioc, int port, Chat* _chat, Logger* _logger);
+    Server(boost::asio::io_context& ioc, int port, Chat* _chat, std::shared_ptr <Logger>  _logger);
     ~Server();
 private:
     void start();
@@ -21,5 +21,5 @@ private:
     Chat* chat;
     boost::asio::io_context& _io_context;
     boost::asio::ip::tcp::acceptor _acceptor;
-    Logger* logger;
+    std::shared_ptr <Logger> logger;
 };
