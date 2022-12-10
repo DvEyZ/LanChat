@@ -94,6 +94,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
     try 
     {
         connection->write(resp.encodeMessage(), std::bind(&Session::onWriteIdentification, shared_from_this(), resp.getStatus()));
+        // error location, bind fails
     }
     catch(ConnectionException& e)
     {

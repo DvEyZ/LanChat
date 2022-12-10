@@ -106,7 +106,7 @@ void SocketConnection::onRead()
 	read_callback(read_buffer);
 }
 
-void SocketConnection::write(std::vector <char> text, std::function<void ()> callback)
+void SocketConnection::write(std::vector <char> text, std::function<void (void)> callback)
 {
 	std::vector <char> to_write = text;
 	boost::asio::async_write(
