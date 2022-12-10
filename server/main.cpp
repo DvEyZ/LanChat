@@ -5,7 +5,7 @@
 #include "StdOstreamLogger.h"
 #include "FileLogger.h"
 
-LoggerComposite global_logger_composite;
+LoggerComposite global_logger_composite("",{});
 
 void loggerSetup()
 {

@@ -2,6 +2,8 @@
 
 #include "Session.h"
 
+std::set <std::shared_ptr <Session>> Session::awaiting_for_identification;
+
 Session::Session(std::shared_ptr<Connection> _connection, Chat* _chat, std::shared_ptr <Logger>  _logger)
     :connection(_connection), chat(_chat), logger(_logger)
 {
@@ -148,4 +150,9 @@ void Session::onError(ConnectionException& error)
 {
     logger->log(error.what());
     chat->leave(shared_from_this());
+}
+
+std::shared_ptr <Connection> Session::getConnection()
+{
+    return connection;
 }

@@ -18,8 +18,10 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
 	# include_directories(linux includes)
 endif()
 
-if(MSVC)
-	add_link_options(/FORCE:MULTIPLE)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	# MSVC directives
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+	add_link_options(-pthread)
 endif()
 
 add_library(LibLanChatGeneric Message.cpp ChatMessage.cpp IdentifyMessage.cpp IdentifyResponseMessage.cpp helper_functions.cpp)

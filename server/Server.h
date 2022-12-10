@@ -8,6 +8,8 @@
 
 class Connection;
 class Chat;
+class Session;
+
 extern LoggerComposite global_logger_composite;
 
 class Server

@@ -10,6 +10,7 @@
 
 class Connection;
 class Chat;
+class Session;
 
 class Auth
 {
