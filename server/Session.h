@@ -39,6 +39,7 @@ private:
 
     void writeIdentification(IdentifyResponseMessage resp);
     void onWriteIdentification(IdentifyResponseMessage::Status status);     // Connection::onWrite callback
+    
     void writeMessage(ChatMessage message);
     void onWriteMessage();
     

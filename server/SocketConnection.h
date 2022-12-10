@@ -19,7 +19,7 @@ private:
 	void readHeader();
 	void onReadHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
 	void readBody();
-	void onReadBody(std::vector <char> body_buffer, const boost::system::error_code& error, std::size_t bytes_transferred);
+	void onReadBody(std::vector <char>& body_buffer, const boost::system::error_code& error, std::size_t bytes_transferred);
 	void onRead();
 	
 	void onWrite(const boost::system::error_code& error, std::size_t bytes_transferred);

@@ -68,7 +68,6 @@ void SocketConnection::readBody()
 {
 	int l = std::stoi(std::string(read_buffer.begin(), read_buffer.end()));
 	std::vector <char> temp_read_buffer(l, '\0');
-	std::vector <char> temp_read_buffer;
 	boost::asio::async_read(
 		socket, 
 		boost::asio::buffer(temp_read_buffer, l), 
@@ -82,7 +81,7 @@ void SocketConnection::readBody()
 	);
 }
 
-void SocketConnection::onReadBody(std::vector <char> body_buffer, const boost::system::error_code& error, std::size_t bytes_transferred)
+void SocketConnection::onReadBody(std::vector <char>& body_buffer, const boost::system::error_code& error, std::size_t bytes_transferred)
 {
 	if(!error)
 	{
