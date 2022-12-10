@@ -1,7 +1,7 @@
 #include "SocketConnection.h"
 
 SocketConnection::SocketConnection(boost::asio::io_context& iocontext)
-	:socket(iocontext), malformed_messages(0)
+	:socket(iocontext), malformed_messages(0), read_buffer()
 {
 
 }
@@ -29,10 +29,10 @@ void SocketConnection::read(std::function<void(std::vector <char>)> callback)
 
 void SocketConnection::readHeader()
 {
-	read_buffer = std::vector(MESSAGE_HEADER_LENGTH, '\0');
+	read_buffer = std::vector <char> (MESSAGE_HEADER_LENGTH, '\0');
 	boost::asio::async_read(
 		socket, 
-		boost::asio::buffer(read_buffer), 
+		boost::asio::buffer(read_buffer, MESSAGE_HEADER_LENGTH), 
 		std::bind(
 			&SocketConnection::onReadHeader, 
 			shared_from_this(), 
@@ -66,10 +66,12 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 
 void SocketConnection::readBody()
 {
-	std::vector <char> temp_read_buffer(std::stoi(std::string(read_buffer.begin(), read_buffer.end())), '\0');
+	int l = std::stoi(std::string(read_buffer.begin(), read_buffer.end()));
+	std::vector <char> temp_read_buffer(l, '\0');
+	std::vector <char> temp_read_buffer;
 	boost::asio::async_read(
 		socket, 
-		boost::asio::buffer(temp_read_buffer), 
+		boost::asio::buffer(temp_read_buffer, l), 
 		std::bind(
 			&SocketConnection::onReadBody, 
 			shared_from_this(), 
@@ -106,8 +108,9 @@ void SocketConnection::onRead()
 	read_callback(read_buffer);
 }
 
-void SocketConnection::write(std::vector <char> text, std::function<void (void)> callback)
+void SocketConnection::write(std::vector <char> text, std::function<void ()> callback)
 {
+	write_callback = callback;
 	std::vector <char> to_write = text;
 	boost::asio::async_write(
 		socket,
@@ -142,11 +145,11 @@ void SocketConnection::onMalformed()
 	}
 	else
 	{
-		throw new ConnectionException("Too many malformed messages.");
+		throw ConnectionException("Too many malformed messages.");
 	}
 }
 
 void SocketConnection::onError(const boost::system::error_code& error)
 {
-	throw new ConnectionException(error.message());
+	throw ConnectionException(error.message());
 }

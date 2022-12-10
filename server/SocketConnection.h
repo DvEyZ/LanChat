@@ -12,7 +12,7 @@ public:
 	SocketConnection(boost::asio::io_context& io_context);
 	~SocketConnection();
 	void read(std::function<void(std::vector <char>)> callback);
-	void write(std::vector <char> text, std::function<void (void)> callback);
+	void write(std::vector <char> text, std::function<void ()> callback);
 	std::string getRemoteIp();
 	boost::asio::ip::tcp::socket& getSocket();
 private:
