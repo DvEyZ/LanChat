@@ -33,7 +33,7 @@ void Session::readMessage()
 {
     try
     {
-        connection->read(std::bind(&Session::onReadMessage, shared_from_this(), std::placeholders::_1));
+        connection->read([this] (std::vector <char> message) {onReadMessage(message);});
     }
     catch(ConnectionException e)
     {
@@ -55,7 +55,7 @@ void Session::readIdentification()
 {
     try
     {
-        connection->read(std::bind(&Session::onReadIdentification, shared_from_this(), std::placeholders::_1));
+        connection->read([this] (std::vector <char> message) {onReadIdentification(message);});
     }
     catch(ConnectionException e)
     {
@@ -93,8 +93,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
 {
     try 
     {
-        connection->write(resp.encodeMessage(), std::bind(&Session::onWriteIdentification, shared_from_this(), resp.getStatus()));
-        // error location, bind fails
+        connection->write(resp.encodeMessage(), [this, &resp] () {onWriteIdentification(resp.getStatus());});
     }
     catch(ConnectionException e)
     {
@@ -130,7 +129,7 @@ void Session::writeMessage(ChatMessage message)
 {
     try
     {
-        connection->write(message.encodeMessage(), std::bind(&Session::onWriteMessage, shared_from_this()));
+        connection->write(message.encodeMessage(), [this] () {onWriteMessage();});
     }
     catch(ConnectionException e)
     {

@@ -32,12 +32,12 @@ void SocketConnection::readHeader()
 	read_buffer = std::vector <char> (MESSAGE_HEADER_LENGTH, '\0');
 	boost::asio::async_read(
 		socket, 
-		boost::asio::buffer(read_buffer, MESSAGE_HEADER_LENGTH), 
+		boost::asio::buffer(read_buffer), 
 		std::bind(
-			&SocketConnection::onReadHeader, 
-			shared_from_this(), 
-			std::placeholders::_1, 
-			std::placeholders::_2
+			[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
+			{
+				onReadHeader(error, bytes_transferred);
+			}
 		)
 	);
 }
@@ -70,14 +70,11 @@ void SocketConnection::readBody()
 	std::vector <char> temp_read_buffer(l, '\0');
 	boost::asio::async_read(
 		socket, 
-		boost::asio::buffer(temp_read_buffer, l), 
-		std::bind(
-			&SocketConnection::onReadBody, 
-			shared_from_this(), 
-			temp_read_buffer,
-			std::placeholders::_1, 
-			std::placeholders::_2
-		)
+		boost::asio::buffer(temp_read_buffer), 
+		[this, &temp_read_buffer] (const boost::system::error_code& error, std::size_t bytes_transferred)
+		{
+			onReadBody(temp_read_buffer, error, bytes_transferred);
+		}
 	);
 }
 
@@ -114,12 +111,10 @@ void SocketConnection::write(std::vector <char> text, std::function<void ()> cal
 	boost::asio::async_write(
 		socket,
 		boost::asio::buffer(to_write), 
-		std::bind(
-			&SocketConnection::onWrite, 
-			shared_from_this(), 
-			std::placeholders::_1, 
-			std::placeholders::_2
-		)
+		[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
+		{
+			onWrite(error, bytes_transferred);
+		}
 	);
 }
 
