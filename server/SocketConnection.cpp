@@ -100,7 +100,7 @@ void SocketConnection::onRead()
 {
 	std::vector <char> return_buffer;
 	return_buffer.insert(return_buffer.end(), header_buffer.begin(), header_buffer.end());
-	return_buffer.insert(return_buffer.end(), header_buffer.begin(), header_buffer.end());
+	return_buffer.insert(return_buffer.end(), body_buffer.begin(), body_buffer.end());
 	read_callback(return_buffer);
 }
 
