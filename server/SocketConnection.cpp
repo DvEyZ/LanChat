@@ -33,12 +33,10 @@ void SocketConnection::readHeader()
 	boost::asio::async_read(
 		socket, 
 		boost::asio::buffer(read_buffer), 
-		std::bind(
-			[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
-			{
+		[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
+		{
 				onReadHeader(error, bytes_transferred);
-			}
-		)
+		}
 	);
 }
 
