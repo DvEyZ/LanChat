@@ -78,9 +78,11 @@ void SocketConnection::readBody()
 
 void SocketConnection::onReadBody(std::vector <char>& body_buffer, const boost::system::error_code& error, std::size_t bytes_transferred)
 {
+	std::cout << "onReadBody() out";
+
 	if(!error)
 	{
-		if(body_buffer.size() != std::stoi(std::string(read_buffer.begin(), read_buffer.end())))
+		if(body_buffer.size() != std::stoi(std::string(read_buffer.begin(), read_buffer.end())))	// tu jest błąd
 		{
 			onMalformed();
 		}
@@ -88,6 +90,7 @@ void SocketConnection::onReadBody(std::vector <char>& body_buffer, const boost::
 		{
 			read_buffer.insert(read_buffer.end(), body_buffer.begin(), body_buffer.end());
 			malformed_messages = 0;
+			std::cout << "onReadBody() in";
 			onRead();
 		}
 	}
@@ -99,6 +102,7 @@ void SocketConnection::onReadBody(std::vector <char>& body_buffer, const boost::
 
 void SocketConnection::onRead()
 {
+	std::cout << "onRead()";
 	read_callback(read_buffer);
 }
 
