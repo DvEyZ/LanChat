@@ -4,7 +4,6 @@
 
 #include "Session.h"
 #include "LoggerComposite.h"
-#include <boost/bind.hpp>
 
 class Connection;
 class Chat;

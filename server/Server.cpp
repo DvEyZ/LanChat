@@ -15,7 +15,13 @@ Server::~Server()
 void Server::start()
 {
     std::shared_ptr<Connection> connection(new SocketConnection(_io_context));
-    _acceptor.async_accept(std::dynamic_pointer_cast<SocketConnection>(connection)->getSocket(), boost::bind(&Server::createConnection, this, connection, boost::asio::placeholders::error));
+    _acceptor.async_accept(
+        std::dynamic_pointer_cast<SocketConnection>(connection)->getSocket(),
+        [this, connection](const boost::system::error_code& error)
+        {
+            createConnection(connection, error);
+        }
+    );
 }
 
 void Server::createConnection(std::shared_ptr <Connection> connection, const boost::system::error_code& error)
