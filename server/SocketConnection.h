@@ -19,7 +19,7 @@ private:
 	void readHeader();
 	void onReadHeader(const boost::system::error_code& error, std::size_t bytes_transferred);
 	void readBody();
-	void onReadBody(std::vector <char> body_buffer, int l, const boost::system::error_code& error, std::size_t bytes_transferred);
+	void onReadBody(int l, const boost::system::error_code& error, std::size_t bytes_transferred);
 	void onRead();
 	
 	void onWrite(const boost::system::error_code& error, std::size_t bytes_transferred);
@@ -34,5 +34,6 @@ private:
 
 	boost::asio::ip::tcp::socket socket;
 
-	std::vector <char> read_buffer;
+	std::vector <char> header_buffer;
+	std::vector <char> body_buffer;
 };

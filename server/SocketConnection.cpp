@@ -1,7 +1,7 @@
 #include "SocketConnection.h"
 
 SocketConnection::SocketConnection(boost::asio::io_context& iocontext)
-	:socket(iocontext), malformed_messages(0), read_buffer()
+	:socket(iocontext), malformed_messages(0), header_buffer(), body_buffer()
 {
 
 }
@@ -29,10 +29,10 @@ void SocketConnection::read(std::function<void(std::vector <char>)> callback)
 
 void SocketConnection::readHeader()
 {
-	read_buffer = std::vector <char> (MESSAGE_HEADER_LENGTH, '\0');
+	header_buffer = std::vector <char> (MESSAGE_HEADER_LENGTH, '\0');
 	boost::asio::async_read(
 		socket, 
-		boost::asio::buffer(read_buffer), 
+		boost::asio::buffer(header_buffer), 
 		[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
 		{
 				onReadHeader(error, bytes_transferred);
@@ -47,7 +47,7 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 		int temp = 0;
 		try
 		{
-			std::string str(read_buffer.begin(), read_buffer.end());
+			std::string str(header_buffer.begin(), header_buffer.end());
 			temp = std::stoi(str);
 			readBody();
 		}
@@ -64,19 +64,19 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 
 void SocketConnection::readBody()
 {
-	int l = std::stoi(std::string(read_buffer.begin(), read_buffer.end()));
-	std::vector <char> temp_read_buffer(l, '\0');
+	int l = std::stoi(std::string(header_buffer.begin(), header_buffer.end()));
+	body_buffer = std::vector(l, '\0');
 	boost::asio::async_read(
 		socket, 
-		boost::asio::buffer(temp_read_buffer),
-		[this, temp_read_buffer, l] (const boost::system::error_code& error, std::size_t bytes_transferred)
+		boost::asio::buffer(body_buffer),
+		[this, l] (const boost::system::error_code& error, std::size_t bytes_transferred)
 		{
-			onReadBody(temp_read_buffer, l, error, bytes_transferred);
+			onReadBody(l, error, bytes_transferred);
 		}
 	);
 }
 
-void SocketConnection::onReadBody(std::vector <char> body_buffer, int l, const boost::system::error_code& error, std::size_t bytes_transferred)
+void SocketConnection::onReadBody(int l, const boost::system::error_code& error, std::size_t bytes_transferred)
 {
 	if(!error)
 	{
@@ -86,7 +86,6 @@ void SocketConnection::onReadBody(std::vector <char> body_buffer, int l, const b
 		} 
 		else
 		{
-			read_buffer.insert(read_buffer.end(), body_buffer.begin(), body_buffer.end());
 			malformed_messages = 0;
 			onRead();
 		}
@@ -99,7 +98,10 @@ void SocketConnection::onReadBody(std::vector <char> body_buffer, int l, const b
 
 void SocketConnection::onRead()
 {
-	read_callback(read_buffer);
+	std::vector <char> return_buffer;
+	return_buffer.insert(return_buffer.end(), header_buffer.begin(), header_buffer.end());
+	return_buffer.insert(return_buffer.end(), header_buffer.begin(), header_buffer.end());
+	read_callback(return_buffer);
 }
 
 void SocketConnection::write(std::vector <char> text, std::function<void ()> callback)
