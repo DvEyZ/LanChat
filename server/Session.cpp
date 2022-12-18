@@ -93,7 +93,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
 {
     try 
     {
-        connection->write(resp.encodeMessage(), [this, &resp] () {onWriteIdentification(resp.getStatus());});
+        connection->write(resp.encodeMessage(), [this, &resp] () {shared_from_this()->onWriteIdentification(resp.getStatus());});
         // tu
     }
     catch(ConnectionException e)
@@ -107,13 +107,9 @@ void Session::onWriteIdentification(IdentifyResponseMessage::Status status)
     if(status == IdentifyResponseMessage::Status::ok)
     {
         chat->join(shared_from_this());
-        Session::awaiting_for_identification.erase(shared_from_this());
-        main();
     }
-    else
-    {
-        Session::awaiting_for_identification.erase(shared_from_this());
-    }
+    Session::awaiting_for_identification.erase(shared_from_this());
+    main();
 }
 
 void Session::postMessage(ChatMessage message)
