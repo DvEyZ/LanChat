@@ -103,7 +103,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
 
 void Session::onWriteIdentification(IdentifyResponseMessage::Status status)
 {
-    if(status = IdentifyResponseMessage::Status::ok)
+    if(status == IdentifyResponseMessage::Status::ok)
     {
         chat->join(shared_from_this());
         Session::awaiting_for_identification.erase(shared_from_this());
