@@ -94,6 +94,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
     try 
     {
         connection->write(resp.encodeMessage(), [this, &resp] () {onWriteIdentification(resp.getStatus());});
+        // tu
     }
     catch(ConnectionException e)
     {
