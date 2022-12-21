@@ -45,7 +45,7 @@ private:
     
     void identificationFailure(IdentifyResponseMessage::Status status);
     
-    void onError(ConnectionException& error);
+    void onError(SocketConnectionError error);
     
     std::queue <ChatMessage> recentMsgWrite;
 

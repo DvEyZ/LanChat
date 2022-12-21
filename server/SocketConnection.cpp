@@ -58,7 +58,7 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 	}
 	else
 	{
-		onError(error);
+		onError(SocketConnectionError(SocketConnectionError::Type::asio_error, error.value()));
 	}
 }
 
@@ -92,7 +92,7 @@ void SocketConnection::onReadBody(int l, const boost::system::error_code& error,
 	}
 	else
 	{
-		onError(error);
+		onError(SocketConnectionError(SocketConnectionError::Type::asio_error, error.value()));
 	}
 }
 
@@ -126,7 +126,7 @@ void SocketConnection::onWrite(const boost::system::error_code& error, std::size
 	}
 	else
 	{
-		onError(error);
+		onError(SocketConnectionError(SocketConnectionError::Type::asio_error, error.value()));
 	}
 }
 
@@ -139,11 +139,20 @@ void SocketConnection::onMalformed()
 	}
 	else
 	{
-		throw ConnectionException("Too many malformed messages.");
+		onError(SocketConnectionError(SocketConnectionError::Type::program_error, SocketConnectionError::Code::malformed_headers));
 	}
 }
 
-void SocketConnection::onError(const boost::system::error_code& error)
+void SocketConnection::onError(SocketConnectionError error)
 {
-	throw ConnectionException(error.message());
+	if(error.getType() == SocketConnectionError::Type::asio_error)
+	{
+		// error handling		
+	}
+	else if(error.getType() == SocketConnectionError::Type::program_error)
+	{
+		// error handling
+	}
+
+	error_callback(error);	// pass to error callback if unhandled.
 }

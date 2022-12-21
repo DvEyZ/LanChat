@@ -2,7 +2,7 @@
 
 #include "../defines.h"
 #include "Connection.h"
-#include "ConnectionException.h"
+#include "SocketConnectionError.h"
 #include <boost/asio.hpp>
 #include <memory>
 
@@ -27,10 +27,11 @@ private:
 	void onMalformed();
 	int malformed_messages;
 
-	void onError(const boost::system::error_code& error);
+	void onError(SocketConnectionError error);
 
 	std::function <void(std::vector <char>)> read_callback;
 	std::function <void(void)> write_callback;
+	std::function <void(SocketConnectionError)> error_callback;
 
 	boost::asio::ip::tcp::socket socket;
 

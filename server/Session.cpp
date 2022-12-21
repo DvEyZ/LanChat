@@ -31,14 +31,7 @@ void Session::main()
 
 void Session::readMessage()
 {
-    try
-    {
         connection->read([this] (std::vector <char> message) {onReadMessage(message);});
-    }
-    catch(ConnectionException e)
-    {
-        onError(e);
-    }
 }
 
 void Session::onReadMessage(std::vector <char> message)
@@ -53,14 +46,7 @@ void Session::onReadMessage(std::vector <char> message)
 
 void Session::readIdentification()
 {
-    try
-    {
-        connection->read([this] (std::vector <char> message) {onReadIdentification(message);});
-    }
-    catch(ConnectionException e)
-    {
-        onError(e);
-    }
+    connection->read([this] (std::vector <char> message) {onReadIdentification(message);});
 }
 
 void Session::onReadIdentification(std::vector <char> message)
@@ -91,14 +77,7 @@ void Session::identify(IdentifyMessage id)
 
 void Session::writeIdentification(IdentifyResponseMessage resp)
 {
-    try 
-    {
-        connection->write(resp.encodeMessage(), [this, resp] () mutable { onWriteIdentification(resp.getStatus()); });
-    }
-    catch(ConnectionException e)
-    {
-        onError(e);
-    }
+    connection->write(resp.encodeMessage(), [this, resp] () mutable { onWriteIdentification(resp.getStatus()); });
 }
 
 void Session::onWriteIdentification(IdentifyResponseMessage::Status status)
@@ -123,14 +102,7 @@ void Session::postMessage(ChatMessage message)
 
 void Session::writeMessage(ChatMessage message)
 {
-    try
-    {
-        connection->write(message.encodeMessage(), [this] () {onWriteMessage();});
-    }
-    catch(ConnectionException e)
-    {
-        onError(e);
-    }
+    connection->write(message.encodeMessage(), [this] () {onWriteMessage();});
 }
 
 void Session::onWriteMessage()
@@ -142,7 +114,7 @@ void Session::onWriteMessage()
     }
 }
 
-void Session::onError(ConnectionException& error)
+void Session::onError(SocketConnectionError error)
 {
     logger->log(error.what());
     chat->leave(shared_from_this());
