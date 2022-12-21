@@ -93,8 +93,7 @@ void Session::writeIdentification(IdentifyResponseMessage resp)
 {
     try 
     {
-        connection->write(resp.encodeMessage(), [this, &resp] () {shared_from_this()->onWriteIdentification(resp.getStatus());});
-        // tu
+        connection->write(resp.encodeMessage(), [this, resp] () mutable { onWriteIdentification(resp.getStatus()); });
     }
     catch(ConnectionException e)
     {
