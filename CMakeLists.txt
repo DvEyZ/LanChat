@@ -25,10 +25,10 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 endif()
 
 add_library(LibLanChatGeneric Message.cpp ChatMessage.cpp IdentifyMessage.cpp IdentifyResponseMessage.cpp helper_functions.cpp)
-add_library(LibLanChatServer server/Auth.cpp server/SocketConnection.cpp server/Server.cpp server/Session.cpp server/SocketConnectionError.cpp)
+add_library(LibLanChatServer server/Auth.cpp server/Connection.cpp server/Server.cpp server/Session.cpp server/SocketConnectionError.cpp)
 target_link_libraries(LibLanChatServer LibLanChatGeneric)
 
-add_executable(LanChatServer server/BasicAuth.cpp server/BasicChat.cpp server/StdOstreamLogger.cpp server/FileLogger.cpp server/LoggerComposite.cpp server/main.cpp)
+add_executable(LanChatServer server/BasicAuth.cpp server/BasicChat.cpp server/SocketConnection.cpp server/StdOstreamLogger.cpp server/FileLogger.cpp server/LoggerComposite.cpp server/main.cpp)
 target_link_libraries(LanChatServer LibLanChatServer)
 
 enable_testing()
