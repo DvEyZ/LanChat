@@ -6,6 +6,8 @@
 #include <boost/asio.hpp>
 #include <memory>
 
+class SocketConnectionError;
+
 class SocketConnection : public Connection, public std::enable_shared_from_this<SocketConnection>
 {
 public:
