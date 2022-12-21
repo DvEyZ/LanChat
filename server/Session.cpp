@@ -7,7 +7,7 @@ std::set <std::shared_ptr <Session>> Session::awaiting_for_identification;
 Session::Session(std::shared_ptr<Connection> _connection, Chat* _chat, std::shared_ptr <Logger>  _logger)
     :connection(_connection), chat(_chat), logger(_logger)
 {
-
+    connection->setErrorCallback([this] (SocketConnectionError err) mutable { onError(err); });
 }
 
 Session::~Session()
