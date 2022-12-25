@@ -145,14 +145,5 @@ void SocketConnection::onMalformed()
 
 void SocketConnection::onError(SocketConnectionError error)
 {
-	if(error.getType() == SocketConnectionError::Type::asio_error)
-	{
-		// error handling		
-	}
-	else if(error.getType() == SocketConnectionError::Type::program_error)
-	{
-		// error handling
-	}
-
 	error_callback(error);	// pass to error callback if unhandled.
 }
