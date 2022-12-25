@@ -8,7 +8,7 @@ Session::Session(std::shared_ptr<Connection> _connection, Chat* _chat, std::shar
     :connection(_connection), chat(_chat), logger(_logger)
 {
     connection->setErrorCallback(
-        [this] (SocketConnectionError err) 
+        [this] (SocketConnectionError err) mutable
         {
             onError(err);
         }
@@ -36,7 +36,7 @@ void Session::main()
 
 void Session::readMessage()
 {
-        connection->read([this] (std::vector <char> message) {onReadMessage(message);});
+    connection->read([this] (std::vector <char> message) {onReadMessage(message);});
 }
 
 void Session::onReadMessage(std::vector <char> message)

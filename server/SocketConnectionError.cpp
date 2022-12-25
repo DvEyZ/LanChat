@@ -18,7 +18,7 @@ std::string SocketConnectionError::what()
 {
     if(type == SocketConnectionError::Type::asio_error)
     {
-        return boost::system::error_code(code, boost::asio::error::get_system_category()).message();
+        return boost::system::error_code(code, boost::asio::error::get_misc_category()).message();
     }
     else
     {

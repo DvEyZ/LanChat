@@ -1,7 +1,7 @@
 #include "SocketConnection.h"
 
 SocketConnection::SocketConnection(boost::asio::io_context& iocontext)
-	:socket(iocontext), malformed_messages(0), header_buffer(), body_buffer()
+	:socket(iocontext), malformed_messages(0), header_buffer(), body_buffer(), error_callback()
 {
 
 }
@@ -19,6 +19,11 @@ std::string SocketConnection::getRemoteIp()
 boost::asio::ip::tcp::socket& SocketConnection::getSocket()
 {
 	return socket;
+}
+
+void SocketConnection::setErrorCallback(std::function <void(SocketConnectionError)> callback)
+{
+	error_callback = callback;
 }
 
 void SocketConnection::read(std::function<void(std::vector <char>)> callback)
@@ -145,5 +150,5 @@ void SocketConnection::onMalformed()
 
 void SocketConnection::onError(SocketConnectionError error)
 {
-	error_callback(error);	// pass to error callback if unhandled.
+	this->error_callback(error);	// pass to error callback if unhandled.
 }
