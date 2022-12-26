@@ -11,13 +11,6 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-	set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-	include_directories("C:\\Boost\\boost_1_80_0\\boost_1_80_0" "C:\\Users\\kwiregowo5\\Desktop\\SZYMON\\projekty\\C++\\include")
-elseif(CMAKE_SYSTEM_NAME STREQUAL "Linux")
-	# include_directories(linux includes)
-endif()
-
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	# MSVC directives
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
