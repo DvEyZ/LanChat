@@ -22,6 +22,6 @@ std::string SocketConnectionError::what()
     }
     else
     {
-        // todo
+        return std::string("Error ") + std::to_string(code);
     }
 }
