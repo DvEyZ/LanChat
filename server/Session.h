@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SocketConnection.h"
+#include "../SocketConnection.h"
 #include "../ChatMessage.h"
 #include "../defines.h"
 #include "../IdentifyMessage.h"

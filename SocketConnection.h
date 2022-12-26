@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../defines.h"
+#include "defines.h"
 #include "Connection.h"
 #include "SocketConnectionError.h"
 #include <boost/asio.hpp>

@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Logger.h"
 #include "SocketConnectionError.h"
-#include "../defines.h"
+#include "defines.h"
 #include <functional>
 #include <vector>
 
