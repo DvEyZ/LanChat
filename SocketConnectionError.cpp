@@ -1,27 +1,27 @@
 #include "SocketConnectionError.h"
 
-SocketConnectionError::SocketConnectionError(Type _type, int _code)
-    :type(_type), code(_code)
+SocketConnectionError::SocketConnectionError(int _code)
+    :code(_code)
 {}
 
-SocketConnectionError::Type SocketConnectionError::getType()
-{
-    return type;
-}
+SocketConnectionError::SocketConnectionError(boost::system::error_code _code)
+    :code(_code)
+{}
 
-int SocketConnectionError::getCode()
+std::variant <boost::system::error_code, int> SocketConnectionError::getCode()
 {
     return code;
 }
 
 std::string SocketConnectionError::what()
 {
-    if(type == SocketConnectionError::Type::asio_error)
+    if(code.index() == 0)
     {
-        return boost::system::error_code(code, boost::asio::error::get_misc_category()).message();
+        std::get<boost::system::error_code>(code).message();
+
     }
     else
     {
-        return std::string("Error ") + std::to_string(code);
+        return std::string("Error ") + std::to_string(std::get <int> (code));
     }
 }

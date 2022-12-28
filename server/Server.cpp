@@ -28,7 +28,7 @@ void Server::createConnection(std::shared_ptr <Connection> connection, const boo
 {
     if(!error)
     {
-        std::shared_ptr <Logger> new_logger_composite(new LoggerComposite("Session - " + connection->getRemoteIp() + ":", { &global_logger_composite}));
+        std::shared_ptr <Logger> new_logger_composite(new LoggerComposite("Session - " + connection->getRemoteIp() + ": ", { &global_logger_composite}));
         std::shared_ptr <Session> session(new Session(connection, chat, new_logger_composite));
         session->run();
         logger->log("Connection from " + connection->getRemoteIp() + " accepted.");

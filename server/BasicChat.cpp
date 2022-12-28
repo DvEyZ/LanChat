@@ -28,6 +28,7 @@ void BasicChat::messageIncoming(ChatMessage message)
 	{
 		if(!auth->permitMessage(message))
 		{
+			logger->log("Message not delivered!");
 			ChatMessage system_response_message(ChatMessage::MessageType::system, "", {message.getSender()}, "Your message was not delivered.");
 			return;
 		}
@@ -40,7 +41,6 @@ void BasicChat::messageIncoming(ChatMessage message)
 			i->postMessage(message);
 		}
 	}
-
 	else
 	{
 		for(auto i : message.getReceivers())
@@ -51,6 +51,7 @@ void BasicChat::messageIncoming(ChatMessage message)
 				j->postMessage(message);
 			}
 		}
+		logger->log("Message incoming!");
 	}
 }
 
