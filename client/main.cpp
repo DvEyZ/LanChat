@@ -15,7 +15,7 @@ int main(int argc, char* argv[])
         args.push_back(argv[i]);    
     }
     
-    Network network(io_context);
+    Network* network = new Network(io_context);
     App app(network, args);
 
     app.run();

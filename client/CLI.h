@@ -9,11 +9,13 @@ class App;
 class CLI
 {
 public:
-    void writeMessage(std::string message);
+    CLI(std::vector <std::string> args);
+
+    std::pair <std::string, std::string> askForAuth();
+    void writeMessage(std::string sender, std::string message);
     void writeError(std::string message);
 
-    void readCommand();
-    
+    std::string readCommand();
 
     void run();
 private:
