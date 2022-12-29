@@ -32,7 +32,7 @@ target_link_libraries(LibLanChatServer LibLanChatGeneric)
 add_executable(LanChatServer server/BasicAuth.cpp server/BasicChat.cpp server/StdOstreamLogger.cpp server/FileLogger.cpp server/LoggerComposite.cpp server/main.cpp)
 target_link_libraries(LanChatServer LibLanChatServer)
 
-add_executable(LanChatClient client/main.cpp client/Session.cpp client/App.cpp)
+add_executable(LanChatClient client/main.cpp client/Session.cpp client/App.cpp client/Network.cpp client/Session.cpp)
 target_link_libraries(LanChatClient LibLanChatGeneric)
 
 enable_testing()

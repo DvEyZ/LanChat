@@ -9,17 +9,18 @@
 
 class Session
 {
-    Session(std::shared_ptr <Connection> connection);
+    Session(App app, std::shared_ptr <Connection> connection);
 
     std::shared_ptr <Connection> getConnection();
-
-    void setErrorHandler();
     void identify(std::string username, std::string password);
     void sendMessage(ChatMessage message);
-    void recvMessage(std::function <void(ChatMessage)> callback);
+    void recvMessage();
+    void disconnect();
 private:
+    App* app;
 
-    std::function <void(ChatMessage)> onRecvMessage();
+    void onSendMessage();
+    void onRecvMessage(ChatMessage message);
     void onError();
     std::shared_ptr <Connection> connection;
 };

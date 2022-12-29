@@ -3,7 +3,6 @@
 #include <thread>
 #include <boost/asio.hpp>
 #include "App.h"
-#include "CLI.h"
 
 int main(int argc, char* argv[])
 {
@@ -16,7 +15,8 @@ int main(int argc, char* argv[])
         args.push_back(argv[i]);    
     }
     
-    App app(io_context, args);
+    Network network(io_context);
+    App app(network, args);
 
     app.run();
 
