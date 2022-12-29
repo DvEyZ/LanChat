@@ -13,6 +13,7 @@ public:
 
     std::pair <std::string, std::string> askForAuth();
     void writeMessage(std::string sender, std::string message);
+    void writeInfo(std::string message);
     void writeError(std::string message);
 
     std::string readCommand();

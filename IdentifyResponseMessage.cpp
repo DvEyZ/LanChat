@@ -28,4 +28,3 @@ std::vector<char> IdentifyResponseMessage::encodeMessage()
 	
 	return(std::vector <char> (temp.begin(), temp.end()));
 }
-

@@ -29,10 +29,7 @@ public:
     void disconnect();
 
     // events
-    void onConnected();
-    void onIdentified();
-    void onMessageSent();
-    void onDisconnected();
+    void onMessageReceived(ChatMessage message);
 private:
     CLI* cli;
     Session* session;
