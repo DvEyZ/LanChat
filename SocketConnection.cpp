@@ -63,7 +63,7 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 	}
 	else
 	{
-		onError(SocketConnectionError(SocketConnectionError::Type::asio_error, error.value()));
+		onError(SocketConnectionError(error));
 	}
 }
 
@@ -97,7 +97,7 @@ void SocketConnection::onReadBody(int l, const boost::system::error_code& error,
 	}
 	else
 	{
-		onError(SocketConnectionError(SocketConnectionError::Type::asio_error, error.value()));
+		onError(SocketConnectionError(error));
 	}
 }
 
@@ -131,7 +131,7 @@ void SocketConnection::onWrite(const boost::system::error_code& error, std::size
 	}
 	else
 	{
-		onError(SocketConnectionError(SocketConnectionError::Type::asio_error, error.value()));
+		onError(SocketConnectionError(error));
 	}
 }
 
@@ -144,7 +144,7 @@ void SocketConnection::onMalformed()
 	}
 	else
 	{
-		onError(SocketConnectionError(SocketConnectionError::Type::program_error, SocketConnectionError::Code::malformed_headers));
+		onError(SocketConnectionError(1));
 	}
 }
 

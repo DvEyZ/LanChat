@@ -18,6 +18,11 @@ void App::run()
     );
 }
 
+void App::error(std::string what)
+{
+    cli->writeError(what);
+}
+
 void App::connect(std::string host)
 {
     network->connect(host, 
@@ -62,5 +67,32 @@ void App::sendUnicastMessage(std::vector <std::string> receivers, std::string me
         return;
     }
     session->sendUnicastMessage(receivers, message);
-    
+    cli->writeMessage(session->getUsername(), receivers, message);
+}
+
+void App::sendBroadcastMessage(std::string message)
+{
+    if(session == nullptr)
+    {
+        error("You are not connected to a  server.");
+        return;
+    }
+    session->sendBroadcastMessage(message);
+    cli->writeMessage(session->getUsername(), {"@all"}, message);
+}
+
+void App::disconnect()
+{
+    if(session == nullptr)
+    {
+        error("You are not connected to a server.");
+        return;
+    }
+    delete session;
+    cli->writeInfo("Disconnected.");
+}
+
+void App::onMessageReceived(ChatMessage message)
+{
+    cli->writeMessage(message.getSender(), message.getReceivers(), message.getMsgBody());
 }
