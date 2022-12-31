@@ -5,10 +5,13 @@
 #include <vector>
 #include <sstream>
 #include <set>
+#include <mutex>
 #include "App.h"
 #include "Command.h"
 
 class App;
+
+std::mutex cout_mutex;
 
 class CLI
 {
@@ -20,13 +23,18 @@ public:
     void writeError(std::string message);
 
     std::string readCommand();
-    
+    std::string ask(std::string what);
+        
+    void silent();
+    void nosilent();
+
     void run();
 private:
     App* app;
-    bool silent;
+    bool silent_flag;
     std::ostringstream os;
     std::set <Command> commands;
 
     void executeCommand(std::string command);
+    void write(std::string what);
 };

@@ -31,6 +31,11 @@ void App::help()
 
 void App::connect(std::string host)
 {
+    if(session != nullptr)
+    {
+        error("Already connected.");
+        return;
+    }
     network->connect(host, 
         [this] (std::shared_ptr <SocketConnection> conn)
         {
