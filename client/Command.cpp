@@ -12,9 +12,3 @@ void Command::run(std::vector <std::string> args) const
 {
     op(args);
 }
-
-bool Command::operator <(Command command)
-{
-    if(this->name != command.name) return this->name < command.name;
-    else return this->arg_num < command.arg_num;
-}

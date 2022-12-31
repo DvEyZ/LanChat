@@ -14,7 +14,6 @@ public:
     
     void run(std::vector <std::string> args) const;
 
-    bool operator <(Command command);
 private:
     const std::function <void(std::vector <std::string> args)> op;
 };

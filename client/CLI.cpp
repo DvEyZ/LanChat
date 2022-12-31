@@ -4,52 +4,47 @@ CLI::CLI(std::vector <std::string> args)
     :silent_flag(false)
 {
     // set up used commands
-    commands.emplace(Command("con", 1, 
+    commands.push_back(Command("connect", 1, 
         [this] (std::vector <std::string> args)
         {
             app->connect(args[0]);
         }
     ));
 
-    commands.emplace(Command("discon", 0, 
+    commands.push_back(Command("disconnect", 0, 
         [this] (std::vector <std::string> args)
         {
             app->disconnect();
         }
     ));
 
-    commands.emplace(Command("id", 0,
+    commands.push_back(Command("identify", 0,
         [this] (std::vector <std::string> args)
         {
-            silent();
             auto name = ask("Username: ");
             auto pass = ask("Password: ");
-            nosilent();
             app->identify(name, pass);
         }
     ));
 
-    commands.emplace(Command("id", 1,
+    commands.push_back(Command("identify", 1,
         [this] (std::vector <std::string> args)
         {
-            silent();
             auto pass = ask("Password: ");
-            nosilent();
             app->identify(args[0], pass);
         }
     ));
 
-    commands.emplace(Command("id", 2,
+    commands.push_back(Command("identify", 2,
         [this] (std::vector <std::string> args)
         {
             app->identify(args[0], args[1]);
         }
     ));
 
-    commands.emplace(Command("m", 0,
+    commands.push_back(Command("message", 0,
         [this] (std::vector <std::string> args)
         {
-            silent();
             auto to = ask("To: ");
             auto m = ask("Message: ");
 
@@ -59,12 +54,11 @@ CLI::CLI(std::vector <std::string> args)
                 temp.push_back(to.substr(0, to.find(',')));
                 to.erase(0, to.find(','));
             }
-            nosilent();
             app->sendUnicastMessage(temp, m);
         }   
     ));
 
-    commands.emplace(Command("m", 1,
+    commands.push_back(Command("message", 1,
         [this] (std::vector <std::string> args)
         {
             std::vector <std::string> temp;
@@ -73,24 +67,20 @@ CLI::CLI(std::vector <std::string> args)
                 temp.push_back(args[0].substr(0, args[0].find(',')));
                 args[0].erase(0, args[0].find(','));
             }
-            silent();
             auto m = ask("Message: ");
-            nosilent();
             app->sendUnicastMessage(temp, m);
         }
     ));
 
-    commands.emplace(Command("@", 0,
+    commands.push_back(Command("@", 0,
         [this] (std::vector <std::string> args)
         {
-            silent();
             auto m = ask("Message: ");
-            nosilent();
             app->sendBroadcastMessage(m);
         }
     ));
     
-    commands.emplace(Command("s", 1,
+    commands.push_back(Command("silent", 1,
         [this] (std::vector <std::string> args)
         {
             if(args[0] == "on")
@@ -102,16 +92,14 @@ CLI::CLI(std::vector <std::string> args)
         }
     ));
 
-    commands.emplace(Command("help", 0,
+    commands.push_back(Command("help", 0,
         [this] (std::vector <std::string> args)
         {
-            silent();
             app->help();
-            nosilent();
         }
     ));
 
-    commands.emplace(Command("quit", 0,
+    commands.push_back(Command("quit", 0,
         [this] (std::vector <std::string> args)
         {
             app->exit(0);
@@ -132,6 +120,7 @@ void CLI::run()
 std::string CLI::readCommand()
 {
     std::string str;
+    write("> ");
     std::getline(std::cin, str);
     return str;
 }
@@ -146,6 +135,17 @@ void CLI::nosilent()
     silent_flag = false;
     std::cout << os.str();
 }
+
+std::string CLI::ask(std::string what)
+{
+    std::string answer;
+    silent();
+    write(what);
+    std::getline(std::cin, answer);
+    nosilent();
+    return answer;
+}
+
 void CLI::writeMessage(std::string sender, std::vector <std::string> receivers, std::string message)
 {
     std::string temp;
@@ -199,13 +199,43 @@ void CLI::executeCommand(std::string command)
         command.erase(0, command.find(' ') + 1);    
     }
 
-    auto op = commands.find(Command(operation, args.size()));
-
-    if(op == commands.end())
+    try
     {
-        app->error("Command not found.");
+        Command cmd = findUniqueCommand(operation, args.size());
+        cmd.run(args);
+    }
+    catch(const int err)
+    {
+        if(err == 0)
+            app->error("Command not found.");
+        else
+            app->error("Ambiguous command.");
         return;
     }
-
-    op->run(args);
 }
+
+Command CLI::findUniqueCommand(std::string name, int args)
+{
+    std::vector <Command> matches;
+    std::copy_if(commands.begin(), commands.end(), std::back_inserter(matches), 
+        [name, args] (Command command)
+        {
+            // if command name begins with provided name, and argument number matches, return true, else false.
+            if(command.name.find(name) == 0)
+            {
+                if(command.arg_num == args)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+    );
+
+    // check if the command name is unique
+
+    if(matches.size() == 1) return matches[0];
+    else if(matches.size() == 0) throw 0;
+    else throw 1;
+}
+

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <sstream>
-#include <set>
+#include <list>
 #include <mutex>
 #include "App.h"
 #include "Command.h"
@@ -33,8 +33,9 @@ private:
     App* app;
     bool silent_flag;
     std::ostringstream os;
-    std::set <Command> commands;
+    std::vector <Command> commands;
 
     void executeCommand(std::string command);
     void write(std::string what);
+    Command findUniqueCommand(std::string name, int args);
 };
