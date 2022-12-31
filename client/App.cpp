@@ -24,6 +24,11 @@ void App::error(std::string what)
     cli->writeError(what);
 }
 
+void App::help()
+{
+
+}
+
 void App::connect(std::string host)
 {
     network->connect(host, 

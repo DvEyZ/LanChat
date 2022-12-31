@@ -1,5 +1,6 @@
 #pragma once
 
+#include <joyterm.hpp>
 #include <string>
 #include <vector>
 #include <sstream>

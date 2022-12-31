@@ -8,6 +8,7 @@ CLI::CLI(std::vector <std::string> args)
 
 void CLI::run()
 {
+    joyterm::init();
     while(true)
     {
         std::string cmd = readCommand();
@@ -42,7 +43,9 @@ void CLI::writeMessage(std::string sender, std::vector <std::string> receivers, 
 
 void CLI::writeError(std::string message)
 {
-    std::cout << "ERROR: " << message << "\n";
+    std::cout << joyterm::style::MStyle({joyterm::style::FgColor::red}) << 
+        "ERROR: " << message 
+    << joyterm::style::MStyle({joyterm::style::Style::reset}) << "\n";
 }
 
 void CLI::writeInfo(std::string message)
