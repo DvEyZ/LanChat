@@ -27,7 +27,7 @@ public:
     void sendUnicastMessage(std::vector <std::string> receivers, std::string message);
     void sendBroadcastMessage(std::string message);
     void disconnect();
-    void exit(int code);
+    void exit();
 
     // events
     void onMessageReceived(ChatMessage message);
@@ -37,4 +37,8 @@ private:
     CLI* cli;
     Session* session;
     Network* network;
+
+    std::thread network_thread;
+    
+    void cleanup();
 };

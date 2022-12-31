@@ -1,7 +1,7 @@
 #include "CLI.h"
 
 CLI::CLI(std::vector <std::string> args)
-    :silent_flag(false)
+    :silent_flag(false), running(true)
 {
     // set up used commands
     commands.push_back(Command("connect", 1, 
@@ -102,7 +102,7 @@ CLI::CLI(std::vector <std::string> args)
     commands.push_back(Command("quit", 0,
         [this] (std::vector <std::string> args)
         {
-            app->exit(0);
+            app->exit();
         }
     ));
 }
@@ -110,7 +110,7 @@ CLI::CLI(std::vector <std::string> args)
 void CLI::run()
 {
     joyterm::init();
-    while(true)
+    while(running)
     {
         std::string cmd = readCommand();
         executeCommand(cmd);
@@ -242,3 +242,7 @@ Command CLI::findUniqueCommand(std::string name, int args)
     else throw 1;
 }
 
+void CLI::stop()
+{
+    running = false;
+}

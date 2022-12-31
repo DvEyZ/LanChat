@@ -9,19 +9,26 @@ App::App(Network* _network, std::vector <std::string> args)
 
 void App::run()
 {
-    std::thread network_thread(
+    network_thread = std::thread(
         [this] () 
         {
             network->run();
         }
     );
+
     cli->run();
     
+    cleanup();
 }
 
 void App::error(std::string what)
 {
     cli->writeError(what);
+}
+
+void App::cleanup()
+{
+    network_thread.join();
 }
 
 void App::help()
@@ -102,12 +109,10 @@ void App::disconnect()
     cli->writeInfo("Disconnected.");
 }
 
-void App::exit(int code)
+void App::exit()
 {
     if(session != nullptr) delete session;
-    delete cli;
-    
-    ::exit(code);
+    cli->stop();
 }
 
 void App::onMessageReceived(ChatMessage message)

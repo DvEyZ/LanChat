@@ -29,9 +29,11 @@ public:
     void nosilent();
 
     void run();
+    void stop();
 private:
     App* app;
     bool silent_flag;
+    bool running;
     std::ostringstream os;
     std::vector <Command> commands;
 
