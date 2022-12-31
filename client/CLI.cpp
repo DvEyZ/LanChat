@@ -148,28 +148,31 @@ std::string CLI::ask(std::string what)
 
 void CLI::writeMessage(std::string sender, std::vector <std::string> receivers, std::string message)
 {
-    std::string temp;
+    using namespace joyterm::style;
+    std::ostringstream strm;
 
-    temp += "\n[ " + sender + " ] => ";
+    strm << "\n" << MStyle({FgColor::blue}) << "[ " << MStyle({Style::reset})
+        << sender 
+        << MStyle({FgColor::blue}) << " ]" << MStyle({Style::reset}) << " => ";
     
     for(auto i : receivers)
     {
-        temp += i + ",";
+        strm << i << MStyle({FgColor::yellow}) << "," << MStyle({Style::reset});
     }
-    temp.erase(temp.end() - 1);
 
-    temp += "\n" + message;
+    strm << "\n" << message << "\n";
 
 
-    write(temp + "\n");
+    write(strm.str());
 }
 
 void CLI::writeError(std::string message)
 {
+    using namespace joyterm::style;
     std::ostringstream strm; 
-    strm << joyterm::style::MStyle({joyterm::style::FgColor::red}) << 
+    strm << MStyle({FgColor::red}) << 
         "ERROR: " << message 
-    << joyterm::style::MStyle({joyterm::style::Style::reset}) << "\n";
+    << MStyle({Style::reset}) << "\n";
     
     write(strm.str());
 }
