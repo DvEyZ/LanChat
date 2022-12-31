@@ -2,7 +2,10 @@
 
 #include <string>
 #include <vector>
+#include <sstream>
+#include <set>
 #include "App.h"
+#include "Command.h"
 
 class App;
 
@@ -11,7 +14,6 @@ class CLI
 public:
     CLI(std::vector <std::string> args);
 
-    std::pair <std::string, std::string> askForAuth();
     void writeMessage(std::string sender, std::vector <std::string> receivers, std::string message);
     void writeInfo(std::string message);
     void writeError(std::string message);
@@ -21,6 +23,9 @@ public:
     void run();
 private:
     App* app;
+    bool silent;
+    std::ostringstream os;
+    std::set <Command> commands;
 
     void executeCommand(std::string command);
 };

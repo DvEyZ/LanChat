@@ -16,20 +16,23 @@ class App
 {
 public:
     App(Network* network, std::vector <std::string> args);
-    ~App();
 
     void run();
     void error(std::string what);
 
     // commands
+    void help();
     void connect(std::string host);
-    void identify();
+    void identify(std::string name, std::string password);
     void sendUnicastMessage(std::vector <std::string> receivers, std::string message);
     void sendBroadcastMessage(std::string message);
     void disconnect();
+    void exit(int code);
 
     // events
     void onMessageReceived(ChatMessage message);
+
+    
 private:
     CLI* cli;
     Session* session;

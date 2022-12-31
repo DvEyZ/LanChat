@@ -9,13 +9,14 @@ App::App(Network* _network, std::vector <std::string> args)
 
 void App::run()
 {
-    cli->run();
     std::thread network_thread(
         [this] () 
         {
             network->run();
         }
     );
+    cli->run();
+    
 }
 
 void App::error(std::string what)
@@ -35,15 +36,14 @@ void App::connect(std::string host)
     );
 }
 
-void App::identify()
+void App::identify(std::string name, std::string password)
 {
     if(session == nullptr)
     {
         error("You are not connected to a server.");
         return;
     }
-    auto auth = cli->askForAuth();
-    session->identify(auth.first, auth.second, 
+    session->identify(name, password, 
             [this] (IdentifyResponseMessage message)
             { 
                 if(message.getStatus() == IdentifyResponseMessage::Status::ok)
@@ -90,6 +90,14 @@ void App::disconnect()
     }
     delete session;
     cli->writeInfo("Disconnected.");
+}
+
+void App::exit(int code)
+{
+    if(session != nullptr) delete session;
+    delete cli;
+    
+    ::exit(code);
 }
 
 void App::onMessageReceived(ChatMessage message)
