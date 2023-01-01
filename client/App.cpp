@@ -34,7 +34,17 @@ void App::cleanup()
 
 void App::help()
 {
-    cli->writeInfo("LanChat client.");
+    cli->writeInfo(
+        "LanChatClient v0.1.0 - help\n"
+        "Commands may be abbreviated. Parameters in {} are optional.\n\n"
+        "connect server{:port}\t\t - connect to a server.\n"
+        "disconnect\t\t\t - disconnect from a server.\n"
+        "identify {username} {password}\t - authenticate yourself.\n"
+        "message {recipient-1{,r-2,r-3}}\t - send a message to the recipients.\n"
+        "@\t\t\t\t - send a broadcast message.\n"
+        "help\t\t\t\t - display this message.\n"
+        "quit\t\t\t\t - exit the client.\n"
+    );
 }
 
 void App::connect(std::string host)

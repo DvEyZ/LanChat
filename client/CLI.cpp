@@ -219,6 +219,9 @@ void CLI::executeCommand(std::string command)
             args.push_back(temp);
         }
     }
+
+    // todo: delete all args that are whitespace-only.
+    
     try
     {
         Command cmd = findUniqueCommand(operation, args.size());
