@@ -6,7 +6,7 @@ ChatMessage::ChatMessage(MessageType _type, std::string _sender, std::vector <st
     :message_type(_type), sender(_sender), receivers(_receivers), body(_body)
 {
     length = 4;
-    length += body.length() + 1;
+    length += body.length();
     length += sender.length() + 1;
     for(auto i : receivers)
     {

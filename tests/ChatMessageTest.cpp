@@ -21,23 +21,23 @@ protected:
 TEST_F(ChatMessageTest, AreLengthFunctionsOk)
 {
 	EXPECT_EQ(m.getRecvNum(), 2);
-	EXPECT_EQ(m.getLength(), 43);
+	EXPECT_EQ(m.getLength(), 42);
 }
 
 TEST_F(ChatMessageTest, IsEncodeMessageFunctionOk)
 {
 	std::vector<char> e = m.encodeMessage();
 	std::string e_str(e.begin(), e.end());
-	EXPECT_EQ(e_str, std::string("0043b002sender1\x01receiver1\x01receiver2\x01Some text."));
+	EXPECT_EQ(e_str, std::string("0042b002sender1\x01receiver1\x01receiver2\x01Some text."));
 }
 
 TEST_F(ChatMessageTest, IsDecodeHeaderFunctionOk)
 {
-	std::string h = "0043";
+	std::string h = "0042";
 	std::vector h_vec(h.begin(), h.end());
 	m2.decodeHeader(h_vec);
 	
-	EXPECT_EQ(m2.getLength(), 43);
+	EXPECT_EQ(m2.getLength(), 42);
 }
 
 TEST_F(ChatMessageTest, IsDecodeBodyFunctionOk)
