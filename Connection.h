@@ -13,4 +13,5 @@ public:
 	virtual void write(std::vector <char> text, std::function<void ()> callback) = 0;
 	virtual void setErrorCallback(std::function <void(SocketConnectionError)> callback) = 0;
 	virtual std::string getRemoteIp() = 0;
+	virtual void close() = 0;
 };

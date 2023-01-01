@@ -16,6 +16,7 @@ class Session
 {
 public:
     Session(App* app, std::shared_ptr <Connection> connection);
+    ~Session();
     
     std::shared_ptr <Connection> getConnection();
     void identify(std::string username, std::string password, std::function < void(IdentifyResponseMessage) > callback);

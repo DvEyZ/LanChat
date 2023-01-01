@@ -17,6 +17,7 @@ public:
 	void write(std::vector <char> text, std::function<void ()> callback);
 	void setErrorCallback(std::function <void(SocketConnectionError)> callback);
 	std::string getRemoteIp();
+	void close();
 	boost::asio::ip::tcp::socket& getSocket();
 private:
 	void readHeader();

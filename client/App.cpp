@@ -69,7 +69,7 @@ void App::identify(std::string name, std::string password)
                 }
                 else
                 {
-                    error("Authentication error: " + message.getStatus());
+                    error("Authentication error: " + std::to_string(message.getStatus()));
                 }
             }
         );

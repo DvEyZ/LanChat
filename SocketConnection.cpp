@@ -32,6 +32,12 @@ void SocketConnection::read(std::function<void(std::vector <char>)> callback)
 	readHeader();
 }
 
+void SocketConnection::close()
+{
+	socket.shutdown(boost::asio::socket_base::shutdown_both);
+	socket.close();
+}
+
 void SocketConnection::readHeader()
 {
 	header_buffer = std::vector <char> (MESSAGE_HEADER_LENGTH, '\0');

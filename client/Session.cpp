@@ -11,6 +11,11 @@ Session::Session(App* _app, std::shared_ptr <Connection> _connection)
     );
 }
 
+Session::~Session()
+{
+    connection->close();
+}
+
 std::shared_ptr <Connection> Session::getConnection()
 {
     return connection;
