@@ -7,8 +7,13 @@ Network::Network(App* _app)
 
 void Network::run()
 {
-    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(context->get_executor());
+    guard = std::make_unique <boost::asio::executor_work_guard <boost::asio::io_context::executor_type>> (context->get_executor());
     context->run();
+}
+
+void Network::stop()
+{
+    guard.reset();
 }
 
 void Network::connect(std::string addr, std::function <void(std::shared_ptr <SocketConnection>)> callback) // addr: address:[port/default 12345]

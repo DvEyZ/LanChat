@@ -28,6 +28,7 @@ void App::error(std::string what)
 
 void App::cleanup()
 {
+    network->stop();
     network_thread.join();
 }
 
@@ -104,7 +105,9 @@ void App::disconnect()
         error("You are not connected to a server.");
         return;
     }
+    // this is a candidate for separate smart pointer class
     delete session;
+    session = nullptr;
     cli->writeInfo("Disconnected.");
 }
 

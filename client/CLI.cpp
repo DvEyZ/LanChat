@@ -49,12 +49,12 @@ CLI::CLI(App* _app, std::vector <std::string> args)
             auto m = ask("Message: ");
 
             std::vector <std::string> temp;
+            std::istringstream strm(to);
+            std::string tmp;
 
-            // !!!
-            while(to.find(',') != std::string::npos)
+            while(std::getline(strm, tmp, ','))
             {
-                temp.push_back(to.substr(0, to.find(',')));
-                to.erase(0, to.find(','));
+                temp.push_back(tmp);
             }
             // !!!
 
@@ -66,12 +66,12 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         [this] (std::vector <std::string> args)
         {
             std::vector <std::string> temp;
+            std::istringstream strm(args[0]);
+            std::string tmp;
 
-            // !!!
-            while(args[0].find(',') != std::string::npos)
+            while(std::getline(strm, tmp, ','))
             {
-                temp.push_back(args[0].substr(0, args[0].find(',')));
-                args[0].erase(0, args[0].find(','));
+                temp.push_back(tmp);
             }
             // !!!
             
@@ -198,6 +198,8 @@ void CLI::write(std::string message)
 
 void CLI::executeCommand(std::string command)
 {
+    if(command == "") return; // skip empty commands in order not to make output mess
+
     auto f = command.find(' ');
     std::string operation = command.substr(0, f);
     if(f != std::string::npos)
