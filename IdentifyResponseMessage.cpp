@@ -17,7 +17,7 @@ IdentifyResponseMessage::Status IdentifyResponseMessage::getStatus()
 bool IdentifyResponseMessage::decodeBody(std::vector<char> _body)
 {
 	if(_body.size() != 1) return false;
-	status = static_cast <Status> (_body.at(0));
+	status = static_cast <Status> (std::stoi(std::string(1, _body.at(0))));
 	return true;
 }
 

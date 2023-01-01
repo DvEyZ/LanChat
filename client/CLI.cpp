@@ -49,11 +49,15 @@ CLI::CLI(App* _app, std::vector <std::string> args)
             auto m = ask("Message: ");
 
             std::vector <std::string> temp;
+
+            // !!!
             while(to.find(',') != std::string::npos)
             {
                 temp.push_back(to.substr(0, to.find(',')));
                 to.erase(0, to.find(','));
             }
+            // !!!
+
             app->sendUnicastMessage(temp, m);
         }   
     ));
@@ -62,11 +66,15 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         [this] (std::vector <std::string> args)
         {
             std::vector <std::string> temp;
+
+            // !!!
             while(args[0].find(',') != std::string::npos)
             {
                 temp.push_back(args[0].substr(0, args[0].find(',')));
                 args[0].erase(0, args[0].find(','));
             }
+            // !!!
+            
             auto m = ask("Message: ");
             app->sendUnicastMessage(temp, m);
         }
@@ -149,9 +157,9 @@ void CLI::writeMessage(std::string sender, std::vector <std::string> receivers, 
     using namespace joyterm::style;
     std::ostringstream strm;
 
-    strm << "\n" << MStyle({FgColor::blue}) << "[ " << MStyle({Style::reset})
+    strm << "\n" << MStyle({FgColor::b_blue}) << "[ " << MStyle({Style::reset})
         << sender 
-        << MStyle({FgColor::blue}) << " ]" << MStyle({Style::reset}) << " => ";
+        << MStyle({FgColor::b_blue}) << " ]" << MStyle({Style::reset}) << " => ";
     
     for(auto i : receivers)
     {
@@ -168,7 +176,7 @@ void CLI::writeError(std::string message)
 {
     using namespace joyterm::style;
     std::ostringstream strm; 
-    strm << MStyle({FgColor::red}) << 
+    strm << MStyle({FgColor::b_red, Style::bold}) << 
         "ERROR: " << message 
     << MStyle({Style::reset}) << "\n";
     

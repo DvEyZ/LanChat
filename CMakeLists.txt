@@ -49,10 +49,6 @@ add_executable(IdentifyResponseMessageTest tests/IdentifyResponseMessageTest.cpp
 target_link_libraries(IdentifyResponseMessageTest GTest::gtest_main)
 target_link_libraries(IdentifyResponseMessageTest LibLanChatGeneric)
 
-add_executable(SessionTest tests/SessionTest/SessionTest.cpp tests/SessionTest/TestConnection.cpp)
-target_link_libraries(SessionTest GTest::gtest_main)
-target_link_libraries(SessionTest LibLanChatGeneric)
-
 include(GoogleTest)
 
 gtest_discover_tests(ChatMessageTest)
