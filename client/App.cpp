@@ -33,7 +33,7 @@ void App::cleanup()
 
 void App::help()
 {
-
+    cli->writeInfo("LanChat client.");
 }
 
 void App::connect(std::string host)

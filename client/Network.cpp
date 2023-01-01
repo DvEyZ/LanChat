@@ -33,6 +33,7 @@ std::pair <std::string, std::string> Network::splitHostname(std::string host)
         hname = host;
         port = "12345";
     }
+    return std::pair<std::string, std::string> (host, port);
 }
 
 void Network::resolveHostname(std::pair <std::string, std::string> host)

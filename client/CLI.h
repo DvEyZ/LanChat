@@ -9,9 +9,10 @@
 #include "App.h"
 #include "Command.h"
 
+static std::mutex cout_mutex;
+
 class App;
 
-std::mutex cout_mutex;
 
 class CLI
 {
