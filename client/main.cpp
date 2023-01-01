@@ -6,8 +6,6 @@
 
 int main(int argc, char* argv[])
 {
-    boost::asio::io_context io_context;
-
     std::vector <std::string> args;
 
     for(int i = 1; i < argc; i++)
@@ -15,8 +13,7 @@ int main(int argc, char* argv[])
         args.push_back(argv[i]);    
     }
     
-    Network* network = new Network(io_context);
-    App app(network, args);
+    App app(args);
 
     app.run();
 

@@ -1,18 +1,19 @@
 #include "Network.h"
 
-Network::Network(boost::asio::io_context& _io_context)
-    :context(_io_context)
+Network::Network(App* _app)
+    :app(_app), context(new boost::asio::io_context())
 {
 }
 
 void Network::run()
 {
-    context.run();
+    boost::asio::executor_work_guard<boost::asio::io_context::executor_type> guard(context->get_executor());
+    context->run();
 }
 
 void Network::connect(std::string addr, std::function <void(std::shared_ptr <SocketConnection>)> callback) // addr: address:[port/default 12345]
 {
-    connection = std::shared_ptr <SocketConnection> (new SocketConnection(context));
+    connection = std::shared_ptr <SocketConnection> (new SocketConnection(*context));
     connect_callback = callback;
     resolveHostname(splitHostname(addr));
 }
@@ -33,26 +34,22 @@ std::pair <std::string, std::string> Network::splitHostname(std::string host)
         hname = host;
         port = "12345";
     }
-    return std::pair<std::string, std::string> (host, port);
+    return std::pair<std::string, std::string> (hname, port);
 }
 
 void Network::resolveHostname(std::pair <std::string, std::string> host)
 {
-    boost::asio::ip::tcp::resolver resolver(context);
-
-    resolver.async_resolve(host.first, host.second, 
-        [this] (boost::system::error_code error, boost::asio::ip::tcp::resolver::results_type endpoints)
-        {
-            if(!error)
-            {
-                connectToEndpoint(endpoints);
-            }
-            else
-            {
-                app->error("Error while resolving hostname: " + error.message());
-            }
-        }
-    );
+    boost::asio::ip::tcp::resolver resolver(*context);
+    
+    try 
+    {
+        auto res = resolver.resolve(host.first, host.second);
+        connectToEndpoint(res);
+    }
+    catch(std::exception& e)
+    {
+        app->error(e.what());
+    }
 }
 
 void Network::connectToEndpoint(boost::asio::ip::tcp::resolver::results_type endpoints)

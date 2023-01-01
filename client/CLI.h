@@ -17,7 +17,7 @@ class App;
 class CLI
 {
 public:
-    CLI(std::vector <std::string> args);
+    CLI(App* app, std::vector <std::string> args);
 
     void writeMessage(std::string sender, std::vector <std::string> receivers, std::string message);
     void writeInfo(std::string message);

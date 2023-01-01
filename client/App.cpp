@@ -1,10 +1,10 @@
 #include "App.h"
 
-App::App(Network* _network, std::vector <std::string> args)
+App::App(std::vector <std::string> args)
 {
-    network = _network;
     session = nullptr;
-    cli = new CLI(args);
+    cli = new CLI(this, args);
+    network = new Network(this);
 }
 
 void App::run()
@@ -66,11 +66,10 @@ void App::identify(std::string name, std::string password)
                 if(message.getStatus() == IdentifyResponseMessage::Status::ok)
                 {
                     cli->writeInfo("Welcome.");
-                    // resume normal operation;
                 }
                 else
                 {
-                    error("Authentication error.");
+                    error("Authentication error: " + message.getStatus());
                 }
             }
         );

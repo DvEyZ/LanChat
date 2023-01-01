@@ -1,7 +1,7 @@
 #include "CLI.h"
 
-CLI::CLI(std::vector <std::string> args)
-    :silent_flag(false), running(true)
+CLI::CLI(App* _app, std::vector <std::string> args)
+    :app(_app), silent_flag(false), running(true)
 {
     // set up used commands
     commands.push_back(Command("connect", 1, 
@@ -139,10 +139,8 @@ void CLI::nosilent()
 std::string CLI::ask(std::string what)
 {
     std::string answer;
-    silent();
     write(what);
     std::getline(std::cin, answer);
-    nosilent();
     return answer;
 }
 
@@ -185,23 +183,32 @@ void CLI::writeInfo(std::string message)
 void CLI::write(std::string message)
 {
     cout_mutex.lock();
+    (silent_flag ? os : std::cout) << std::flush;
     (silent_flag ? os : std::cout) << message;
     cout_mutex.unlock();
 }
 
 void CLI::executeCommand(std::string command)
 {
-    std::string operation = command.substr(0, command.find(' '));
-    command.erase(0, command.find(' ') + 1);
+    auto f = command.find(' ');
+    std::string operation = command.substr(0, f);
+    if(f != std::string::npos)
+        command.erase(0, f);
+    else
+        command.erase(command.begin(), command.end());
     
     std::vector <std::string> args;
 
-    while(command.find(' ') != std::string::npos)
+    if(f != std::string::npos)
     {
-        args.push_back(command.substr(0, command.find(' ')));
-        command.erase(0, command.find(' ') + 1);    
-    }
+        std::istringstream strm(command);
+        std::string temp;
 
+        while(std::getline(strm, temp, ' '));
+        {
+            args.push_back(temp);
+        }
+    }
     try
     {
         Command cmd = findUniqueCommand(operation, args.size());

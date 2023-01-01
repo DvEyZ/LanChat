@@ -15,7 +15,7 @@ class Session;
 class App
 {
 public:
-    App(Network* network, std::vector <std::string> args);
+    App(std::vector <std::string> args);
 
     void run();
     void error(std::string what);

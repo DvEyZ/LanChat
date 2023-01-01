@@ -11,10 +11,9 @@ class App;
 class Network
 {
 public:
-    Network(boost::asio::io_context& io_context);
+    Network(App* app);
     void connect(std::string addr, std::function <void(std::shared_ptr <SocketConnection>)> callback);
     void run();
-
 private:
     std::pair <std::string, std::string> splitHostname(std::string hname);
     void resolveHostname(std::pair <std::string, std::string> host);
@@ -23,6 +22,6 @@ private:
 
     std::shared_ptr <SocketConnection> connection;
     std::function <void(std::shared_ptr <SocketConnection>)> connect_callback;
-    boost::asio::io_context& context;
+    std::shared_ptr <boost::asio::io_context> context;
     App* app;
 };
