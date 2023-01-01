@@ -17,8 +17,7 @@ std::string SocketConnectionError::what()
 {
     if(code.index() == 0)
     {
-        std::get<boost::system::error_code>(code).message();
-
+        return std::get<boost::system::error_code>(code).message();
     }
     else
     {

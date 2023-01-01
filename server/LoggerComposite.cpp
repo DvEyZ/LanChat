@@ -7,10 +7,9 @@ LoggerComposite::LoggerComposite(std::string _module_name, std::vector <Logger*>
 
 void LoggerComposite::log(std::string message)
 {
-	message = module_name + message;
 	for(auto i : loggers)
 	{
-		i->log(message);
+		i->log(module_name + message);
 	}
 }
 
