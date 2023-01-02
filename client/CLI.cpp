@@ -149,13 +149,20 @@ std::string CLI::ask(std::string what)
     return answer;
 }
 
-void CLI::writeMessage(std::string sender, std::vector <std::string> receivers, std::string message)
+void CLI::writeMessage(int type, std::string sender, std::vector <std::string> receivers, std::string message)
 {
     using namespace joyterm::style;
     std::ostringstream strm;
 
-    strm << "\n" << MStyle({FgColor::b_blue, Style::bold}) << "[ " << sender << " ]" << MStyle({Style::reset}) << " => ";
-    
+    if(type == ChatMessage::system || type == ChatMessage::system_broadcast)
+    {
+        strm << "\n" << MStyle({FgColor::white, BgColor::magenta, Style::bold}) << "[ SYSTEM ]" << MStyle({Style::reset}) << " => ";
+    }
+    else
+    {
+        strm << "\n" << MStyle({FgColor::b_blue, Style::bold}) << "[ " << sender << " ]" << MStyle({Style::reset}) << " => ";
+    }
+
     for(auto i : receivers)
     {
         strm << MStyle({FgColor::b_yellow, Style::bold}) << i << MStyle({Style::reset}) << ",";

@@ -21,14 +21,14 @@
 static std::mutex cout_mutex;
 
 class App;
-
+class ChatMessage;
 
 class CLI
 {
 public:
     CLI(App* app, std::vector <std::string> args);
 
-    void writeMessage(std::string sender, std::vector <std::string> receivers, std::string message);
+    void writeMessage(int type, std::string sender, std::vector <std::string> receivers, std::string message);
     void writeInfo(std::string message);
     void writeError(std::string message);
 

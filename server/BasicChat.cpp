@@ -30,6 +30,7 @@ void BasicChat::messageIncoming(ChatMessage message)
 		{
 			logger->log("Message not delivered!");
 			ChatMessage system_response_message(ChatMessage::MessageType::system, "", {message.getSender()}, "Your message was not delivered.");
+			messageIncoming(system_response_message);
 			return;
 		}
 	}

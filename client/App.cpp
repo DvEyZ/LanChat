@@ -101,7 +101,7 @@ void App::sendUnicastMessage(std::vector <std::string> receivers, std::string me
         return;
     }
     session->sendUnicastMessage(receivers, message);
-    cli->writeMessage(session->getUsername(), receivers, message);
+    cli->writeMessage(ChatMessage::unicast, session->getUsername(), receivers, message);
 }
 
 void App::sendBroadcastMessage(std::string message)
@@ -140,5 +140,5 @@ void App::exit()
 
 void App::onMessageReceived(ChatMessage message)
 {
-    cli->writeMessage(message.getSender(), message.getReceivers(), message.getMsgBody());
+    cli->writeMessage(message.getMessageType(), message.getSender(), message.getReceivers(), message.getMsgBody());
 }
