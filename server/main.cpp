@@ -27,7 +27,22 @@ int main(int argc, char* argv[])
 
     BasicAuth auth(auth_logger_composite);
     BasicChat chat(&auth, chat_logger_composite);
-    Server server(iocontext, 12345, &chat, server_logger_composite);
+    
+    int port;
+    
+    if(argc == 1) port = 12345;
+    else
+    try
+    {
+        port = std::stoi(argv[1]);
+    }
+    catch(std::invalid_argument)
+    {
+        std::cout << "Bad port!\n";
+        return 1;
+    }
+
+    Server server(iocontext, port, &chat, server_logger_composite);
     
     iocontext.run();
 
