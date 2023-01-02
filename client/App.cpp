@@ -37,13 +37,13 @@ void App::help()
     cli->writeInfo(
         "LanChatClient v0.1.0 - help\n"
         "Commands may be abbreviated. Parameters in {} are optional.\n\n"
-        "connect server{:port}\t\t - connect to a server.\n"
-        "disconnect\t\t\t - disconnect from a server.\n"
-        "identify {username} {password}\t - authenticate yourself.\n"
-        "message {recipient-1{,r-2,r-3}}\t - send a message to the recipients.\n"
-        "@\t\t\t\t - send a broadcast message.\n"
-        "help\t\t\t\t - display this message.\n"
-        "quit\t\t\t\t - exit the client.\n"
+        N_CONNECT " server{:port}\t\t - connect to a server.\n"
+        N_DISCONNECT "\t\t\t - disconnect from a server.\n"
+        N_IDENTIFY " {username} {password}\t - authenticate yourself.\n"
+        N_MESSAGE " {recipient-1{,r-2,r-3}}\t - send a message to the recipients.\n"
+        N_BROADCAST "\t\t\t - send a broadcast message.\n"
+        N_HELP "\t\t\t\t - display this message.\n"
+        N_QUIT "\t\t\t\t - exit the client.\n"
     );
 }
 
@@ -60,6 +60,9 @@ void App::connect(std::string host)
             session = new Session(this, conn);
 
             cli->writeInfo("Welcome to " + session->getConnection()->getRemoteIp());
+
+            cli->unlock(N_IDENTIFY);
+            cli->unlock(N_DISCONNECT);
         }
     );
 }
@@ -77,6 +80,10 @@ void App::identify(std::string name, std::string password)
                 if(message.getStatus() == IdentifyResponseMessage::Status::ok)
                 {
                     cli->writeInfo("Welcome.");
+                    cli->unlock(N_MESSAGE);
+                    cli->unlock(N_BROADCAST);
+                    
+                    session->listen([this] (ChatMessage m) { onMessageReceived(m); });
                 }
                 else
                 {
@@ -105,7 +112,6 @@ void App::sendBroadcastMessage(std::string message)
         return;
     }
     session->sendBroadcastMessage(message);
-    cli->writeMessage(session->getUsername(), {"@all"}, message);
 }
 
 void App::disconnect()
@@ -119,6 +125,11 @@ void App::disconnect()
     delete session;
     session = nullptr;
     cli->writeInfo("Disconnected.");
+
+    cli->lock(N_DISCONNECT);
+    cli->lock(N_IDENTIFY);
+    cli->lock(N_MESSAGE);
+    cli->lock(N_BROADCAST);
 }
 
 void App::exit()

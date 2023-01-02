@@ -22,9 +22,12 @@ public:
     void identify(std::string username, std::string password, std::function < void(IdentifyResponseMessage) > callback);
     void sendUnicastMessage(std::vector <std::string> receivers, std::string message);
     void sendBroadcastMessage(std::string message);
-    void recvMessage(std::function <void(ChatMessage)> callback);
+    void listen(std::function <void(ChatMessage)> callback);
     std::string getUsername();
 private:
+    void recvMessage();
+
+    std::function <void(ChatMessage)> callback;
     App* app;
     std::string username;
     std::shared_ptr <Connection> connection;

@@ -13,7 +13,6 @@ public:
     const int arg_num;
     
     void run(std::vector <std::string> args) const;
-
 private:
     const std::function <void(std::vector <std::string> args)> op;
 };

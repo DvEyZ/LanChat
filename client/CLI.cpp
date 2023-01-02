@@ -1,24 +1,24 @@
 #include "CLI.h"
 
 CLI::CLI(App* _app, std::vector <std::string> args)
-    :app(_app), silent_flag(false), running(true)
+    :app(_app), running(true)
 {
     // set up used commands
-    commands.push_back(Command("connect", 1, 
+    commands.push_back(Command(N_CONNECT, 1, 
         [this] (std::vector <std::string> args)
         {
             app->connect(args[0]);
         }
     ));
 
-    commands.push_back(Command("disconnect", 0, 
+    commands.push_back(Command(N_DISCONNECT, 0, 
         [this] (std::vector <std::string> args)
         {
             app->disconnect();
         }
     ));
 
-    commands.push_back(Command("identify", 0,
+    commands.push_back(Command(N_IDENTIFY, 0,
         [this] (std::vector <std::string> args)
         {
             auto name = ask("Username: ");
@@ -27,7 +27,7 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         }
     ));
 
-    commands.push_back(Command("identify", 1,
+    commands.push_back(Command(N_IDENTIFY, 1,
         [this] (std::vector <std::string> args)
         {
             auto pass = ask("Password: ");
@@ -35,14 +35,14 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         }
     ));
 
-    commands.push_back(Command("identify", 2,
+    commands.push_back(Command(N_IDENTIFY, 2,
         [this] (std::vector <std::string> args)
         {
             app->identify(args[0], args[1]);
         }
     ));
 
-    commands.push_back(Command("message", 0,
+    commands.push_back(Command(N_MESSAGE, 0,
         [this] (std::vector <std::string> args)
         {
             auto to = ask("To: ");
@@ -62,7 +62,7 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         }   
     ));
 
-    commands.push_back(Command("message", 1,
+    commands.push_back(Command(N_MESSAGE, 1,
         [this] (std::vector <std::string> args)
         {
             std::vector <std::string> temp;
@@ -80,7 +80,7 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         }
     ));
 
-    commands.push_back(Command("@", 0,
+    commands.push_back(Command(N_BROADCAST, 0,
         [this] (std::vector <std::string> args)
         {
             auto m = ask("Message: ");
@@ -88,31 +88,24 @@ CLI::CLI(App* _app, std::vector <std::string> args)
         }
     ));
     
-    commands.push_back(Command("silent", 1,
-        [this] (std::vector <std::string> args)
-        {
-            if(args[0] == "on")
-                silent();
-            else if(args[0] == "off")
-                nosilent();
-            else
-                app->error("Invalid arguments.");
-        }
-    ));
-
-    commands.push_back(Command("help", 0,
+    commands.push_back(Command(N_HELP, 0,
         [this] (std::vector <std::string> args)
         {
             app->help();
         }
     ));
 
-    commands.push_back(Command("quit", 0,
+    commands.push_back(Command(N_QUIT, 0,
         [this] (std::vector <std::string> args)
         {
             app->exit();
         }
     ));
+
+    lock(N_DISCONNECT);
+    lock(N_IDENTIFY);
+    lock(N_MESSAGE);
+    lock(N_BROADCAST);
 }
 
 void CLI::run()
@@ -135,22 +128,24 @@ std::string CLI::readCommand()
     return str;
 }
 
-void CLI::silent()
+void CLI::lock(std::string name)
 {
-    silent_flag = true;
+    locked.emplace(name);
 }
 
-void CLI::nosilent()
+void CLI::unlock(std::string name)
 {
-    silent_flag = false;
-    std::cout << os.str();
+    locked.erase(name);
 }
 
 std::string CLI::ask(std::string what)
 {
     std::string answer;
     write(what);
+    
+    cout_mutex.lock();
     std::getline(std::cin, answer);
+    cout_mutex.unlock();
     return answer;
 }
 
@@ -159,13 +154,16 @@ void CLI::writeMessage(std::string sender, std::vector <std::string> receivers, 
     using namespace joyterm::style;
     std::ostringstream strm;
 
-    strm << "\n" << MStyle({FgColor::b_blue}) << "[ " << MStyle({Style::reset})
-        << sender 
-        << MStyle({FgColor::b_blue}) << " ]" << MStyle({Style::reset}) << " => ";
+    strm << "\n" << MStyle({FgColor::b_blue, Style::bold}) << "[ " << sender << " ]" << MStyle({Style::reset}) << " => ";
     
     for(auto i : receivers)
     {
-        strm << i << MStyle({FgColor::yellow}) << "," << MStyle({Style::reset});
+        strm << MStyle({FgColor::b_yellow, Style::bold}) << i << MStyle({Style::reset}) << ",";
+    }
+    
+    if(receivers.empty())
+    {
+        strm << MStyle({FgColor::white, BgColor::magenta, Style::bold}) << "ALL" << MStyle({Style::reset});
     }
 
     strm << "\n" << message << "\n";
@@ -193,8 +191,8 @@ void CLI::writeInfo(std::string message)
 void CLI::write(std::string message)
 {
     cout_mutex.lock();
-    (silent_flag ? os : std::cout) << std::flush;
-    (silent_flag ? os : std::cout) << message;
+    std::cout << std::flush;
+    std::cout << message;
     cout_mutex.unlock();
 }
 
@@ -259,7 +257,11 @@ Command CLI::findUniqueCommand(std::string name, int args)
 
     // check if the command name is unique
 
-    if(matches.size() == 1) return matches[0];
+    if(matches.size() == 1)
+    {
+        if(locked.contains(matches[0].name)) throw 0;
+        else return matches[0];
+    }
     else if(matches.size() == 0) throw 0;
     else throw 1;
 }

@@ -6,7 +6,9 @@ Session::Session(App* _app, std::shared_ptr <Connection> _connection)
     connection->setErrorCallback(
         [this] (SocketConnectionError error)
         {
-            app->error(error.what());
+            if(error.getCode().index() == 0)
+                if(std::get <boost::system::error_code> (error.getCode()).value() != (int)boost::asio::error::operation_aborted)
+                    app->error(error.what());
         }
     );
 }
@@ -58,10 +60,10 @@ void Session::sendBroadcastMessage(std::string message)
     connection->write(m.encodeMessage(), [] () {});
 }
 
-void Session::recvMessage(std::function <void(ChatMessage)> callback)
+void Session::recvMessage()
 {
     connection->read(
-        [this, callback] (std::vector <char> data)
+        [this] (std::vector <char> data)
         {
             ChatMessage m;
             if(m.decodeAll(data))
@@ -70,6 +72,17 @@ void Session::recvMessage(std::function <void(ChatMessage)> callback)
                 app->error("Malformed message.");
         }
     );
+}
+
+void Session::listen(std::function <void(ChatMessage)> _callback)
+{
+    callback = [this, _callback] (ChatMessage m)
+        {
+            _callback(m);
+            recvMessage();
+        };
+    
+    recvMessage();
 }
 
 std::string Session::getUsername()
