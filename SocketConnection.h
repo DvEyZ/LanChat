@@ -41,4 +41,5 @@ private:
 
 	std::vector <char> header_buffer;
 	std::vector <char> body_buffer;
+	std::vector <char> write_buffer;
 };

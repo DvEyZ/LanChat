@@ -56,10 +56,9 @@ void BasicAuth::getUserList()
 	std::ifstream user_file(USER_LIST_FILE);
 	nlohmann::json users;
 
-	users = nlohmann::json::parse(user_file);
-
 	try 
 	{
+		users = nlohmann::json::parse(user_file);
 		user_list = users["users"].get<std::map<std::string, std::string>>();
 	}
 	catch(nlohmann::json::exception)

@@ -12,7 +12,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	# MSVC directives
+	include(CMakeIncludes.txt)
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	add_link_options(-pthread)
 endif()

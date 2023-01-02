@@ -118,10 +118,10 @@ void SocketConnection::onRead()
 void SocketConnection::write(std::vector <char> text, std::function<void ()> callback)
 {
 	write_callback = callback;
-	std::vector <char> to_write = text;
+	write_buffer = std::vector <char> (text.begin(), text.end());
 	boost::asio::async_write(
 		socket,
-		boost::asio::buffer(to_write), 
+		boost::asio::buffer(write_buffer), 
 		[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
 		{
 			onWrite(error, bytes_transferred);
