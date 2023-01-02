@@ -90,9 +90,14 @@ void Session::onWriteIdentification(IdentifyResponseMessage::Status status)
     if(status == IdentifyResponseMessage::Status::ok)
     {
         chat->join(shared_from_this());
+        Session::awaiting_for_identification.erase(shared_from_this());
+        main();
     }
-    Session::awaiting_for_identification.erase(shared_from_this());
-    main();
+    else
+    {
+        Session::awaiting_for_identification.erase(shared_from_this());
+        return;
+    }
 }
 
 void Session::postMessage(ChatMessage message)

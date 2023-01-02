@@ -11,12 +11,7 @@ BasicAuth::BasicAuth(std::shared_ptr <Logger> _logger)
 
 	std::ifstream config_file(AUTH_CONFIG_FILE_SERVER);
 	nlohmann::json config;
-	if(!config_file.good())
-	{
-		logger->log("Configuration file not found, using default settings.");
-		useDefaultConfig();
-		return;
-	}
+	
 	try
 	{
 		config = nlohmann::json::parse(config_file);
@@ -60,12 +55,9 @@ void BasicAuth::getUserList()
 {
 	std::ifstream user_file(USER_LIST_FILE);
 	nlohmann::json users;
-	if(!user_file.good())
-	{
-		logger->log("User file not found, using default settings.");
-		useDefaultConfig();
-		return;
-	}
+
+	users = nlohmann::json::parse(user_file);
+
 	try 
 	{
 		user_list = users["users"].get<std::map<std::string, std::string>>();
