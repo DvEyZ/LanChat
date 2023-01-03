@@ -115,7 +115,14 @@ bool BasicAuth::permitMessage(ChatMessage message)
 bool BasicAuth::checkPassword(std::string user, std::string password)
 {
 	if(!require_password) return true;
-	if(user_list[user] == password)	return true;
+	try
+	{
+		if(user_list.at(user) == password)	return true;
+	}
+	catch(std::out_of_range)
+	{
+		return false;
+	}
 	return false;
 }
 

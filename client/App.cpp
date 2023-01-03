@@ -134,6 +134,8 @@ void App::disconnect()
     cli->lock(N_IDENTIFY);
     cli->lock(N_MESSAGE);
     cli->lock(N_BROADCAST);
+
+    cli->prompt = "> ";
 }
 
 void App::exit()
