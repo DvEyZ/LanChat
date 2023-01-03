@@ -158,7 +158,7 @@ void CLI::writeMessage(int type, std::string sender, std::vector <std::string> r
 
     if(type == ChatMessage::system || type == ChatMessage::system_broadcast)
     {
-        strm << "\n" << MStyle({FgColor::white, BgColor::magenta, Style::bold}) << "[ SYSTEM ]" << MStyle({Style::reset}) << " => ";
+        strm << "\n" << MStyle({FgColor::white, BgColor::green, Style::bold}) << "[ SYSTEM ]" << MStyle({Style::reset}) << " => ";
     }
     else
     {
