@@ -63,6 +63,8 @@ void App::connect(std::string host)
 
             cli->unlock(N_IDENTIFY);
             cli->unlock(N_DISCONNECT);
+
+            cli->prompt = session->getConnection()->getRemoteIp() + "> ";
         }
     );
 }
@@ -83,6 +85,8 @@ void App::identify(std::string name, std::string password)
                     cli->unlock(N_MESSAGE);
                     cli->unlock(N_BROADCAST);
                     
+                    cli->prompt = session->getUsername() + "@" + session->getConnection()->getRemoteIp() + "> ";
+
                     session->listen([this] (ChatMessage m) { onMessageReceived(m); });
                 }
                 else

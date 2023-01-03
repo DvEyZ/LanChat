@@ -106,6 +106,8 @@ CLI::CLI(App* _app, std::vector <std::string> args)
     lock(N_IDENTIFY);
     lock(N_MESSAGE);
     lock(N_BROADCAST);
+
+    prompt = "> ";
 }
 
 void CLI::run()
@@ -122,7 +124,7 @@ std::string CLI::readCommand()
 {
     std::string str;
     cout_mutex.lock();
-    std::cout << "> ";  // write even if silent_flag is true.
+    std::cout << prompt;  // write even if silent_flag is true.
     cout_mutex.unlock();
     std::getline(std::cin, str);
     return str;

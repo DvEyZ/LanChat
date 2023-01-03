@@ -40,6 +40,8 @@ public:
 
     void run();
     void stop();
+
+    std::string prompt;
 private:
     App* app;
     bool running;
