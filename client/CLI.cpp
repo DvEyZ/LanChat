@@ -229,6 +229,11 @@ void CLI::executeCommand(std::string command)
         }
     }
 
+    for(int i = 0; i < args.size(); i++)
+    {
+        if(args[i].empty() || std::all_of(args[i].begin(), args[i].end(), [] (char c) -> bool { return isspace(c); }))
+            args.erase(args.begin() + i);
+    }
     // todo: delete all args that are whitespace-only.
     
     try
