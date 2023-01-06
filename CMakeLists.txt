@@ -17,6 +17,17 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 	add_link_options(-pthread)
 endif()
 
+add_library(LibLanChatMessages
+    "message/Message.cpp"
+    "message/Addressed.cpp"
+    "message/Readable.cpp"
+    "message/Signed.cpp"
+    "message/ReadableMessageBody.cpp"
+    "message/SendMessage.cpp"
+    "message/ResponseMessage.cpp"
+    "message/IdentifyMessage.cpp"
+    "MessageWrapper.cpp"
+)
 add_library(LibLanChatGeneric 
 	Message.cpp 
 	ChatMessage.cpp 
@@ -37,19 +48,7 @@ target_link_libraries(LanChatClient LibLanChatGeneric)
 
 enable_testing()
 
-add_executable(ChatMessageTest tests/ChatMessageTest.cpp)
-target_link_libraries(ChatMessageTest GTest::gtest_main)
-target_link_libraries(ChatMessageTest LibLanChatGeneric)
-
-add_executable(IdentifyMessageTest tests/IdentifyMessageTest.cpp)
-target_link_libraries(IdentifyMessageTest GTest::gtest_main)
-target_link_libraries(IdentifyMessageTest LibLanChatGeneric)
-
-add_executable(IdentifyResponseMessageTest tests/IdentifyResponseMessageTest.cpp)
-target_link_libraries(IdentifyResponseMessageTest GTest::gtest_main)
-target_link_libraries(IdentifyResponseMessageTest LibLanChatGeneric)
+add_executable(SendMessageTest tests/SendMessageTest.cpp)
+target_link_libraries(SendMessageTest LibLanChatMessages GTest::gtest_main)
 
 include(GoogleTest)
-
-gtest_discover_tests(ChatMessageTest)
-gtest_discover_tests(IdentifyMessageTest)

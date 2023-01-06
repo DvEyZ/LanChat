@@ -3,21 +3,25 @@
 const std::string ResponseMessage::STATUS = "Response_status";
 const std::string ResponseMessage::MT = "response";
 
+ResponseMessage::ResponseMessage()
+    :Message(MT)
+{}
+
 ResponseMessage::ResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status s)
     :Message(MT), Addressed(receivers), Readable(body), status(s)
 {}
 
 void ResponseMessage::encodeContent(nlohmann::json& json)
 {
-    Addressed::encode(json);
-    Readable::encode(json);
+    Addressed::encodeSelf(json);
+    Readable::encodeSelf(json);
     encodeSelf(json);
 }
 
 bool ResponseMessage::decodeContent(nlohmann::json json)
 {
-    bool a = Addressed::decode(json);
-    bool r = Readable::decode(json);
+    bool a = Addressed::decodeSelf(json);
+    bool r = Readable::decodeSelf(json);
     bool e = decodeSelf(json);
     return a && r && e;
 }

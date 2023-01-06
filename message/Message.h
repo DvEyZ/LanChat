@@ -10,7 +10,7 @@ class Message
 {
 public:
     Message(std::string type);
-    typedef std::chrono::system_clock::time_point Timestamp;
+    typedef std::chrono::system_clock::duration Timestamp;
 
     std::string getVersion();
     std::string getType();

@@ -4,7 +4,9 @@
 
 class IdentifyMessage : public Message
 {
+public:
     const static std::string MT;
+    IdentifyMessage();
     IdentifyMessage(std::string name, std::string pass);
 
     std::string getUsername();

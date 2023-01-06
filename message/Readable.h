@@ -5,11 +5,12 @@
 class Readable
 {
 public:
+    Readable() {};
     Readable(ReadableMessageBody b);
     ReadableMessageBody getBody();
 protected:
-    bool decode(nlohmann::json json);
-    void encode(nlohmann::json& json);
+    bool decodeSelf(nlohmann::json json);
+    void encodeSelf(nlohmann::json& json);
 private:
     ReadableMessageBody body;
     const static std::string TYPE;

@@ -11,7 +11,7 @@ std::string Signed::getSender()
     return sender;
 }
 
-bool Signed::decode(nlohmann::json json)
+bool Signed::decodeSelf(nlohmann::json json)
 {
     try
     {
@@ -24,7 +24,7 @@ bool Signed::decode(nlohmann::json json)
     return true;
 }
 
-void Signed::encode(nlohmann::json& json)
+void Signed::encodeSelf(nlohmann::json& json)
 {
     json[SENDER] = sender;
 }

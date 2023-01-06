@@ -5,20 +5,24 @@ const std::string SendMessage::TYPE = "Send_type";
 const std::string SendMessage::TYPE_TARGET = "target";
 const std::string SendMessage::TYPE_BROADCAST = "broadcast";
 
+SendMessage::SendMessage()
+    :Message(MT)
+{}
+
 SendMessage::SendMessage(std::string sender, std::vector <std::string> receivers, ReadableMessageBody body, std::string t)
     :Message(MT), Signed(sender), Addressed(receivers), Readable(body), type(t)
 {}
 
-std::string SendMessage::getType()
+std::string SendMessage::getSendMessageType()
 {
     return type;
 }
 
 void SendMessage::encodeContent(nlohmann::json& json)
 {
-    Signed::encode(json);
-    Addressed::encode(json);
-    Readable::encode(json);
+    Signed::encodeSelf(json);
+    Addressed::encodeSelf(json);
+    Readable::encodeSelf(json);
     encodeSelf(json);
 }
 
@@ -29,9 +33,9 @@ void SendMessage::encodeSelf(nlohmann::json& json)
 
 bool SendMessage::decodeContent(nlohmann::json json)
 {
-    bool s = Signed::decode(json);
-    bool a = Addressed::decode(json);
-    bool r = Readable::decode(json);
+    bool s = Signed::decodeSelf(json);
+    bool a = Addressed::decodeSelf(json);
+    bool r = Readable::decodeSelf(json);
     bool e = decodeSelf(json);
     return s && a && r && e;
 }

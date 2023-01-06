@@ -5,12 +5,14 @@
 class MessageWrapper
 {
 public:
-    MessageWrapper(Message& m);
-    Message& getMessage();
-
+    MessageWrapper(Message&);
+    void decode(std::vector <char> data);
+    void decodeHeader(std::vector <char> data);
+    void decodeBody(std::vector <char> data);
+    uint32_t getLength();
+    std::string getData();
     std::vector <char> encode();
-    bool decode(std::vector <char> data);
 private:
-    int length;
-    std::string data; 
+    uint32_t length;
+    std::string data;
 };

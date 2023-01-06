@@ -16,7 +16,7 @@ public:
         BAD_DATA = 102,
         DENIED = 103
     };
-
+    ResponseMessage();
     ResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status status = OK);
     Status getStatus();
     bool ok();

@@ -6,6 +6,7 @@
 class ReadableMessageBody
 {
 public:
+    ReadableMessageBody() {};
     ReadableMessageBody(std::string str, std::string type = "text");
     std::string getType();
     std::string getContent();  

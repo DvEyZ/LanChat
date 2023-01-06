@@ -4,6 +4,10 @@ const std::string IdentifyMessage::USERNAME = "Identify_username";
 const std::string IdentifyMessage::PASSWORD = "Identify_password";
 const std::string IdentifyMessage::MT = "identify";
 
+IdentifyMessage::IdentifyMessage()
+    :Message(MT)
+{}
+
 IdentifyMessage::IdentifyMessage(std::string name, std::string pass)
     :Message(MT), username(name), password(pass)
 {}
