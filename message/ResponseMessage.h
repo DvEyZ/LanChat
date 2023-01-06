@@ -16,7 +16,6 @@ public:
         MALFORMED_MESSAGE = 301,    // Malformed message. Use this if decoding of message fails.
         BAD_DATA = 302,             // Bad data. Use this if decoding succeeds, but the data itself either is either malformed, or makes no sense together.
         DENIED = 303,               // Denied. Use this if data is OK, but the server denies it, for any reason.
-        UNEXPECTED = 304            // Unexpected. Use this if a message was received which is not expected in the current context.
     };
     ResponseMessage();
     ResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status status = INFO);
