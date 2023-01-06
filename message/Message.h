@@ -18,9 +18,10 @@ public:
 
     std::string encode();
     bool decode(std::string message);
+protected:
+    const static std::string TYPE;
 private:
     const static std::string VERSION;
-    const static std::string TYPE;
     const static std::string TIMESTAMP;
 
     void encodeCommon(nlohmann::json& json);

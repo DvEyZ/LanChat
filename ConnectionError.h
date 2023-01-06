@@ -5,7 +5,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/asio.hpp>
 
-class SocketConnectionError
+class ConnectionError
 {
 public:
     enum Code
@@ -13,8 +13,8 @@ public:
         malformed_headers = 1
     };
 
-    SocketConnectionError(boost::system::error_code code);
-    SocketConnectionError(int code);
+    ConnectionError(boost::system::error_code code);
+    ConnectionError(int code);
     std::variant <boost::system::error_code, int> getCode();
     std::string what();
 private:

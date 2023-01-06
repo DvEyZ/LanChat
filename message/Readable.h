@@ -13,6 +13,6 @@ protected:
     void encodeSelf(nlohmann::json& json);
 private:
     ReadableMessageBody body;
-    const static std::string TYPE;
+    const static std::string BODY_TYPE;
     const static std::string BODY;
 };

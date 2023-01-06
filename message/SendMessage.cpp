@@ -42,6 +42,8 @@ bool SendMessage::decodeContent(nlohmann::json json)
 
 bool SendMessage::decodeSelf(nlohmann::json json)
 {
+    if(json[TYPE] != MT)
+        return false;
     try
     {
         type = json[TYPE];

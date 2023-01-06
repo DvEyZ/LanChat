@@ -1,14 +1,18 @@
 #include "SocketConnection.h"
 
 SocketConnection::SocketConnection(boost::asio::io_context& iocontext)
-	:socket(iocontext), malformed_messages(0), header_buffer(), body_buffer(), error_callback()
+	:socket(iocontext), header_buffer(), body_buffer(), error_callback()
 {
 
 }
 
 SocketConnection::~SocketConnection()
 {
-	socket.close();
+    if(!socket.is_open())
+    {
+        socket.shutdown(boost::asio::socket_base::shutdown_both);
+	    socket.close();
+    }
 }
 
 std::string SocketConnection::getRemoteIp()
@@ -21,12 +25,12 @@ boost::asio::ip::tcp::socket& SocketConnection::getSocket()
 	return socket;
 }
 
-void SocketConnection::setErrorCallback(std::function <void(SocketConnectionError)> callback)
+void SocketConnection::setErrorCallback(std::function <void(ConnectionError)> callback)
 {
 	error_callback = callback;
 }
 
-void SocketConnection::read(std::function<void(std::vector <char>)> callback)
+void SocketConnection::read(std::function<void(MessageWrapper)> callback)
 {
 	read_callback = callback;
 	readHeader();
@@ -40,7 +44,7 @@ void SocketConnection::close()
 
 void SocketConnection::readHeader()
 {
-	header_buffer = std::vector <char> (MESSAGE_HEADER_LENGTH, '\0');
+	header_buffer = std::vector <char> (sizeof(uint32_t), '\0');
 	boost::asio::async_read(
 		socket, 
 		boost::asio::buffer(header_buffer), 
@@ -55,70 +59,50 @@ void SocketConnection::onReadHeader(const boost::system::error_code& error, std:
 {
 	if(!error)
 	{
-		int temp = 0;
-		try
-		{
-			std::string str(header_buffer.begin(), header_buffer.end());
-			temp = std::stoi(str);
-			readBody();
-		}
-		catch(std::invalid_argument)
-		{
-			onMalformed();
-		}
+        read_wrapper.decodeHeader(header_buffer);
+        readBody();
 	}
 	else
 	{
-		onError(SocketConnectionError(error));
+		onError(ConnectionError(error));
 	}
 }
 
 void SocketConnection::readBody()
 {
-	int l = std::stoi(std::string(header_buffer.begin(), header_buffer.end()));
-	body_buffer = std::vector(l, '\0');
+	body_buffer = std::vector(read_wrapper.getLength(), '\0');
 	boost::asio::async_read(
 		socket, 
 		boost::asio::buffer(body_buffer),
-		[this, l] (const boost::system::error_code& error, std::size_t bytes_transferred)
+		[this] (const boost::system::error_code& error, std::size_t bytes_transferred)
 		{
-			onReadBody(l, error, bytes_transferred);
+			onReadBody(error, bytes_transferred);
 		}
 	);
 }
 
-void SocketConnection::onReadBody(int l, const boost::system::error_code& error, std::size_t bytes_transferred)
+void SocketConnection::onReadBody(const boost::system::error_code& error, std::size_t bytes_transferred)
 {
 	if(!error)
 	{
-		if(body_buffer.size() != l)	// tu jest błąd
-		{
-			onMalformed();
-		} 
-		else
-		{
-			malformed_messages = 0;
-			onRead();
-		}
+		read_wrapper.decodeBody(body_buffer);
+        onRead();
 	}
 	else
 	{
-		onError(SocketConnectionError(error));
+		onError(ConnectionError(error));
 	}
 }
 
 void SocketConnection::onRead()
 {
-	std::vector <char> return_buffer;
-	return_buffer.insert(return_buffer.end(), header_buffer.begin(), header_buffer.end());
-	return_buffer.insert(return_buffer.end(), body_buffer.begin(), body_buffer.end());
-	read_callback(return_buffer);
+	read_callback(read_wrapper);
 }
 
-void SocketConnection::write(std::vector <char> text, std::function<void ()> callback)
+void SocketConnection::write(MessageWrapper msg, std::function<void ()> callback)
 {
 	write_callback = callback;
-	write_buffer = std::vector <char> (text.begin(), text.end());
+	write_buffer = msg.encode();
 	boost::asio::async_write(
 		socket,
 		boost::asio::buffer(write_buffer), 
@@ -137,24 +121,11 @@ void SocketConnection::onWrite(const boost::system::error_code& error, std::size
 	}
 	else
 	{
-		onError(SocketConnectionError(error));
+		onError(ConnectionError(error));
 	}
 }
 
-void SocketConnection::onMalformed()
-{
-	malformed_messages++;
-	if(malformed_messages < CONNECTION_MAX_MALFORMED_IN_A_ROW)
-	{
-		readHeader();
-	}
-	else
-	{
-		onError(SocketConnectionError(1));
-	}
-}
-
-void SocketConnection::onError(SocketConnectionError error)
+void SocketConnection::onError(ConnectionError error)
 {
 	this->error_callback(error);	// pass to error callback if unhandled.
 }

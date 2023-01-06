@@ -40,6 +40,8 @@ bool IdentifyMessage::decodeContent(nlohmann::json json)
 
 bool IdentifyMessage::decodeSelf(nlohmann::json json)
 {
+    if(json[TYPE] != MT)
+        return false;
     try
     {
         username = json[USERNAME];

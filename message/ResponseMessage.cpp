@@ -33,6 +33,8 @@ void ResponseMessage::encodeSelf(nlohmann::json& json)
 
 bool ResponseMessage::decodeSelf(nlohmann::json json)
 {
+    if(json[TYPE] != MT)
+        return false;
     try
     {
         status = json[STATUS];

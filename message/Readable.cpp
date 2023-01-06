@@ -1,6 +1,6 @@
 #include "Readable.h"
 
-const std::string Readable::TYPE = "Readable_type";
+const std::string Readable::BODY_TYPE = "Readable_type";
 const std::string Readable::BODY = "Readable_body";
 
 Readable::Readable(ReadableMessageBody b)
@@ -16,7 +16,7 @@ bool Readable::decodeSelf(nlohmann::json json)
 {
     try
     {
-        body = ReadableMessageBody(json[BODY].get<std::string>(), json[TYPE].get<std::string>());
+        body = ReadableMessageBody(json[BODY].get<std::string>(), json[BODY_TYPE].get<std::string>());
     }
     catch(const std::exception& e)
     {
@@ -27,6 +27,6 @@ bool Readable::decodeSelf(nlohmann::json json)
 
 void Readable::encodeSelf(nlohmann::json& json)
 {
-    json[TYPE] = body.getType();
+    json[BODY_TYPE] = body.getType();
     json[BODY] = body.getContent();
 }
