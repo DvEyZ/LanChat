@@ -6,11 +6,10 @@
 class ReadableMessageBody
 {
 public:
+    ReadableMessageBody(std::string str, std::string type = "text");
     std::string getType();
-
-    std::string getText();
-    std::vector <std::byte> getBin();
+    std::string getContent();  
 private:
     std::string type;
-    std::vector <std::byte> content;
+    std::string content;
 };

@@ -1,8 +1,14 @@
 #include "Message.h"
 
-unsigned int Message::getLength()
+const std::string Message::TYPE = "Message_type";
+const std::string Message::VERSION = "Message_version";
+const std::string Message::TIMESTAMP = "Message_timestamp";
+
+Message::Message(std::string t)
 {
-    return length;
+    type = t;
+    version = MESSAGE_VERSION;
+    timestamp = std::chrono::system_clock::now();
 }
 
 std::string Message::getType()
@@ -20,30 +26,16 @@ Message::Timestamp Message::getTimestamp()
     return timestamp;
 }
 
-std::vector <char> Message::encode()
+std::string Message::encode()
 {
     nlohmann::json json;
-    std::string result;
     encodeCommon(json);
     encodeContent(json);
-
-    char len_encoded[sizeof(unsigned int)];
-    memmove(len_encoded, &length, sizeof(unsigned int));
-
-    result += len_encoded;
-    result += json.dump();
-
-    return std::vector <char> (result.begin(), result.end());
+    return json.dump();
 }
 
 bool Message::decode(std::string message)
 {
-    char* len_encoded = new char[sizeof(unsigned int)];
-    len_encoded = message.substr(0, sizeof(unsigned int)).data();
-    memmove(&length, len_encoded, sizeof(unsigned int));
-    message.erase(0, sizeof(unsigned int));
-    delete len_encoded;
-
     nlohmann::json json;
     try
     {
@@ -62,18 +54,18 @@ bool Message::decode(std::string message)
 
 void Message::encodeCommon(nlohmann::json& json)
 {
-    json["version"] = version;
-    json["type"] = type;
-    json["timestamp"] = timestamp.time_since_epoch().count();
+    json[VERSION] = version;
+    json[TYPE] = type;
+    json[TIMESTAMP] = timestamp.time_since_epoch().count();
 }
 
 bool Message::decodeCommon(nlohmann::json json)
 {
     try
     {
-        version = json["version"].get<std::string>();
-        type = json["type"].get<std::string>();
-        auto duration = std::chrono::seconds (json["timestamp"].get<int64_t>());
+        version = json[VERSION].get<std::string>();
+        type = json[TYPE].get<std::string>();
+        auto duration = std::chrono::seconds (json[TIMESTAMP].get<int64_t>());
         timestamp = Timestamp(duration);
     }
     catch(const std::exception& e)
