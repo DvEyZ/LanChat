@@ -51,5 +51,5 @@ ResponseMessage::Status ResponseMessage::getStatus()
 
 bool ResponseMessage::ok()
 {
-    return status == ResponseMessage::OK;
+    return status < 300;
 }
