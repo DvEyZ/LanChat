@@ -2,9 +2,12 @@
 
 #include "message/Message.h"
 
+class Message;
+
 class MessageWrapper
 {
 public:
+    MessageWrapper() {};
     MessageWrapper(Message&);
     void decode(std::vector <char> data);
     void decodeHeader(std::vector <char> data);

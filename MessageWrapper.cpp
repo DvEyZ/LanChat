@@ -43,7 +43,7 @@ std::vector <char> MessageWrapper::encode()
 
     std::vector <char> sum;
     sum.insert(sum.end(), len.begin(), len.end());
-    sum.insert(sum.end(), sum.begin(), sum.end());
+    sum.insert(sum.end(), dat.begin(), dat.end());
 
     return sum;
 }

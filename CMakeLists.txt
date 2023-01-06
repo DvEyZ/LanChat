@@ -29,7 +29,7 @@ add_library(LibLanChatMessages
     "MessageWrapper.cpp"
 )
 add_library(LibLanChatGeneric 
-	Message.cpp 
+	Message.cpp
 	ChatMessage.cpp 
 	IdentifyMessage.cpp
 	IdentifyResponseMessage.cpp 
@@ -51,4 +51,19 @@ enable_testing()
 add_executable(SendMessageTest tests/SendMessageTest.cpp)
 target_link_libraries(SendMessageTest LibLanChatMessages GTest::gtest_main)
 
+add_executable(IdentifyMessageTest tests/IdentifyMessageTest.cpp)
+target_link_libraries(IdentifyMessageTest LibLanChatMessages GTest::gtest_main)
+
+add_executable(ResponseMessageTest tests/ResponseMessageTest.cpp)
+target_link_libraries(ResponseMessageTest LibLanChatMessages GTest::gtest_main)
+
+add_executable(MessageWrapperTest tests/MessageWrapperTest.cpp)
+target_link_libraries(MessageWrapperTest LibLanChatMessages GTest::gtest_main)
+
+
 include(GoogleTest)
+
+gtest_discover_tests(SendMessageTest)
+gtest_discover_tests(IdentifyMessageTest)
+gtest_discover_tests(ResponseMessageTest)
+gtest_discover_tests(MessageWrapperTest)

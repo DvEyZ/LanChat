@@ -46,8 +46,7 @@ TEST_F(SendMessageTest, IsEncodeWorking)
 {
     auto x = m->encode();
     std::cerr << x << "\n";
-    std::this_thread::sleep_for(std::chrono::seconds(5));
     SendMessage m2;
-    m2.decode(x);
+    ASSERT_TRUE(m2.decode(x));
     std::cerr << m2.encode() << "\n";
 }
