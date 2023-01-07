@@ -8,7 +8,7 @@ Session::Session(std::shared_ptr<Connection> _connection, Chat* _chat, std::shar
     :connection(_connection), chat(_chat), logger(_logger)
 {
     connection->setErrorCallback(
-        [this] (SocketConnectionError err) mutable
+        [this] (ConnectionError err) mutable
         {
             onError(err);
         }
@@ -36,83 +36,81 @@ void Session::main()
 
 void Session::readMessage()
 {
-    connection->read([this] (std::vector <char> message) {onReadMessage(message);});
+    connection->read([this] (MessageWrapper w) { onReadMessage(w);});
 }
 
-void Session::onReadMessage(std::vector <char> message)
+void Session::onReadMessage(MessageWrapper w)
 {
-    ChatMessage m;
-    if(m.decodeAll(message))
+    SendMessage m;
+    if(m.decode(w.getData()))
     {
         chat->messageIncoming(m);
-        main();
     }
+    else
+    {
+        ResponseMessage m({"Malformed message."}, ResponseMessage::MALFORMED_MESSAGE);
+        postMessage(m);
+    }
+    main();
 }
 
 void Session::readIdentification()
 {
-    connection->read([this] (std::vector <char> message) {onReadIdentification(message);});
+    connection->read([this] (MessageWrapper w) {onReadIdentification(w);});
 }
 
-void Session::onReadIdentification(std::vector <char> message)
+void Session::onReadIdentification(MessageWrapper message)
 {
     IdentifyMessage id;
-    if(id.decodeAll(message))
+    if(id.decode(message.getData()))
     {
         identify(id);
     }
     else
     {
-        writeIdentification(IdentifyResponseMessage::Status::auth_failed_malformed);
+        ResponseMessage m({"Malformed message."}, ResponseMessage::MALFORMED_MESSAGE);
+        writeMessage(m, [this] () { onError(ConnectionError(ResponseMessage::MALFORMED_MESSAGE)); });
     }
 }
 
 void Session::identify(IdentifyMessage id)
 {
-    user = id.getUsername();
-    IdentifyResponseMessage::Status status;
-    status = chat->auth->authenticate(id);
-    if(status == IdentifyResponseMessage::Status::ok)
-        status = chat->auth->permitConnection(shared_from_this());
-    
-    IdentifyResponseMessage resp(status);
+    ResponseMessage resp;
 
-    writeIdentification(resp);
+    // REORGANIZACJA
+
+    writeMessage(resp, 
+        [this, resp] () mutable
+        {
+            if(resp.ok())
+                onWriteIdentification();
+            else
+                onError(resp.getStatus());
+        } 
+    );
 }
 
-void Session::writeIdentification(IdentifyResponseMessage resp)
+void Session::onWriteIdentification()
 {
-    connection->write(resp.encodeMessage(), [this, resp] () mutable { onWriteIdentification(resp.getStatus()); });
+    chat->join(shared_from_this());
+    Session::awaiting_for_identification.erase(shared_from_this());
+    main();
 }
 
-void Session::onWriteIdentification(IdentifyResponseMessage::Status status)
-{
-    if(status == IdentifyResponseMessage::Status::ok)
-    {
-        chat->join(shared_from_this());
-        Session::awaiting_for_identification.erase(shared_from_this());
-        main();
-    }
-    else
-    {
-        Session::awaiting_for_identification.erase(shared_from_this());
-        return;
-    }
-}
-
-void Session::postMessage(ChatMessage message)
+void Session::postMessage(Message& message)
 {
     bool idle = recentMsgWrite.empty();
     recentMsgWrite.push(message);
     if(idle)
     {
-        writeMessage(recentMsgWrite.front());
+        writeMessage(recentMsgWrite.front(), [this] () { onWriteMessage(); });
     }
 }
 
-void Session::writeMessage(ChatMessage message)
+void Session::writeMessage(Message& message, std::function <void()> callback)
 {
-    connection->write(message.encodeMessage(), [this] () {onWriteMessage();});
+    MessageWrapper wrapper(message);
+    connection->write(wrapper, callback);
 }
 
 void Session::onWriteMessage()
@@ -120,11 +118,11 @@ void Session::onWriteMessage()
     recentMsgWrite.pop();
     if(!recentMsgWrite.empty())
     {
-        writeMessage(recentMsgWrite.front());
+        writeMessage(recentMsgWrite.front(), [this] () { onWriteMessage(); });
     }
 }
 
-void Session::onError(SocketConnectionError error)
+void Session::onError(ConnectionError error)
 {
     logger->log(error.what());
     chat->leave(shared_from_this());

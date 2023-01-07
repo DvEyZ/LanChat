@@ -34,7 +34,7 @@ add_library(LibLanChatGeneric
 	IdentifyMessage.cpp
 	IdentifyResponseMessage.cpp 
 	SocketConnection.cpp 
-	SocketConnectionError.cpp 
+	ConnectionError.cpp 
 	helper_functions.cpp
 )
 add_library(LibLanChatServer server/Auth.cpp server/Server.cpp server/Session.cpp)

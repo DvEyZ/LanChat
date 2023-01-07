@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../IdentifyMessage.h"
-#include "../IdentifyResponseMessage.h"
+#include "../message/IdentifyMessage.h"
+#include "../message/ResponseMessage.h"
 #include "Chat.h"
 #include "Logger.h"
 

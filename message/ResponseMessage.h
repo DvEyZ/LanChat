@@ -4,7 +4,7 @@
 #include "Readable.h"
 #include "Addressed.h"
 
-class ResponseMessage : public Message, public Readable, public Addressed
+class ResponseMessage : public Message, public Readable
 {
 public:
     const static std::string MT;
@@ -18,10 +18,10 @@ public:
         DENIED = 303,               // Denied. Use this if data is OK, but the server denies it, for any reason.
     };
     ResponseMessage();
-    ResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status status = INFO);
+    ResponseMessage(ReadableMessageBody body, Status status = INFO);
     Status getStatus();
     bool ok();
-private:
+protected:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);
     bool decodeContent(nlohmann::json json);

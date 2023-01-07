@@ -10,7 +10,7 @@ class BasicChat : public Chat
 {
 public:
 	BasicChat(Auth* _auth, std::shared_ptr <Logger> _logger);
-	virtual void messageIncoming(ChatMessage message);
+	virtual void messageIncoming(Addressed message);
 	virtual void join(std::shared_ptr <Session> session);
 	virtual void leave(std::shared_ptr <Session> session);
 	std::set <std::shared_ptr <Session>> getUserConnections(std::string username);

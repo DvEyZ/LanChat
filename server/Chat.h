@@ -15,7 +15,7 @@ class Session;
 class Chat
 {
 public:
-	virtual void messageIncoming(ChatMessage message) = 0;
+	virtual void messageIncoming(Addressed& message) = 0;
 	virtual void join(std::shared_ptr <Session> session) = 0;
 	virtual void leave(std::shared_ptr <Session> session) = 0;
 	virtual std::set <std::shared_ptr <Session>> getUserConnections(std::string username) = 0;
