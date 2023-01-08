@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../SendMessage.h"
-#include "../ResponseMessage.h"
+#include "../AddressedResponseMessage.h"
 #include "../IdentifyMessage.h"
 
 class IMessageVisitor
