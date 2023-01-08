@@ -7,12 +7,14 @@ protected:
     void SetUp() override
     {
         m = new AddressedResponseMessage({"r1", "r2"}, ReadableMessageBody("Your message was not delivered."), ResponseMessage::DENIED);
+        m_observer = dynamic_cast <Readable*> (m);
     }
 
     void TearDown() override
     {
         delete m;
     }
+    Readable* m_observer;
     Message* m;
 };
 

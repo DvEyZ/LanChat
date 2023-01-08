@@ -4,7 +4,7 @@
 #include "Readable.h"
 #include "Addressed.h"
 
-class ResponseMessage : virtual public Readable
+class ResponseMessage : public Readable
 {
 public:
     const static std::string MT;
