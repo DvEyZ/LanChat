@@ -60,6 +60,8 @@ target_link_libraries(ResponseMessageTest LibLanChatMessages GTest::gtest_main)
 add_executable(MessageWrapperTest tests/MessageWrapperTest.cpp)
 target_link_libraries(MessageWrapperTest LibLanChatMessages GTest::gtest_main)
 
+add_executable(ReadableTest tests/ReadableTest.cpp)
+target_link_libraries(ReadableTest LibLanChatMessages GTest::gtest_main)
 
 include(GoogleTest)
 
@@ -67,3 +69,4 @@ gtest_discover_tests(SendMessageTest)
 gtest_discover_tests(IdentifyMessageTest)
 gtest_discover_tests(ResponseMessageTest)
 gtest_discover_tests(MessageWrapperTest)
+gtest_discover_tests(ReadableTest)
