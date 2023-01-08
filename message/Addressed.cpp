@@ -11,7 +11,7 @@ std::vector <std::string> Addressed::getReceivers()
     return receivers;
 }
 
-bool Addressed::decodeSelf(nlohmann::json json)
+bool Addressed::decodeContent(nlohmann::json json)
 {
     try
     {
@@ -24,7 +24,7 @@ bool Addressed::decodeSelf(nlohmann::json json)
     return true;
 }
 
-void Addressed::encodeSelf(nlohmann::json& json)
+void Addressed::encodeContent(nlohmann::json& json)
 {
     json[RECEIVERS] = receivers;
 }

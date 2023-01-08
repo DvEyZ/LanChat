@@ -29,10 +29,10 @@ add_library(LibLanChatMessages
     "MessageWrapper.cpp"
 )
 add_library(LibLanChatGeneric 
-	Message.cpp
-	ChatMessage.cpp 
-	IdentifyMessage.cpp
-	IdentifyResponseMessage.cpp 
+	#Message.cpp
+	#ChatMessage.cpp 
+	#IdentifyMessage.cpp
+	#IdentifyResponseMessage.cpp 
 	SocketConnection.cpp 
 	ConnectionError.cpp 
 	helper_functions.cpp

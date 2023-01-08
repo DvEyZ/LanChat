@@ -12,7 +12,7 @@ ReadableMessageBody Readable::getBody()
     return body;
 }
 
-bool Readable::decodeSelf(nlohmann::json json)
+bool Readable::decodeContent(nlohmann::json json)
 {
     try
     {
@@ -25,7 +25,7 @@ bool Readable::decodeSelf(nlohmann::json json)
     return true;
 }
 
-void Readable::encodeSelf(nlohmann::json& json)
+void Readable::encodeContent(nlohmann::json& json)
 {
     json[BODY_TYPE] = body.getType();
     json[BODY] = body.getContent();

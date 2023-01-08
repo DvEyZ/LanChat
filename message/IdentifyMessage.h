@@ -6,9 +6,11 @@ class IdentifyMessage : public Message
 {
 public:
     const static std::string MT;
-    IdentifyMessage();
+    IdentifyMessage() {};
     IdentifyMessage(std::string name, std::string pass);
 
+    virtual ~IdentifyMessage() {};
+    std::string getType();
     std::string getUsername();
     std::string getPassword();
 private:

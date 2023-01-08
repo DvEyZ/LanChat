@@ -4,13 +4,15 @@ const std::string IdentifyMessage::USERNAME = "Identify_username";
 const std::string IdentifyMessage::PASSWORD = "Identify_password";
 const std::string IdentifyMessage::MT = "identify";
 
-IdentifyMessage::IdentifyMessage()
-    :Message(MT)
-{}
 
 IdentifyMessage::IdentifyMessage(std::string name, std::string pass)
-    :Message(MT), username(name), password(pass)
+    :username(name), password(pass)
 {}
+
+std::string IdentifyMessage::getType()
+{
+    return MT;
+}
 
 std::string IdentifyMessage::getUsername()
 {
@@ -40,8 +42,6 @@ bool IdentifyMessage::decodeContent(nlohmann::json json)
 
 bool IdentifyMessage::decodeSelf(nlohmann::json json)
 {
-    if(json[TYPE] != MT)
-        return false;
     try
     {
         username = json[USERNAME];

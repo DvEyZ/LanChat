@@ -3,23 +3,25 @@
 const std::string ResponseMessage::STATUS = "Response_status";
 const std::string ResponseMessage::MT = "response";
 
-ResponseMessage::ResponseMessage()
-    :Message(MT)
-{}
 
 ResponseMessage::ResponseMessage(ReadableMessageBody body, Status s)
-    :Message(MT),  Readable(body), status(s)
+    :Readable(body), status(s)
 {}
+
+std::string ResponseMessage::getType()
+{
+    return MT;
+}
 
 void ResponseMessage::encodeContent(nlohmann::json& json)
 {
-    Readable::encodeSelf(json);
+    Readable::encodeContent(json);
     encodeSelf(json);
 }
 
 bool ResponseMessage::decodeContent(nlohmann::json json)
 {
-    bool r = Readable::decodeSelf(json);
+    bool r = Readable::decodeContent(json);
     bool e = decodeSelf(json);
     return r && e;
 }
@@ -31,8 +33,6 @@ void ResponseMessage::encodeSelf(nlohmann::json& json)
 
 bool ResponseMessage::decodeSelf(nlohmann::json json)
 {
-    if(json[TYPE] != MT)
-        return false;
     try
     {
         status = json[STATUS];

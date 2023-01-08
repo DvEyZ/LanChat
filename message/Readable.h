@@ -1,16 +1,17 @@
 #pragma once
 #include "ReadableMessageBody.h"
-#include <nlohmann/json.hpp>
+#include "Message.h"
 
-class Readable
+class Readable : virtual public Message
 {
 public:
     Readable() {};
     Readable(ReadableMessageBody b);
+    virtual ~Readable() {};
     ReadableMessageBody getBody();
 protected:
-    bool decodeSelf(nlohmann::json json);
-    void encodeSelf(nlohmann::json& json);
+    bool decodeContent(nlohmann::json json);
+    void encodeContent(nlohmann::json& json);
 private:
     ReadableMessageBody body;
     const static std::string BODY_TYPE;

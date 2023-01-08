@@ -9,11 +9,12 @@ const static std::string MESSAGE_VERSION = "1.0";
 class Message
 {
 public:
-    Message(std::string type);
+    Message();
+    virtual ~Message() {};
     typedef std::chrono::system_clock::duration Timestamp;
 
     std::string getVersion();
-    std::string getType();
+    virtual std::string getType() = 0;
     Timestamp getTimestamp();
 
     std::string encode();
@@ -31,6 +32,5 @@ private:
     virtual bool decodeContent(nlohmann::json json) = 0;
 
     std::string version;
-    std::string type;
     Timestamp timestamp;
 };

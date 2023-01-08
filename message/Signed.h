@@ -1,16 +1,17 @@
 #pragma once
-#include <string>
-#include <nlohmann/json.hpp>
+#include "Message.h"
 
-class Signed
+class Signed : virtual public Message
 {
 public:
     Signed() {};
     Signed(std::string sender);
+
+    virtual ~Signed() {};
     std::string getSender();
 protected:
-    bool decodeSelf(nlohmann::json json);
-    void encodeSelf(nlohmann::json& json);
+    bool decodeContent(nlohmann::json json);
+    void encodeContent(nlohmann::json& json);
 private:
     const static std::string SENDER;
     std::string sender;

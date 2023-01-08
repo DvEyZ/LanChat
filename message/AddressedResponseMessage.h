@@ -7,6 +7,7 @@ class AddressedResponseMessage : public ResponseMessage, public Addressed
 {
 public:
     AddressedResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status s = INFO);
+    virtual ~AddressedResponseMessage() {};
 private:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

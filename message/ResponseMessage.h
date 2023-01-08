@@ -4,7 +4,7 @@
 #include "Readable.h"
 #include "Addressed.h"
 
-class ResponseMessage : public Message, public Readable
+class ResponseMessage : public Readable
 {
 public:
     const static std::string MT;
@@ -17,8 +17,11 @@ public:
         BAD_DATA = 302,             // Bad data. Use this if decoding succeeds, but the data itself either is either malformed, or makes no sense together.
         DENIED = 303,               // Denied. Use this if data is OK, but the server denies it, for any reason.
     };
-    ResponseMessage();
+    ResponseMessage() {};
     ResponseMessage(ReadableMessageBody body, Status status = INFO);
+
+    virtual ~ResponseMessage() {};
+    std::string getType();
     Status getStatus();
     bool ok();
 protected:

@@ -5,14 +5,16 @@
 #include "Signed.h"
 #include "Addressed.h"
 
-class SendMessage : public Message, public Readable, public Signed, public Addressed
+class SendMessage : public Readable, public Signed, public Addressed
 {
 public:
     const static std::string MT;
     const static std::string TYPE_TARGET;
     const static std::string TYPE_BROADCAST;
-    SendMessage();
+    SendMessage() {};
     SendMessage(std::string sender, std::vector <std::string> receivers, ReadableMessageBody body, std::string type);
+    virtual ~SendMessage() {};
+    std::string getType();
     std::string getSendMessageType();
 private:
     void encodeContent(nlohmann::json& json);
