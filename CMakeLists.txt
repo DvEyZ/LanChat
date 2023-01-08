@@ -28,6 +28,7 @@ add_library(LibLanChatMessages
     "message/IdentifyMessage.cpp"
     "message/AddressedResponseMessage.cpp"
     "MessageWrapper.cpp"
+    "message/visitors/RelayMessageVisitor.cpp"
 )
 add_library(LibLanChatGeneric 
 	#Message.cpp
@@ -67,6 +68,9 @@ target_link_libraries(ReadableTest LibLanChatMessages GTest::gtest_main)
 add_executable(AddressedResponseMessageTest tests/AddressedResponseMessageTest.cpp)
 target_link_libraries(AddressedResponseMessageTest LibLanChatMessages GTest::gtest_main)
 
+add_executable(IMessageVisitorTest tests/IMessageVisitorTest.cpp)
+target_link_libraries(IMessageVisitorTest LibLanChatMessages GTest::gtest_main)
+
 include(GoogleTest)
 
 gtest_discover_tests(SendMessageTest)
@@ -75,3 +79,4 @@ gtest_discover_tests(ResponseMessageTest)
 gtest_discover_tests(MessageWrapperTest)
 gtest_discover_tests(ReadableTest)
 gtest_discover_tests(AddressedResponseMessageTest)
+gtest_discover_tests(IMessageVisitorTest)

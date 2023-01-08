@@ -11,6 +11,8 @@ Message::Message()
     timestamp = std::chrono::duration_cast <std::chrono::seconds> (tse);
 }
 
+Message::~Message() {}
+
 std::string Message::getVersion()
 {
     return version;

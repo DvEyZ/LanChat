@@ -2,18 +2,20 @@
 
 #include "Message.h"
 
+class IMessageVisitor;
+class Message;
+
 class IdentifyMessage : public Message
 {
 public:
     const static std::string MT;
-    IdentifyMessage() {};
+    IdentifyMessage();
     IdentifyMessage(std::string name, std::string pass);
 
-    virtual ~IdentifyMessage() {};
+    virtual ~IdentifyMessage();
     std::string getType();
     std::string getUsername();
     std::string getPassword();
-    void acceptVisitor(IMessageVisitor& v);
 private:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

@@ -24,7 +24,7 @@ TEST_F(AddressedResponseMessageTest, AreSpecificGettersWorking)
     auto as_addr = dynamic_cast <Addressed*> (m);
     ASSERT_EQ(as_resp->ok(), false);
     ASSERT_EQ(as_resp->getBody().getContent(), "Your message was not delivered.");
-    ASSERT_EQ(as_addr->getReceivers()[0], "r1");
+    ASSERT_EQ(as_addr->getReceivers()[0], "r1" );
 }
 
 TEST_F(AddressedResponseMessageTest, AreBaseGettersWorking)

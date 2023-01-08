@@ -1,8 +1,12 @@
 #include "AddressedResponseMessage.h"
 
+AddressedResponseMessage::AddressedResponseMessage() {}
+
 AddressedResponseMessage::AddressedResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status s)
     :Addressed(receivers), ResponseMessage(body, s)
 {}
+
+AddressedResponseMessage::~AddressedResponseMessage() {}
 
 std::string AddressedResponseMessage::getType()
 {

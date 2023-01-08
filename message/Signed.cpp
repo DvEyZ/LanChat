@@ -2,9 +2,13 @@
 
 const std::string Signed::SENDER = "Signed_sender";
 
+Signed::Signed() {}
+
 Signed::Signed(std::string s)
     :sender(s)
 {}
+
+Signed::~Signed() {}
 
 std::string Signed::getSender()
 {

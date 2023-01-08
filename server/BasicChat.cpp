@@ -23,8 +23,6 @@ void BasicChat::leave(std::shared_ptr <Session> session)
 
 void BasicChat::messageIncoming(Addressed& message)
 {
-	// system messages don't need permission from Auth
-
     ResponseMessage msg_resp;
 
 	if(!auth->permitMessage(message))

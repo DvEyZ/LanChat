@@ -3,7 +3,6 @@
 #include <string>
 #include <chrono>
 #include <nlohmann/json.hpp>
-#include "visitors/IMessageVisitor.h"
 
 const static std::string MESSAGE_VERSION = "1.0";
 
@@ -11,7 +10,7 @@ class Message
 {
 public:
     Message();
-    virtual ~Message() {};
+    virtual ~Message();
     typedef std::chrono::seconds Timestamp;
 
     std::string getVersion();
@@ -20,7 +19,6 @@ public:
 
     std::string encode();
     bool decode(std::string message);
-    virtual void acceptVisitor(IMessageVisitor& visitor) = 0;
 protected:
     const static std::string TYPE;
 private:

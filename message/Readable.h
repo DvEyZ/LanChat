@@ -2,12 +2,14 @@
 #include "ReadableMessageBody.h"
 #include "Message.h"
 
+class Message;
+
 class Readable : virtual public Message
 {
 public:
-    Readable() {};
+    Readable();
     Readable(ReadableMessageBody b);
-    virtual ~Readable() {};
+    virtual ~Readable();
     ReadableMessageBody getBody();
 protected:
     bool decodeContent(nlohmann::json json);

@@ -2,9 +2,13 @@
 
 const std::string Addressed::RECEIVERS = "Addressed_receivers";
 
+Addressed::Addressed() {}
+
 Addressed::Addressed(std::vector <std::string> r)
     :receivers(r)
 {}
+
+Addressed::~Addressed() {}
 
 std::vector <std::string> Addressed::getReceivers()
 {

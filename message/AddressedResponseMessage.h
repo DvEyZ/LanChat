@@ -2,13 +2,18 @@
 
 #include "ResponseMessage.h"
 #include "Addressed.h"
+#include <set>
+
+class IMessageVisitor;
+class ResponseMessage;
+class Addressed;
 
 class AddressedResponseMessage : public ResponseMessage, public Addressed
 {
 public:
-    AddressedResponseMessage() {};
+    AddressedResponseMessage();
     AddressedResponseMessage(std::vector <std::string> receivers, ReadableMessageBody body, Status s = INFO);
-    virtual ~AddressedResponseMessage() {};
+    virtual ~AddressedResponseMessage();
 
     std::string getType();
 private:

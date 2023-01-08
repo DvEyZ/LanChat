@@ -3,10 +3,13 @@
 const std::string ResponseMessage::STATUS = "Response_status";
 const std::string ResponseMessage::MT = "response";
 
+ResponseMessage::ResponseMessage() {}
 
 ResponseMessage::ResponseMessage(ReadableMessageBody body, Status s)
     :Readable(body), status(s)
 {}
+
+ResponseMessage::~ResponseMessage() {}
 
 std::string ResponseMessage::getType()
 {
@@ -56,5 +59,5 @@ bool ResponseMessage::ok()
 
 void ResponseMessage::acceptVisitor(IMessageVisitor& v)
 {
-    v.visitResponseMessage(*this);
+    v.visitResponseMessage(this);
 }

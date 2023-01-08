@@ -4,10 +4,13 @@ const std::string IdentifyMessage::USERNAME = "Identify_username";
 const std::string IdentifyMessage::PASSWORD = "Identify_password";
 const std::string IdentifyMessage::MT = "identify";
 
+IdentifyMessage::IdentifyMessage() {}
 
 IdentifyMessage::IdentifyMessage(std::string name, std::string pass)
     :username(name), password(pass)
 {}
+
+IdentifyMessage::~IdentifyMessage() {}
 
 std::string IdentifyMessage::getType()
 {
@@ -52,9 +55,4 @@ bool IdentifyMessage::decodeSelf(nlohmann::json json)
         return false;
     }
     return true;   
-}
-
-void IdentifyMessage::acceptVisitor(IMessageVisitor& v)
-{
-    v.visitIdentifyMessage(*this);
 }

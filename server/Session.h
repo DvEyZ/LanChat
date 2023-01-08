@@ -44,7 +44,7 @@ private:
 
     void onError(ConnectionError error);
     
-    std::queue <Message&> recentMsgWrite;
+    std::queue <Message> recentMsgWrite;
 
     std::string user; 
     std::shared_ptr <Connection> connection;

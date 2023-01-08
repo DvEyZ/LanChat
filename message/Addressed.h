@@ -1,12 +1,15 @@
 #pragma once
 #include "Message.h"
+#include <set>
+
+class Message;
 
 class Addressed : virtual public Message
 {
 public:
-    Addressed() {};
+    Addressed();
     Addressed(std::vector <std::string> receivers);
-    virtual ~Addressed() {};
+    virtual ~Addressed();
     std::vector <std::string> getReceivers();
 protected:
     bool decodeContent(nlohmann::json json);
