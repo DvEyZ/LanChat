@@ -13,6 +13,7 @@ public:
     std::string getType();
     std::string getUsername();
     std::string getPassword();
+    void acceptVisitor(IMessageVisitor& v);
 private:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

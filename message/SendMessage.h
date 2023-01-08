@@ -16,6 +16,7 @@ public:
     virtual ~SendMessage() {};
     std::string getType();
     std::string getSendMessageType();
+    void acceptVisitor(IMessageVisitor& v);
 private:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

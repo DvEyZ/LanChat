@@ -24,6 +24,8 @@ public:
     std::string getType();
     Status getStatus();
     bool ok();
+
+    void acceptVisitor(IMessageVisitor& v);
 protected:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

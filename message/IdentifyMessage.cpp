@@ -53,3 +53,8 @@ bool IdentifyMessage::decodeSelf(nlohmann::json json)
     }
     return true;   
 }
+
+void IdentifyMessage::acceptVisitor(IMessageVisitor& v)
+{
+    v.visitIdentifyMessage(*this);
+}

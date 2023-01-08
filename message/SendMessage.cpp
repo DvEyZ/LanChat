@@ -53,3 +53,8 @@ bool SendMessage::decodeSelf(nlohmann::json json)
     }
     return true;
 }
+
+void SendMessage::acceptVisitor(IMessageVisitor& v)
+{
+    v.visitSendMessage(*this);
+}
