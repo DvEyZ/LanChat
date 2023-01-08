@@ -109,7 +109,7 @@ ResponseMessage BasicAuth::permitConnection(std::shared_ptr <Session> session)
 
 bool BasicAuth::permitMessage(Message& message)
 {
-    // PermissionMessageVisitor
+    // TODO
 
 	return true;
 }
