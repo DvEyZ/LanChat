@@ -69,25 +69,28 @@ void Session::onReadIdentification(MessageWrapper message)
     else
     {
         ResponseMessage m({"Malformed message."}, ResponseMessage::MALFORMED_MESSAGE);
-        writeMessage(m, [this] () { onError(ConnectionError(ResponseMessage::MALFORMED_MESSAGE)); });
+        postMessage(m);
+        onError(ConnectionError(ResponseMessage::MALFORMED_MESSAGE));
     }
 }
 
 void Session::identify(IdentifyMessage id)
 {
-    ResponseMessage resp;
+    ResponseMessage a_resp = chat->auth->authenticate(id);
+    ResponseMessage s_resp;
+    
+    if(a_resp.ok())
+    {
+        s_resp = chat->auth->permitConnection(shared_from_this());
+    }
 
-    // REORGANIZACJA
+    postMessage(a_resp);
+    postMessage(s_resp);
 
-    writeMessage(resp, 
-        [this, resp] () mutable
-        {
-            if(resp.ok())
-                onWriteIdentification();
-            else
-                onError(resp.getStatus());
-        } 
-    );
+    if(a_resp.ok() && s_resp.ok())
+        onWriteIdentification();
+    else
+        onError(222);
 }
 
 void Session::onWriteIdentification()

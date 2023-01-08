@@ -67,47 +67,49 @@ void BasicAuth::getUserList()
 	}
 }
 
-IdentifyResponseMessage::Status BasicAuth::authenticate(IdentifyMessage message)
+ResponseMessage BasicAuth::authenticate(IdentifyMessage message)
 {
-	if(!require_account)	return IdentifyResponseMessage::Status::ok;
+    bool accepted = false;
+	if(!require_account)	
+        accepted = true;
 	else if(checkPassword(message.getUsername(), message.getPassword()))
-		return IdentifyResponseMessage::Status::ok;
-	else
-		return IdentifyResponseMessage::Status::auth_failed_bad_credentials;
+		accepted = true;
+
+    if(accepted)
+        return ResponseMessage({ "Welcome." }, ResponseMessage::DONE);
+    else
+        return ResponseMessage({ "Login failed." }, ResponseMessage::DENIED);
 }
 
-IdentifyResponseMessage::Status BasicAuth::permitConnection(std::shared_ptr <Session> session)
+ResponseMessage BasicAuth::permitConnection(std::shared_ptr <Session> session)
 {
 	if(chat == nullptr)
 	{
 		logger->log("ERROR: chat is null.");
-		return IdentifyResponseMessage::Status::fail_generic;
+		return ResponseMessage({ "Unspecified error." }, ResponseMessage::FAIL);
 	}
-	boost::system::error_code error;
 	try
 	{
 	if(chat->getUserConnections(session->getUser()).size() >= max_connections_for_user.value())	
-		return IdentifyResponseMessage::Status::conn_failed_too_many_for_user;
+		return ResponseMessage({ "You have too many sessions opened." }, ResponseMessage::DENIED);
 	}
 	catch(std::bad_optional_access)
 	{}
 	try
 	{
 	if(chat->getIpConnections(session->getConnection()->getRemoteIp()).size() >= max_connections_from_ip.value())	
-		return IdentifyResponseMessage::Status::conn_failed_too_many_for_ip;
+		return ResponseMessage({ "Too many connections from your IP." }, ResponseMessage::DENIED);
 	}
 	catch(std::bad_optional_access)
 	{}
 	if(banned_ips.contains(session->getConnection()->getRemoteIp()))
-		return IdentifyResponseMessage::Status::conn_failed_ip_banned;
-	if(error)	return IdentifyResponseMessage::Status::fail_generic;
-	return IdentifyResponseMessage::Status::ok;
+		return ResponseMessage({ "Your IP is on the server blacklist." }, ResponseMessage::DENIED);
+	return ResponseMessage({"Connection accepted."}, ResponseMessage::DONE);
 }
 
-bool BasicAuth::permitMessage(ChatMessage message)
+bool BasicAuth::permitMessage(Message& message)
 {
-	if(containsBannedWords(message.getMsgBody())) return false;
-	if((message.getMessageType() == ChatMessage::MessageType::broadcast) && (!isAllowedToBroadcast(message.getSender()))) return false;
+    // PermissionMessageVisitor
 
 	return true;
 }
@@ -126,6 +128,7 @@ bool BasicAuth::checkPassword(std::string user, std::string password)
 	return false;
 }
 
+/*
 bool BasicAuth::containsBannedWords(std::string message)
 {
 	for(auto i : banned_words)
@@ -134,6 +137,7 @@ bool BasicAuth::containsBannedWords(std::string message)
 	}
 	return false;
 }
+*/
 
 bool BasicAuth::isAllowedToBroadcast(std::string user)
 {

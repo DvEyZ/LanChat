@@ -26,7 +26,7 @@ public:
     ~Session();
     void run();             // main
     void postMessage(Message& message);
-    
+
     std::string getUser();
     std::shared_ptr <Connection> getConnection();
 private:
