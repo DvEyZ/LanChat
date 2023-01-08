@@ -7,7 +7,8 @@ const std::string Message::TIMESTAMP = "Message_timestamp";
 Message::Message()
 {
     version = MESSAGE_VERSION;
-    timestamp = std::chrono::system_clock::now().time_since_epoch();
+    auto tse = std::chrono::system_clock::now().time_since_epoch();
+    timestamp = std::chrono::duration_cast <std::chrono::seconds> (tse);
 }
 
 std::string Message::getVersion()
@@ -62,7 +63,7 @@ bool Message::decodeCommon(nlohmann::json json)
         version = json[VERSION].get<std::string>();
         // type = json[TYPE].get<std::string>();
         auto duration = (json[TIMESTAMP].get<int64_t>());
-        timestamp = std::chrono::system_clock::duration(duration);
+        timestamp = std::chrono::seconds(duration);
     }
     catch(const std::exception& e)
     {

@@ -11,7 +11,7 @@ class Message
 public:
     Message();
     virtual ~Message() {};
-    typedef std::chrono::system_clock::duration Timestamp;
+    typedef std::chrono::seconds Timestamp;
 
     std::string getVersion();
     virtual std::string getType() = 0;
