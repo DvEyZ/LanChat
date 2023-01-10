@@ -14,6 +14,7 @@ public:
     std::string getType();
     std::string getAction();
     std::map <std::string, std::string> getParams();
+    std::string getParam(std::string w);
 private:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);
@@ -23,6 +24,6 @@ private:
     std::string action;
     std::map <std::string, std::string> params;
 
-    const std::string ACTION;
-    const std::string PARAMS;
+    const static std::string ACTION;
+    const static std::string PARAMS;
 };
