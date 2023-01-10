@@ -25,7 +25,8 @@ add_library(LibLanChatMessages
     "message/ReadableMessageBody.cpp"
     "message/SendMessage.cpp"
     "message/ResponseMessage.cpp"
-    "message/IdentifyMessage.cpp"
+    "message/CommandMessage.cpp"
+    "message/IdentifyCommandMessage.cpp"
     "message/AddressedResponseMessage.cpp"
     "MessageWrapper.cpp"
 )
@@ -38,33 +39,50 @@ add_library(LibLanChatGeneric
 	"ConnectionError.cpp"
 	"helper_functions.cpp"
 )
-add_library(LibLanChatServer server/Auth.cpp server/Server.cpp server/Session.cpp)
+
+add_library(LibLanChatServer 
+    "server/Auth.cpp" 
+    "server/Server.cpp" 
+    "server/Session.cpp")
 target_link_libraries(LibLanChatServer LibLanChatGeneric)
 
-add_executable(LanChatServer server/BasicAuth.cpp server/BasicChat.cpp server/StdOstreamLogger.cpp server/FileLogger.cpp server/LoggerComposite.cpp server/main.cpp)
+add_executable(LanChatServer 
+    "server/BasicAuth.cpp" 
+    "server/BasicChat.cpp" 
+    "server/StdOstreamLogger.cpp" 
+    "server/FileLogger.cpp" 
+    "server/LoggerComposite.cpp"
+    "server/main.cpp")
 target_link_libraries(LanChatServer LibLanChatServer)
 
-add_executable(LanChatClient client/main.cpp client/Session.cpp client/App.cpp client/Network.cpp client/Session.cpp client/CLI.cpp client/Command.cpp)
+add_executable(LanChatClient 
+    "client/main.cpp" 
+    "client/Session.cpp" 
+    "client/App.cpp" 
+    "client/Network.cpp" 
+    "client/Session.cpp" 
+    "client/CLI.cpp" 
+    "client/Command.cpp")
 target_link_libraries(LanChatClient LibLanChatGeneric)
 
 enable_testing()
 
-add_executable(SendMessageTest tests/SendMessageTest.cpp)
+add_executable(SendMessageTest "tests/SendMessageTest.cpp")
 target_link_libraries(SendMessageTest LibLanChatMessages GTest::gtest_main)
 
-add_executable(IdentifyMessageTest tests/IdentifyMessageTest.cpp)
+add_executable(IdentifyMessageTest "tests/IdentifyMessageTest.cpp")
 target_link_libraries(IdentifyMessageTest LibLanChatMessages GTest::gtest_main)
 
-add_executable(ResponseMessageTest tests/ResponseMessageTest.cpp)
+add_executable(ResponseMessageTest "tests/ResponseMessageTest.cpp")
 target_link_libraries(ResponseMessageTest LibLanChatMessages GTest::gtest_main)
 
-add_executable(MessageWrapperTest tests/MessageWrapperTest.cpp)
+add_executable(MessageWrapperTest "tests/MessageWrapperTest.cpp")
 target_link_libraries(MessageWrapperTest LibLanChatMessages GTest::gtest_main)
 
-add_executable(ReadableTest tests/ReadableTest.cpp)
+add_executable(ReadableTest "tests/ReadableTest.cpp")
 target_link_libraries(ReadableTest LibLanChatMessages GTest::gtest_main)
 
-add_executable(AddressedResponseMessageTest tests/AddressedResponseMessageTest.cpp)
+add_executable(AddressedResponseMessageTest "tests/AddressedResponseMessageTest.cpp")
 target_link_libraries(AddressedResponseMessageTest LibLanChatMessages GTest::gtest_main)
 
 include(GoogleTest)

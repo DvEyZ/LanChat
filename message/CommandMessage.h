@@ -15,12 +15,13 @@ public:
     std::string getAction();
     std::map <std::string, std::string> getParams();
     std::string getParam(std::string w);
-private:
+protected:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);
     bool decodeContent(nlohmann::json json);
     bool decodeSelf(nlohmann::json json);
 
+private:
     std::string action;
     std::map <std::string, std::string> params;
 

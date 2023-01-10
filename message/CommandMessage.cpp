@@ -40,7 +40,8 @@ void CommandMessage::encodeContent(nlohmann::json& json)
 
 void CommandMessage::encodeSelf(nlohmann::json& json)
 {
-    json[]
+    json[ACTION] = action;
+    json[PARAMS] = params;
 }
 
 bool CommandMessage::decodeContent(nlohmann::json json)
@@ -53,5 +54,14 @@ bool CommandMessage::decodeContent(nlohmann::json json)
 
 bool CommandMessage::decodeSelf(nlohmann::json json)
 {
-
+    try
+    {
+        action = json[ACTION].get<std::string>();
+        params = json[PARAMS].get<std::map<std::string,std::string>>();
+    }
+    catch (std::exception& e)
+    {
+        return false;
+    }
+    return true;
 }

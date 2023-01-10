@@ -13,7 +13,9 @@ public:
     std::string getPassword();
 
 private:
+    void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);
+    bool decodeContent(nlohmann::json json);
     bool decodeSelf(nlohmann::json json);
 
     std::string username;
