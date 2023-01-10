@@ -6,6 +6,8 @@
 
 const static std::string MESSAGE_VERSION = "1.0";
 
+class IMessageVisitor;
+
 class Message
 {
 public:

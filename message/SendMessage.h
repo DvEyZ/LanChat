@@ -5,7 +5,6 @@
 #include "Addressed.h"
 #include <set>
 
-class IMessageVisitor;
 class Readable;
 class Signed;
 class Addressed;
@@ -17,7 +16,7 @@ public:
     const static std::string TYPE_TARGET;
     const static std::string TYPE_BROADCAST;
     SendMessage();
-    SendMessage(std::string sender, std::vector <std::string> receivers, ReadableMessageBody body, std::string type);
+    SendMessage(std::string sender, std::vector <std::string> receivers, ReadableMessageBody body, std::string ts);
     virtual ~SendMessage();
     std::string getType();
     std::string getSendMessageType();

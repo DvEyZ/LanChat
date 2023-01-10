@@ -1,21 +1,17 @@
 #pragma once
 
-#include "Message.h"
+#include "CommandMessage.h"
 
-class IMessageVisitor;
-class Message;
-
-class IdentifyMessage : public Message
+class IdentifyCommandMessage : public CommandMessage
 {
 public:
-    const static std::string MT;
-    IdentifyMessage();
-    IdentifyMessage(std::string name, std::string pass);
+    IdentifyCommandMessage();
+    IdentifyCommandMessage(std::string name, std::string pass);
 
-    virtual ~IdentifyMessage();
-    std::string getType();
+    virtual ~IdentifyCommandMessage();
     std::string getUsername();
     std::string getPassword();
+
 private:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

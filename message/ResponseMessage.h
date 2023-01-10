@@ -2,7 +2,6 @@
 
 #include "Readable.h"
 
-class IMessageVisitor;
 class Readable;
 
 class ResponseMessage : public Readable

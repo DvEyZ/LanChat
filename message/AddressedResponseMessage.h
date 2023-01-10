@@ -4,7 +4,6 @@
 #include "Addressed.h"
 #include <set>
 
-class IMessageVisitor;
 class ResponseMessage;
 class Addressed;
 
