@@ -1,52 +1,41 @@
 #include "IdentifyCommandMessage.h"
 
+const std::string IdentifyCommandMessage::ACTION_NAME = "identify";
 const std::string IdentifyCommandMessage::USERNAME = "Identify_username";
 const std::string IdentifyCommandMessage::PASSWORD = "Identify_password";
 
 IdentifyCommandMessage::IdentifyCommandMessage() {}
 
 IdentifyCommandMessage::IdentifyCommandMessage(std::string name, std::string pass)
-    :username(name), password(pass)
+    :CommandMessage(name, ACTION_NAME, { {USERNAME, name }, {PASSWORD, pass} })
 {}
 
 IdentifyCommandMessage::~IdentifyCommandMessage() {}
 
 std::string IdentifyCommandMessage::getUsername()
 {
-    return username;
+    return getParam(USERNAME);
 }
 
 std::string IdentifyCommandMessage::getPassword()
 {
-    return password;
+    return getParam(PASSWORD);
 }
 
 void IdentifyCommandMessage::encodeContent(nlohmann::json& json)
 {
+    CommandMessage::encodeContent(json);
     encodeSelf(json);
-}
-
-void IdentifyCommandMessage::encodeSelf(nlohmann::json& json)
-{
-    json[USERNAME] = username;
-    json[PASSWORD] = password;
 }
 
 bool IdentifyCommandMessage::decodeContent(nlohmann::json json)
 {
-    return decodeSelf(json);
+    bool c = CommandMessage::decodeContent(json);
+    bool s = decodeSelf(json);
+    return c && s;
 }
 
 bool IdentifyCommandMessage::decodeSelf(nlohmann::json json)
 {
-    try
-    {
-        username = json[USERNAME];
-        password = json[PASSWORD];
-    }
-    catch(const std::exception& e)
-    {
-        return false;
-    }
-    return true;   
+    return json[ACTION] == ACTION_NAME;
 }

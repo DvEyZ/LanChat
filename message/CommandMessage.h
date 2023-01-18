@@ -21,10 +21,9 @@ protected:
     bool decodeContent(nlohmann::json json);
     bool decodeSelf(nlohmann::json json);
 
+    const static std::string ACTION;
+    const static std::string PARAMS;
 private:
     std::string action;
     std::map <std::string, std::string> params;
-
-    const static std::string ACTION;
-    const static std::string PARAMS;
 };

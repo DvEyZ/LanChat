@@ -18,9 +18,7 @@ private:
     bool decodeContent(nlohmann::json json);
     bool decodeSelf(nlohmann::json json);
 
-    std::string username;
-    std::string password;
-
+    const static std::string ACTION_NAME;
     const static std::string USERNAME;
     const static std::string PASSWORD;
 };
