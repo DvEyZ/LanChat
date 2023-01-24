@@ -67,7 +67,7 @@ void BasicAuth::getUserList()
 	}
 }
 
-ResponseMessage BasicAuth::authenticate(IdentifyMessage message)
+ResponseMessage BasicAuth::authenticate(IdentifyCommandMessage message)
 {
     bool accepted = false;
 	if(!require_account)	

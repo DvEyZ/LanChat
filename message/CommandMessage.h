@@ -3,7 +3,7 @@
 #include <map>
 #include "Signed.h"
 
-class CommandMessage : Signed
+class CommandMessage : public Signed
 {
 public:
     const static std::string MT;

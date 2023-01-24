@@ -61,7 +61,7 @@ void Session::readIdentification()
 
 void Session::onReadIdentification(MessageWrapper message)
 {
-    IdentifyMessage id;
+    IdentifyCommandMessage id;
     if(id.decode(message.getData()))
     {
         identify(id);
@@ -74,7 +74,7 @@ void Session::onReadIdentification(MessageWrapper message)
     }
 }
 
-void Session::identify(IdentifyMessage id)
+void Session::identify(IdentifyCommandMessage id)
 {
     ResponseMessage a_resp = chat->auth->authenticate(id);
     ResponseMessage s_resp;

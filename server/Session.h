@@ -6,7 +6,7 @@
 #include "../defines.h"
 #include "Chat.h"
 #include "Server.h"
-#include "../message/IdentifyMessage.h"
+#include "../message/IdentifyCommandMessage.h"
 #include "../message/SendMessage.h"
 #include "../message/ResponseMessage.h"
 #include <queue>
@@ -30,7 +30,7 @@ public:
     std::string getUser();
     std::shared_ptr <Connection> getConnection();
 private:
-    void identify(IdentifyMessage id);
+    void identify(IdentifyCommandMessage id);
     void main();
 
     void readIdentification();
