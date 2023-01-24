@@ -15,6 +15,8 @@ public:
     std::string getAction();
     std::map <std::string, std::string> getParams();
     std::string getParam(std::string w);
+
+    void acceptVisitor(MessageVisitor& v);
 protected:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

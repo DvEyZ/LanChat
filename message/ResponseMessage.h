@@ -25,6 +25,7 @@ public:
     Status getStatus();
     bool ok();
 
+    void acceptVisitor(MessageVisitor& v);
 protected:
     void encodeContent(nlohmann::json& json);
     void encodeSelf(nlohmann::json& json);

@@ -56,3 +56,8 @@ bool ResponseMessage::ok()
 {
     return status < 300;
 }
+
+void ResponseMessage::acceptVisitor(MessageVisitor &v)
+{
+    v.visitResponseMessage(this);
+}

@@ -18,6 +18,11 @@ std::string SendMessage::getSendMessageType()
     return type;
 }
 
+void SendMessage::acceptVisitor(MessageVisitor &v)
+{
+    v.visitSendMessage(this);
+}
+
 std::string SendMessage::getType()
 {
     return MT;

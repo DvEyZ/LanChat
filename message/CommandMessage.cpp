@@ -32,6 +32,11 @@ std::string CommandMessage::getParam(std::string w)
     return params.at(w);
 }
 
+void CommandMessage::acceptVisitor(MessageVisitor &v)
+{
+    v.visitCommandMessage(this);
+}
+
 void CommandMessage::encodeContent(nlohmann::json& json)
 {
     Signed::encodeContent(json);

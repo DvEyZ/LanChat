@@ -4,6 +4,8 @@
 #include <chrono>
 #include <nlohmann/json.hpp>
 
+#include "MessageVisitor.h"
+
 const static std::string MESSAGE_VERSION = "1.0";
 
 class IMessageVisitor;
@@ -21,6 +23,8 @@ public:
 
     std::string encode();
     bool decode(std::string message);
+    
+    virtual void acceptVisitor(MessageVisitor& v) = 0;
 protected:
     const static std::string TYPE;
 private:
