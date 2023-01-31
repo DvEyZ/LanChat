@@ -6,5 +6,5 @@
 class CommandProcessor
 {
 public:
-    ResponseMessage executeCommand(CommandMessage& m);
+    virtual ResponseMessage executeCommand(CommandMessage& m);
 };

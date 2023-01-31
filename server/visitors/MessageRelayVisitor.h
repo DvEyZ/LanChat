@@ -14,7 +14,7 @@ public:
     void visitCommandMessage(CommandMessage* m);
     void visitResponseMessage(ResponseMessage* m);
 
-    ResponseMessage getResult();
+    ResponseMessage getResponse();
 private:
     Chat* chat;
     Auth* auth;

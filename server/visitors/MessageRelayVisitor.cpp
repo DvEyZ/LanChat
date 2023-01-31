@@ -6,7 +6,7 @@ MessageRelayVisitor::MessageRelayVisitor(Chat* _chat, Auth* _auth, CommandProces
 
 void MessageRelayVisitor::visitSendMessage(SendMessage* m)
 {
-
+    
 }
 
 void MessageRelayVisitor::visitCommandMessage(CommandMessage* m)

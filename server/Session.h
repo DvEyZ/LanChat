@@ -6,7 +6,9 @@
 #include "../defines.h"
 #include "Chat.h"
 #include "Auth.h"
+#include "CommandProcessor.h"
 #include "../MessageCreator.h"
+#include "visitors/MessageRelayVisitor.h"
 #include "../message/IdentifyCommandMessage.h"
 #include "../message/SendMessage.h"
 #include "../message/ResponseMessage.h"
@@ -48,6 +50,7 @@ private:
     
     Auth* auth;
     Chat* chat;
+    CommandProcessor* cp;
 
     std::shared_ptr <Logger>  logger;
 };

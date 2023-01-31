@@ -43,6 +43,9 @@ void Session::onReadMessage(MessageWrapper w)
 {
     MessageCreator f(w);
     auto message = f.get();
+
+    MessageRelayVisitor relay(chat, auth, cp);
+    message.acceptVisitor(relay);
 }
 
 void Session::identify(IdentifyCommandMessage id)
