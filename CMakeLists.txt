@@ -27,8 +27,8 @@ add_library(LibLanChatMessages
     "message/ResponseMessage.cpp"
     "message/CommandMessage.cpp"
     "message/IdentifyCommandMessage.cpp"
-    "message/AddressedResponseMessage.cpp"
     "MessageWrapper.cpp"
+    "MessageCreator.cpp"
 )
 add_library(LibLanChatGeneric 
 	#Message.cpp
@@ -43,7 +43,9 @@ add_library(LibLanChatGeneric
 add_library(LibLanChatServer 
     "server/Auth.cpp" 
     "server/Server.cpp" 
-    "server/Session.cpp")
+    "server/Session.cpp"
+    "server/CommandProcessor.cpp"
+)
 target_link_libraries(LibLanChatServer LibLanChatGeneric)
 
 add_executable(LanChatServer 

@@ -128,17 +128,6 @@ bool BasicAuth::checkPassword(std::string user, std::string password)
 	return false;
 }
 
-/*
-bool BasicAuth::containsBannedWords(std::string message)
-{
-	for(auto i : banned_words)
-	{
-		if(string_contains(message, i)) return true;
-	}
-	return false;
-}
-*/
-
 bool BasicAuth::isAllowedToBroadcast(std::string user)
 {
 	if(anyone_may_broadcast) return true;

@@ -5,16 +5,15 @@
 #include "../SocketConnection.h"
 #include "../defines.h"
 #include "Chat.h"
-#include "Server.h"
+#include "Auth.h"
+#include "../MessageCreator.h"
 #include "../message/IdentifyCommandMessage.h"
 #include "../message/SendMessage.h"
 #include "../message/ResponseMessage.h"
 #include <queue>
 #include <functional>
-#include <boost/enable_shared_from_this.hpp>
 
 class Chat;
-class Server;
 class ConnectionError;
 
 class Session : public std::enable_shared_from_this<Session>
@@ -33,8 +32,6 @@ private:
     void identify(IdentifyCommandMessage id);
     void main();
 
-    void readIdentification();
-    void onReadIdentification(MessageWrapper w);      // Connection::onRead callback
     void readMessage();
     void onReadMessage(MessageWrapper w);             // Connection::onRead callback
     
@@ -48,6 +45,8 @@ private:
 
     std::string user; 
     std::shared_ptr <Connection> connection;
+    
+    Auth* auth;
     Chat* chat;
 
     std::shared_ptr <Logger>  logger;

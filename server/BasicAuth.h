@@ -12,8 +12,8 @@ class BasicAuth : public Auth
 public:
 	BasicAuth(std::shared_ptr <Logger> logger);
 	virtual ResponseMessage authenticate(IdentifyCommandMessage identification);					//check credentials
-	virtual ResponseMessage permitConnection(std::shared_ptr <Session> session);	//check if connection is permitted
-	virtual bool permitMessage(Message& message);							//check if message is permitted
+	virtual ResponseMessage permitConnection(std::shared_ptr <Session> session);	                //check if connection is permitted
+	virtual bool permitMessage(Message& message);							                        //check if message is permitted
 protected:
 	void useDefaultConfig();
 	void getUserList();
@@ -32,6 +32,5 @@ protected:
 	std::set <std::string> banned_words;
 	std::set <std::string> broadcast_users;
 
-	//bool containsBannedWords(std::string text);
 	bool isAllowedToBroadcast(std::string user);
 };

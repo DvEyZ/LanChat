@@ -26,7 +26,7 @@ std::string Session::getUser()
 void Session::run()
 {
     Session::awaiting_for_identification.emplace(shared_from_this());
-    readIdentification();
+    readMessage();
 }
 
 void Session::main()
@@ -41,37 +41,8 @@ void Session::readMessage()
 
 void Session::onReadMessage(MessageWrapper w)
 {
-    SendMessage m;
-    if(m.decode(w.getData()))
-    {
-        chat->messageIncoming(m);
-    }
-    else
-    {
-        ResponseMessage m({"Malformed message."}, ResponseMessage::MALFORMED_MESSAGE);
-        postMessage(m);
-    }
-    main();
-}
-
-void Session::readIdentification()
-{
-    connection->read([this] (MessageWrapper w) {onReadIdentification(w);});
-}
-
-void Session::onReadIdentification(MessageWrapper message)
-{
-    IdentifyCommandMessage id;
-    if(id.decode(message.getData()))
-    {
-        identify(id);
-    }
-    else
-    {
-        ResponseMessage m({"Malformed message."}, ResponseMessage::MALFORMED_MESSAGE);
-        postMessage(m);
-        onError(ConnectionError(ResponseMessage::MALFORMED_MESSAGE));
-    }
+    MessageCreator f(w);
+    auto message = f.get();
 }
 
 void Session::identify(IdentifyCommandMessage id)
